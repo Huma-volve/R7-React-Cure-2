@@ -1,8 +1,8 @@
-import './App.css'
-import { RouterProvider } from 'react-router-dom'
-import router from './routes.tsx'
 
-function App() {
+import { RouterProvider } from 'react-router-dom';
+import router from './routes';
+
+export default function App() {
 
   return (
     <>
@@ -10,5 +10,3 @@ function App() {
     </>
   )
 }
-
-export default App
