@@ -5,7 +5,6 @@ export default function HomePage() {
         <div className="HomePage">
             {/* Start Hero Section */}
             <HeroSection />
-            {/* End Hero Section */}
         </div>
     );
 }
