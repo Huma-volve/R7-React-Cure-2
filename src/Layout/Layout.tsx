@@ -1,13 +1,15 @@
-import { Outlet } from 'react-router'
-import ScrollToTop from './ScrollToTop'
+import { Outlet } from 'react-router';
+import { lazy } from 'react';
+const Navbar = lazy(() => import('../components/navbar/Navbar'));
+const Footer = lazy(() => import('../components/footer/Footer'));
 
-const Layout = () => {
-  return (
-    <>
-    <ScrollToTop />
-    <Outlet />
-    </>
-  )
+
+export default function Layout() {
+    return (
+        <div>
+            <Navbar />
+            <Outlet />
+            <Footer />
+        </div>
+    );
 }
-
-export default Layout
