@@ -19,7 +19,7 @@ const ProfileList = () => {
                         focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:outline-none
                         transition-colors duration-200 hover:bg-transparent"
                 >
-                    <img src="/assets/img/Profile-image.png" alt="Profile" />
+                    <img src="/image/Profile-image.png" alt="Profile" />
                 </Button>
             </DropdownMenuTrigger>
 
@@ -33,7 +33,7 @@ const ProfileList = () => {
                     <div className="flex items-center mb-4 justify-between gap-2 px-2">
                         <Link to="/profile" className="flex items-center gap-2">
                             <img
-                                src="/assets/img/Profile-image.png"
+                                src="/image/Profile-image.png"
                                 alt="Profile"
                                 className="w-15 h-15 rounded-full"
                             />
@@ -41,7 +41,7 @@ const ProfileList = () => {
                                 <p className="font-semibold sm:text-[20px] text-[18px]" style={{fontFamily: "var(--font-secondary)"}}>John Doe</p>
                                 <p className="text-sm text-gray-500 flex items-center gap-1">
                                     <img
-                                        src="/assets/icons/LocationPerson.svg"
+                                        src="/icons/LocationPerson.svg"
                                         alt="Location icon"
                                     />
                                     <span className='text-[12px] sm:text-[15px]'>129,El-Nasr Street, Cairo</span>
@@ -49,17 +49,17 @@ const ProfileList = () => {
                             </div>
                         </Link>
                         <Link to="/settings">
-                            <img src="/assets/icons/Settings.svg" alt="Settings" />
+                            <img src="/icons/Settings.svg" alt="Settings" />
                         </Link>
                     </div>
 
                     <Link to="/payment">
                         <DropdownMenuItem className="mb-3 cursor-pointer text-[16px] hover:bg-gray-300! transition-colors">
-                            <img src="/assets/icons/Banknote 3.svg" alt="Payment Method" />
+                            <img src="/icons/Banknote 3.svg" alt="Payment Method" />
                             Payment Method
                             <DropdownMenuShortcut>
                                 <img
-                                    src="/assets/icons/solar_alt-arrow-right-linear.svg"
+                                    src="/icons/solar_alt-arrow-right-linear.svg"
                                     alt="arrow right icon"
                                 />
                             </DropdownMenuShortcut>
@@ -68,11 +68,11 @@ const ProfileList = () => {
 
                     <Link to="/favorites">
                         <DropdownMenuItem className="mb-3 cursor-pointer hover:bg-gray-300! transition-colors">
-                            <img src="/assets/icons/Favorite.svg" alt="Favorite" />
+                            <img src="/icons/Favorite.svg" alt="Favorite" />
                             Favorite
                             <DropdownMenuShortcut>
                                 <img
-                                    src="/assets/icons/solar_alt-arrow-right-linear.svg"
+                                    src="/icons/solar_alt-arrow-right-linear.svg"
                                     alt="arrow right icon"
                                 />
                             </DropdownMenuShortcut>
@@ -81,11 +81,11 @@ const ProfileList = () => {
 
                     <Link to="/settings">
                         <DropdownMenuItem className="mb-3 cursor-pointer text-[16px] hover:bg-gray-300! transition-colors">
-                            <img src="/assets/icons/Settings-1.svg" alt="Settings" />
+                            <img src="/icons/Settings-1.svg" alt="Settings" />
                             Settings
                             <DropdownMenuShortcut>
                                 <img
-                                    src="/assets/icons/solar_alt-arrow-right-linear.svg"
+                                    src="/icons/solar_alt-arrow-right-linear.svg"
                                     alt="arrow right icon"
                                 />
                             </DropdownMenuShortcut>
@@ -94,11 +94,11 @@ const ProfileList = () => {
 
                     <Link to="/privacy">
                         <DropdownMenuItem className="mb-3 cursor-pointer text-[16px] hover:bg-gray-300! transition-colors">
-                            <img src="/assets/icons/Lock Keyhole Minimalistic.svg" alt="Privacy" />
+                            <img src="/icons/Lock Keyhole Minimalistic.svg" alt="Privacy" />
                             Privacy Policy
                             <DropdownMenuShortcut>
                                 <img
-                                    src="/assets/icons/solar_alt-arrow-right-linear.svg"
+                                    src="/icons/solar_alt-arrow-right-linear.svg"
                                     alt="arrow right icon"
                                 />
                             </DropdownMenuShortcut>
@@ -107,7 +107,7 @@ const ProfileList = () => {
                 </DropdownMenuGroup>
 
                 <DropdownMenuItem className="text-[#FC4B4E]! font-semibold text-[16px] hover:bg-gray-300! cursor-pointer transition-colors">
-                    <img src="/assets/icons/Logout 4.svg" alt="Logout" />
+                    <img src="/icons/Logout 4.svg" alt="Logout" />
                     Log out
                 </DropdownMenuItem>
             </DropdownMenuContent>

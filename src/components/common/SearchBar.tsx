@@ -15,38 +15,38 @@ const DoctorsList: DoctorsType[] = [
         id: 2,
         name: 'Dr. Jane Smith',
         specialty: 'Dermatologist',
-        image: '/assets/img/doctor-2.png'
+        image: '/image/doctor-2.jpg'
     },
     {
         id: 3,
         name: 'Dr. Emily Johnson',
         specialty: 'Pediatrician',
-        image: '/assets/img/doctor-3.png'
+        image: '/image/doctor-3.jpg'
     },
     {
         id: 4,
         name: 'Dr. Michael Brown',
         specialty: 'Neurologist',
-        image: '/assets/img/doctor-4.png'
+        image: '/image/doctor-4.jpg'
     },
-    { id: 5, name: 'Dr. John Doe', specialty: 'Cardiologist', image: '/assets/img/doctor-1.png' },
+    { id: 5, name: 'Dr. John Doe', specialty: 'Cardiologist', image: '/image/doctor-1.jpg' },
     {
         id: 6,
         name: 'Dr. Jane Smith',
         specialty: 'Dermatologist',
-        image: '/assets/img/doctor-2.png'
+        image: '/image/doctor-2.jpg'
     },
     {
         id: 7,
         name: 'Dr. Emily Johnson',
         specialty: 'Pediatrician',
-        image: '/assets/img/doctor-3.png'
+        image: '/image/doctor-3.jpg'
     },
     {
         id: 8,
         name: 'Dr. Michael Brown',
         specialty: 'Neurologist',
-        image: '/assets/img/doctor-4.png'
+        image: '/image/doctor-4.jpg'
     }
 ];
 
@@ -142,7 +142,7 @@ const SearchBar = () => {
                 className="pl-12 pr-4 py-2 rounded-xl bg-[#F5F6F7] outline-0 border-0 focus-visible:ring-0 focus-visible:ring-offset-0 shadow-none"
             />
             <img
-                src="/assets/icons/Search.svg"
+                src="/icons/Search.svg"
                 width={24}
                 height={24}
                 className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
@@ -204,14 +204,14 @@ const SearchBar = () => {
                                                         <div className="flex items-center gap-3 sm:text-sm text-[13px] text-black">
                                                             <div className="flex items-center gap-1">
                                                                 <img
-                                                                    src="/assets/icons/Star.svg"
+                                                                    src="/icons/Star.svg"
                                                                     alt="rating"
                                                                 />
                                                                 <span>4.9</span>
                                                             </div>
                                                             <div className="flex items-center gap-1">
                                                                 <img
-                                                                    src="/assets/icons/Time.svg"
+                                                                    src="/icons/Time.svg"
                                                                     alt="time"
                                                                 />
                                                                 <span>9:30am - 8:00pm</span>
@@ -245,7 +245,7 @@ const SearchBar = () => {
                                             {filteredLastSearches.map(
                                                 (
                                                     term,
-                                                    idx // 💡 استخدام filteredLastSearches
+                                                    idx // filteredLastSearches
                                                 ) => (
                                                     <li
                                                         key={idx}

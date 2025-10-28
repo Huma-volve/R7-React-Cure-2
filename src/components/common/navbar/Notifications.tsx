@@ -23,21 +23,21 @@ const NotificationsList: NotificationsType[] = [
         id: 1,
         title: 'Upcoming Appointment',
         message: 'Your appointment with Dr. Smith is confirmed for tomorrow at 10 AM.',
-        image: '/assets/icons/time-quarter.svg',
+        image: '/icons/time-quarter.svg',
         time: '1h'
     },
     {
         id: 2,
         title: 'Appointment completed',
         message: 'You have successfully booked your appointment with Dr. Emily Walker.',
-        image: '/assets/icons/solar_check-circle-linear.svg',
+        image: '/icons/solar_check-circle-linear.svg',
         time: '2h'
     },
     {
         id: 3,
         title: 'Appointment Cancelled',
         message: 'You have successfully cancelled your appointment with Dr. David Patel.',
-        image: '/assets/icons/calendar-remove.svg',
+        image: '/icons/calendar-remove.svg',
         time: '3h'
     }
 ];
@@ -62,7 +62,7 @@ const Notifications = () => {
                         focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:outline-none
                         hover:bg-[#E9EAEB] transition-colors duration-200"
                 >
-                    <img src="/assets/icons/Notifications.svg" alt="" />
+                    <img src="/icons/Notifications.svg" alt="" />
                 </Button>
             </DropdownMenuTrigger>
 
@@ -110,7 +110,7 @@ const Notifications = () => {
                 ) : (
                     <div className="flex items-center justify-center p-5 flex-col">
                         <img
-                            src="/assets/img/Notifications-Empty.png"
+                            src="/image/Notifications-Empty.png"
                             alt="notifications Empty"
                             className="mb-3"
                         />

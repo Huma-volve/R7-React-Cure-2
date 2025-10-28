@@ -24,14 +24,14 @@ const HamburgerMenu: React.FC = () => {
                     >
                         {!isOpen ? (
                             <img
-                                src="/assets/icons/MenuBar.svg"
+                                src="/icons/MenuBar.svg"
                                 width={16}
                                 height={12}
                                 alt="Menu Icon"
                             />
                         ) : (
                             <img
-                                src="/assets/icons/CloseMenu.svg"
+                                src="/icons/CloseMenu.svg"
                                 width={11}
                                 height={11}
                                 alt="Menu Icon"

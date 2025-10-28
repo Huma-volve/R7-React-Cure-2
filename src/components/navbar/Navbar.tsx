@@ -12,7 +12,7 @@ export default function Navbar() {
                     <div className="logo">
                         <Link to="/" className="cursor-pointer">
                             <img
-                                src="/assets/icons/BsHeartPulse.svg"
+                                src="/icons/BsHeartPulse.svg"
                                 alt="Logo"
                                 className="w-8 h-8"
                             />
