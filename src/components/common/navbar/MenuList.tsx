@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { cn } from '@/lib/utils'; // افترض أن لديك utility function مثل هذه لدمج الفئات
 
-const HamburgerMenu = () => {
+const HamburgerMenu: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false); // حالة لتتبع ما إذا كانت القائمة مفتوحة
 
   const toggleMenu = () => {

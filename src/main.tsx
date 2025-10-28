@@ -1,11 +1,15 @@
 import { createRoot } from 'react-dom/client'
 import { Provider } from 'react-redux';
 import './index.css'
-import App from './App.tsx'
 import store from './store/Store.ts';
+import { RouterProvider } from 'react-router-dom';
+import router from './routes.tsx';
+import { Suspense } from 'react';
 
 createRoot(document.getElementById('root')!).render(
-  <Provider store={store}>
-    <App />
-  </Provider>,
+  < Provider store={store} >
+    <Suspense fallback={<div>Loading...</div>}>
+      <RouterProvider router={router} />
+    </Suspense>
+  </Provider >,
 )
