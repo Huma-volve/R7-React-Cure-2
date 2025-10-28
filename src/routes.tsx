@@ -1,15 +1,20 @@
 import { createBrowserRouter } from 'react-router-dom';
-import Layout from './Layout/Layout';
 import Error from './Pages/Error/Error';
-import Home from './Pages/Home/Home';
 import DoctorDetails from './Pages/DoctorDetails/DoctorDetails';
 import BookAppointment from './Pages/BookAppointment/BookAppointment';
-import LogIn from './Pages/login/LogIn';
+import { lazy } from "react";
+
+const Layout = lazy(() => import("./Layout/Layout"));
+const Home = lazy(() => import("./Pages/Home/Home"));
+const LogIn = lazy(() => import("./Pages/login/LogIn"));
+const SignUp = lazy(() => import("./Pages/signUp/SignUp"));
+const ErrorPage = lazy(() => import("./Pages/Error/Error"));
 
 const router = createBrowserRouter([
     {
-        path: '/',
+        path: "/",
         element: <Layout />,
+
         errorElement: <Error />,
         children: [
             { path: '/', element: <Home /> },
@@ -17,5 +22,15 @@ const router = createBrowserRouter([
             { path: "bookappointment", element: <BookAppointment /> }
         ]
     },
-    { path: "/login", element: <LogIn /> },]);
+    {
+        path: "/login",
+        element: <LogIn />,
+    },
+    {
+        path: "/signup",
+        element: <SignUp />,
+    },
+    
+]);
+
 export default router;
