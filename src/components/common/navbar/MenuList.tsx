@@ -9,7 +9,7 @@ import {
 import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 
-const MenuList: React.FC = () => {
+const HamburgerMenu: React.FC = () => {
     const [isOpen, setIsOpen] = useState(false);
 
     return (
@@ -82,4 +82,4 @@ const MenuList: React.FC = () => {
     );
 };
 
-export default MenuList;
+export default HamburgerMenu;
