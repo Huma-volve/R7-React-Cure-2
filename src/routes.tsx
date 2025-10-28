@@ -13,10 +13,16 @@ const router = createBrowserRouter([
         element: <Layout />,
         errorElement: <ErrorPage />,
         children: [
-            { index: true, element: <Home /> }, // بدل path: "/" استخدم index
-            { path: "login", element: <LogIn /> },
-            { path: "signup", element: <SignUp /> },
+            { path: "/", element: <Home /> },
         ],
+    },
+    {
+        path: "/login",
+        element: <LogIn />,
+    },
+    {
+        path: "/signup",
+        element: <SignUp />,
     },
 ]);
 
