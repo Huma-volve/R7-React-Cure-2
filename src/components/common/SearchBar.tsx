@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { BiSearch } from 'react-icons/bi';
-import { Input } from "@/components/ui/input";
+import { Input } from '../ui/input';
+
+
 
 const SearchBar = () => {
     const [searchTerm, setSearchTerm] = useState('');
