@@ -43,7 +43,7 @@ const HamburgerMenu: React.FC = () => {
       {/* القائمة المنسدلة (Dropdown Menu) */}
       <div
         className={cn(
-          'absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none transform transition-opacity duration-200 ease-out',
+          'absolute right-0 !mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none transform transition-opacity duration-200 ease-out',
           isOpen ? 'opacity-100 scale-100 translate-y-0' : 'opacity-0 scale-95 -translate-y-2 pointer-events-none'
         )}
         role="menu"

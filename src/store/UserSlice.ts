@@ -1,3 +1,4 @@
+// src/redux/slices/userSlice.ts
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
@@ -13,32 +14,60 @@ const initialState: UserState = {
     error: null,
 };
 
-// 🔹 Register user
-export const registerUser = createAsyncThunk(
-    "user/registerUser",
-    async (userData: any, { rejectWithValue }) => {
+// ===================================
+// 🔹 Send OTP to user's phone
+// ===================================
+export const sendOTP = createAsyncThunk(
+    "user/sendOTP",
+    async (phoneNumber: string, { rejectWithValue }) => {
         try {
-            const response = await axios.post("https://jsonplaceholder.typicode.com/users", userData);
-            return response.data;
+            const response = await axios.post("https://api.example.com/auth/send-otp", { phoneNumber });
+            return response.data; // usually { success: true, message: "OTP sent" }
         } catch (error) {
             return rejectWithValue((error as Error).message);
         }
     }
 );
 
-// 🔹 Login user
-export const loginUser = createAsyncThunk(
-    "user/loginUser",
-    async (userData: any, { rejectWithValue }) => {
+// ===================================
+// 🔹 Verify OTP
+// ===================================
+export const verifyOTP = createAsyncThunk(
+    "user/verifyOTP",
+    async (
+        { phoneNumber, otp }: { phoneNumber: string; otp: string },
+        { rejectWithValue }
+    ) => {
         try {
-            const response = await axios.post("https://jsonplaceholder.typicode.com/login", userData);
-            return response.data;
+            const response = await axios.post("https://api.example.com/auth/verify-otp", {
+                phoneNumber,
+                otp,
+            });
+            return response.data; // usually { user, token }
         } catch (error) {
             return rejectWithValue((error as Error).message);
         }
     }
 );
 
+// ===================================
+// 🔹 Google Sign-In
+// ===================================
+export const googleLogin = createAsyncThunk(
+    "user/googleLogin",
+    async (token: string, { rejectWithValue }) => {
+        try {
+            const response = await axios.post("https://api.example.com/auth/google", { token });
+            return response.data; // usually { user, token }
+        } catch (error) {
+            return rejectWithValue((error as Error).message);
+        }
+    }
+);
+
+// ===================================
+// 🔹 User Slice
+// ===================================
 const userSlice = createSlice({
     name: "user",
     initialState,
@@ -50,29 +79,43 @@ const userSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
-            .addCase(registerUser.pending, (state) => {
+            // 🔹 Send OTP
+            .addCase(sendOTP.pending, (state) => {
                 state.loading = true;
-            })
-            .addCase(registerUser.fulfilled, (state, action) => {
-                state.loading = false;
-                state.user = action.payload;
                 state.error = null;
             })
-            .addCase(registerUser.rejected, (state, action) => {
+            .addCase(sendOTP.fulfilled, (state) => {
+                state.loading = false;
+            })
+            .addCase(sendOTP.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload as string | null;
             })
 
-            // ✅ Login cases
-            .addCase(loginUser.pending, (state) => {
+            // 🔹 Verify OTP
+            .addCase(verifyOTP.pending, (state) => {
                 state.loading = true;
             })
-            .addCase(loginUser.fulfilled, (state, action) => {
+            .addCase(verifyOTP.fulfilled, (state, action) => {
                 state.loading = false;
-                state.user = action.payload;
+                state.user = action.payload.user;
                 state.error = null;
             })
-            .addCase(loginUser.rejected, (state, action) => {
+            .addCase(verifyOTP.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload as string | null;
+            })
+
+            // 🔹 Google Login
+            .addCase(googleLogin.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(googleLogin.fulfilled, (state, action) => {
+                state.loading = false;
+                state.user = action.payload.user;
+                state.error = null;
+            })
+            .addCase(googleLogin.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload as string | null;
             });
