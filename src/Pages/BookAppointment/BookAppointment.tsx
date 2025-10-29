@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ChevronLeft, ChevronRight, Calendar, Clock, MapPin, Heart, Check } from 'lucide-react';
+// import { ChevronLeft, ChevronRight, Calendar, Clock, MapPin, Heart, Check } from 'lucide-react';
 import { Link } from 'react-router';
 import DoctorCardInfo from '@/components/DoctorCardInfo/DoctorCardInfo';
 
@@ -151,7 +151,7 @@ export default function AppointmentBooking() {
         <div className="bg-white px-4 py-4 flex items-center gap-3 ">
             <Link to={'/doctordetails'}>            
           <button>
-            <ChevronLeft className="w-6 h-6" />
+            {/* <ChevronLeft className="w-6 h-6" /> */}
           </button>
             </Link>
           <h1 className="text-lg font-semibold">Book Appointment</h1>
@@ -169,10 +169,10 @@ export default function AppointmentBooking() {
             className="w-full flex items-center justify-between p-3 border border-gray-300 rounded-lg mb-4"
           >
             <div className="flex items-center gap-2 text-gray-700">
-              <Calendar className="w-5 h-5" />
+              {/* <Calendar className="w-5 h-5" /> */}
               <span>{getSelectedDateInfo()}</span>
             </div>
-            <ChevronRight className={`w-5 h-5 transition-transform ${showDatePicker ? 'rotate-90' : ''}`} />
+            {/* <ChevronRight className={`w-5 h-5 transition-transform ${showDatePicker ? 'rotate-90' : ''}`} /> */}
           </button>
 
           {showDatePicker && (
@@ -180,13 +180,13 @@ export default function AppointmentBooking() {
               {/* Month Navigation */}
               <div className="flex items-center justify-between mb-4">
                 <button onClick={handlePrevMonth} className="p-2 hover:bg-gray-100 rounded">
-                  <ChevronLeft className="w-5 h-5" />
+                  {/* <ChevronLeft className="w-5 h-5" /> */}
                 </button>
                 <span className="font-semibold">
                   {monthNames[currentMonth.getMonth()]} {currentMonth.getFullYear()}
                 </span>
                 <button onClick={handleNextMonth} className="p-2 hover:bg-gray-100 rounded">
-                  <ChevronRight className="w-5 h-5" />
+                  {/* <ChevronRight className="w-5 h-5" /> */}
                 </button>
               </div>
 
@@ -254,7 +254,7 @@ export default function AppointmentBooking() {
             </div>
           ) : (
             <div className="text-center py-8 text-gray-500">
-              <Clock className="w-12 h-12 mx-auto mb-2 text-gray-400" />
+              {/* <Clock className="w-12 h-12 mx-auto mb-2 text-gray-400" /> */}
               <p>No available times for this date</p>
             </div>
           )}
@@ -265,7 +265,7 @@ export default function AppointmentBooking() {
             <div className="flex flex-col items-center justify-between">
                             {selectedTime && (
               <div className="mb-3 p-3 bg-blue-50 rounded-lg flex items-center gap-2 text-sm">
-                <Calendar className="w-4 h-4 text-blue-600" />
+                {/* <Calendar className="w-4 h-4 text-blue-600" /> */}
                 <span className="text-gray-700">
                   {getSelectedDateInfo()} - {selectedTime}
                 </span>

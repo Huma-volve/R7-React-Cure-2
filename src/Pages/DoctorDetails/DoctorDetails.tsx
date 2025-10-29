@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Heart, Star, MapPin, Users, Briefcase, ThumbsUp, MessageSquare, Calendar, ChevronLeft, Edit } from 'lucide-react';
+
 import { Link } from 'react-router';
 import DoctorCardInfo from '@/components/DoctorCardInfo/DoctorCardInfo';
 import ReviewPopup from '@/components/ReviewPopup/ReviewPopup';
@@ -46,11 +46,13 @@ export default function DoctorDetails() {
   return (
     <div className="min-h-screen ">
 
+      <div></div>
+
       {/* Mobile View */}
       <div className="lg:hidden mx-5">
         {/* Header */}
         <div className="bg-white px-4 py-3 flex items-center justify-between ">
-          <ChevronLeft className="w-6 h-6" />
+          {/* <ChevronLeft className="w-6 h-6" /> */}
           <h1 className="text-lg font-semibold">Doctor Details</h1>
           <button className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center">
             <span className="text-xl">−</span>
@@ -121,7 +123,7 @@ export default function DoctorDetails() {
             <div className="flex items-center justify-between mb-3">
               <h3 className="font-semibold">Reviews and Rating</h3>
               <button className="text-blue-500 text-sm flex items-center gap-1">
-                <Edit className="w-4 h-4" />
+                {/* <Edit className="w-4 h-4" /> */}
                 add review
               </button>
             </div>
@@ -162,7 +164,7 @@ export default function DoctorDetails() {
                       <div className="text-xs text-gray-500">{reviews[0].time}</div>
                     </div>
                     <div className="flex items-center gap-1 bg-yellow-50 px-2 py-1 rounded">
-                      <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
+                      {/* <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" /> */}
                       <span className="text-sm font-semibold text-yellow-600">{reviews[0].rating}</span>
                     </div>
                   </div>
@@ -201,7 +203,7 @@ export default function DoctorDetails() {
       {/* Desktop View */}
       <div className="hidden lg:block max-w-7xl mx-auto p-6">
         <div className="flex items-center gap-2 mb-6">
-          <ChevronLeft className="w-5 h-5" />
+          {/* <ChevronLeft className="w-5 h-5" /> */}
           <span className="text-gray-700">Make an appointment</span>
         </div>
 
@@ -213,7 +215,7 @@ export default function DoctorDetails() {
               <div className="flex items-center justify-between mb-4">
                 <h3 className="font-semibold">Choose date and time</h3>
                 <div className="flex items-center gap-2 text-sm text-gray-600">
-                  <Calendar className="w-4 h-4" />
+                  {/* <Calendar className="w-4 h-4" /> */}
                   <span>November, 2024</span>
                 </div>
               </div>
@@ -373,7 +375,7 @@ export default function DoctorDetails() {
                 </div>
               </div>
             </div>
-              <Heart className="w-6 h-6 text-gray-400 absolute top-8 right-8" />
+              {/* <Heart className="w-6 h-6 text-gray-400 absolute top-8 right-8" /> */}
 
             {/* Stats */}
             <div className="grid grid-cols-4 gap-3 py-4 border-y">
@@ -440,11 +442,11 @@ export default function DoctorDetails() {
               <h3 className="font-semibold mb-3">Location</h3>
               <div className="bg-gray-100 rounded-lg h-40 relative overflow-hidden">
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <MapPin className="w-8 h-8 text-blue-600" />
+                  {/* <MapPin className="w-8 h-8 text-blue-600" /> */}
                 </div>
               </div>
               <div className="flex items-start gap-2 mt-2 text-sm text-gray-600">
-                <MapPin className="w-4 h-4 mt-0.5" />
+                {/* <MapPin className="w-4 h-4 mt-0.5" /> */}
                 <span>129,El-Nasr Street, Cairo, Egypt</span>
               </div>
             </div>
