@@ -9,9 +9,11 @@ const LogIn = lazy(() => import("./Pages/login/LogIn"));
 const SignUp = lazy(() => import("./Pages/signUp/SignUp"));
 const Error = lazy(() => import("./Pages/Error/Error"));
 
+
+
 const router = createBrowserRouter([
     {
-        path: "/",
+        path: '/',
         element: <Layout />,
 
         errorElement: <Error />,
