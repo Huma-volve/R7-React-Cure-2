@@ -1,8 +1,10 @@
 import React from "react";
 import { useForm } from "react-hook-form";
 import { BsHeartPulse } from "react-icons/bs";
+import { useNavigate } from "react-router";
 
 const LogIn: React.FC = () => {
+    const navigate = useNavigate();
     const {
         register,
         handleSubmit,
@@ -12,25 +14,30 @@ const LogIn: React.FC = () => {
     const onSubmit = (data: any) => {
         console.log(data);
         if (data !== null) {
-            window.location.href = "/verify-otp";
+            navigate("/verify-otp", { state: data });
         }
     };
 
     return (
         <section
-            className="w-full !p-8 !px-12 h-screen flex flex-col items-start bg-no-repeat bg-right"
-            style={{ backgroundImage: "url('/image/background.jpg')" }}
+            className="md:!p-8 !p-6 !px-8 md:!px-12 md:bg-[url('/image/background.jpg')] h-screen flex flex-col w-full md:w-auto items-start md:bg-no-repeat md:bg-right"
         >
             <div>
                 <BsHeartPulse className="text-(--color-primary) text-3xl" />
             </div>
 
-            <div className="h-full flex items-center text-center !py-6 !px-44">
-                <div className="w-[420px] !p-4">
-                    <div className="flex flex-col gap-3">
-                        <h2 className="text-2xl font-semibold !mb-2">Sign in</h2>
-                        <p className="font-light text-[#6D7379] mb-4">
-                            Please Enter your phone number
+            <div className="h-full w-full flex items-center text-center !py-6 md:!px-44">
+                <div className="md:w-[420px] w-full !p-4">
+                    <div className="flex flex-col items-center gap-3">
+                        <img
+                            src="/image/undraw_welcome.jpg"
+                            alt="sign in"
+                            loading="lazy"
+                            className="block md:hidden"
+                        />
+                        <h2 className="hidden md:block text-3xl font-serif font-medium !mb-2">Sign in</h2>
+                        <p className=" flex gap-1 font-serif text-[1.2rem] text-start w-full md:w-auto text-black md:text-[#6D7379] mb-4">
+                            <span className="md:block hidden">Please </span> Enter your phone number
                         </p>
                     </div>
 

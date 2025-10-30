@@ -7,14 +7,15 @@ const Layout = lazy(() => import("./layout/Layout"));
 const Home = lazy(() => import("./Pages/Home/Home"));
 const LogIn = lazy(() => import("./Pages/login/LogIn"));
 const Verify = lazy(() => import("./Pages/verify/Verify"));
+const Additional = lazy(() => import("./Pages/additional/Additional"));
 const ErrorPage = lazy(() => import("./Pages/Error/Error"));
 
 const Protected = () => {
     const dispatch = useDispatch<AppDispatch>();
     const user = useSelector((state: RootState) => state.user);
 
-    const logout = () => dispatch({ type: "LOGOUT" });
-
+    // Check if user is authenticated
+    const isAuthenticated = user?.user !== null;
     if (!user?.user) {
         return <Navigate to="/login" replace />;
     }
@@ -36,7 +37,10 @@ const router = createBrowserRouter([
     {
         path: "/verify-otp",
         element: <Verify />,
-    },
+    }, {
+        path: "/additional",
+        element: <Additional />,
+    }
 ]);
 
 export default router;

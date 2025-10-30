@@ -1,5 +1,6 @@
 @import 'tailwindcss';
 @import "tw-animate-css";
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap');
 
 @custom-variant dark (&:is(.dark *));
 
@@ -39,16 +40,17 @@
   --sidebar-accent-foreground: oklch(0.21 0.034 264.665);
   --sidebar-border: oklch(0.928 0.006 264.531);
   --sidebar-ring: oklch(0.707 0.022 261.325);
+  --font-Noto: "Noto Serif", serif;
 }
 
 input::placeholder
 {
   color: #99A2AB;
   position: absolute;
-  left: 4rem;
 }
 
-@theme inline {
+@theme inline
+{
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -86,7 +88,8 @@ input::placeholder
   --color-sidebar-ring: var(--sidebar-ring);
 }
 
-.dark {
+.dark
+{
   --background: oklch(0.13 0.028 261.692);
   --foreground: oklch(0.985 0.002 247.839);
   --card: oklch(0.21 0.034 264.665);
@@ -120,11 +123,15 @@ input::placeholder
   --sidebar-ring: oklch(0.551 0.027 264.364);
 }
 
-@layer base {
-  * {
+@layer base
+{
+  *
+  {
     @apply border-border outline-ring/50;
   }
-  body {
+
+  body
+  {
     @apply bg-background text-foreground;
   }
 }
