@@ -1,7 +1,7 @@
 import React from "react";
 import { useForm } from "react-hook-form";
 import { BsHeartPulse } from "react-icons/bs";
-import { useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 
 const LogIn: React.FC = () => {
     const navigate = useNavigate();
@@ -80,7 +80,6 @@ const LogIn: React.FC = () => {
                             Sign in
                         </button>
                     </form>
-
                     <div className="!my-4 flex items-center">
                         <hr className="flex-1 border-gray-300" />
                         <span className="!mx-2 text-gray-500 text-sm">or</span>
@@ -99,6 +98,10 @@ const LogIn: React.FC = () => {
                         />
                         Sign in with Google
                     </button>
+                    <nav className='flex items-center justify-center gap-2'>
+                        <p className="text-[#99A2AB] text-sm">Don't have an account </p>
+                        <Link to="/signup" className="text-[#145DB8] text-sm">sign up</Link>
+                    </nav>
                 </div>
             </div>
         </section>

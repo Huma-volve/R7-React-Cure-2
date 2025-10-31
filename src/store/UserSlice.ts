@@ -13,12 +13,32 @@ const initialState: UserState = {
     user: null,
     error: null,
 };
+interface User {
+    fullname: string;
+    email: string;
+    loading: boolean;
+    error: string | null;
+}
+const UserData: User = {
+    fullname: '',
+    email: '',
+    loading: false,
+    error: null
+}
+export const signup = createAsyncThunk(
+    'user/signup',
+    async (data: User, { rejectWithValue }) => {
+        try {
+            const response = await axios.post("https://api.example.com/auth/signup", data);
+            return response.data;
+        } catch (error) {
+            return rejectWithValue((error as Error).message);
+        }
+    }
 
-// ===================================
-// 🔹 Send OTP to user's phone
-// ===================================
-export const sendOTP = createAsyncThunk(
-    "user/sendOTP",
+)
+export const phoneNumber = createAsyncThunk(
+    "user/phoneNumber",
     async (phoneNumber: string, { rejectWithValue }) => {
         try {
             const response = await axios.post("https://api.example.com/auth/send-otp", { phoneNumber });
@@ -29,9 +49,6 @@ export const sendOTP = createAsyncThunk(
     }
 );
 
-// ===================================
-// 🔹 Verify OTP
-// ===================================
 export const verifyOTP = createAsyncThunk(
     "user/verifyOTP",
     async (
@@ -50,9 +67,7 @@ export const verifyOTP = createAsyncThunk(
     }
 );
 
-// ===================================
-// 🔹 Google Sign-In
-// ===================================
+
 export const googleLogin = createAsyncThunk(
     "user/googleLogin",
     async (token: string, { rejectWithValue }) => {
@@ -65,9 +80,7 @@ export const googleLogin = createAsyncThunk(
     }
 );
 
-// ===================================
-// 🔹 User Slice
-// ===================================
+
 const userSlice = createSlice({
     name: "user",
     initialState,
@@ -79,20 +92,31 @@ const userSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
-            // 🔹 Send OTP
-            .addCase(sendOTP.pending, (state) => {
+            .addCase(signup.pending, (state) => {
                 state.loading = true;
                 state.error = null;
             })
-            .addCase(sendOTP.fulfilled, (state) => {
+            .addCase(signup.fulfilled, (state, action) => {
+                state.loading = false;
+                state.user = action.payload.user;
+                state.error = null;
+            })
+            .addCase(signup.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload as string | null;
+            })
+            .addCase(phoneNumber.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(phoneNumber.fulfilled, (state) => {
                 state.loading = false;
             })
-            .addCase(sendOTP.rejected, (state, action) => {
+            .addCase(phoneNumber.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload as string | null;
             })
 
-            // 🔹 Verify OTP
             .addCase(verifyOTP.pending, (state) => {
                 state.loading = true;
             })
@@ -106,7 +130,6 @@ const userSlice = createSlice({
                 state.error = action.payload as string | null;
             })
 
-            // 🔹 Google Login
             .addCase(googleLogin.pending, (state) => {
                 state.loading = true;
             })
