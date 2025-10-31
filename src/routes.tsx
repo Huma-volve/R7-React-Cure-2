@@ -1,7 +1,7 @@
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import { lazy } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import type { RootState, AppDispatch } from "./store/Store";
+import { useSelector } from "react-redux";
+import type { RootState } from "./store/Store";
 
 const Layout = lazy(() => import("./layout/Layout"));
 const Home = lazy(() => import("./Pages/Home/Home"));
@@ -11,12 +11,9 @@ const Signup = lazy(() => import("./Pages/signup/Signup"));
 const ErrorPage = lazy(() => import("./Pages/Error/Error"));
 
 const Protected = () => {
-    const dispatch = useDispatch<AppDispatch>();
-    const user = useSelector((state: RootState) => state.user);
+    const token = useSelector((state: RootState) => state.auth.token);
 
-    // Check if user is authenticated
-    const isAuthenticated = user?.user !== null;
-    if (!user?.user) {
+    if (!token) {
         return <Navigate to="/login" replace />;
     }
 
@@ -37,11 +34,11 @@ const router = createBrowserRouter([
     {
         path: "/verify-otp",
         element: <Verify />,
-    }, {
+    },
+    {
         path: "/signup",
         element: <Signup />,
-
-    }
+    },
 ]);
 
 export default router;
