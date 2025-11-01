@@ -9,23 +9,33 @@ const LogIn = lazy(() => import("./Pages/login/LogIn"));
 const Verify = lazy(() => import("./Pages/verify/Verify"));
 const Signup = lazy(() => import("./Pages/signup/Signup"));
 const ErrorPage = lazy(() => import("./Pages/Error/Error"));
+const PayMethod = lazy(() => import("./Pages/paymethod/PayMethod"));
+const Methods = lazy(() => import("./Pages/paymethod/Methods"));
 
-const Protected = () => {
-    const token = useSelector((state: RootState) => state.auth.token);
+// const Protected = () => {
+//     const token = useSelector((state: RootState) => state.auth.token);
 
-    if (!token) {
-        return <Navigate to="/login" replace />;
-    }
+//     if (!token) {
+//         return <Navigate to="/login" replace />;
+//     }
 
-    return <Layout />;
-};
+//     return <Layout />;
+// };
 
 const router = createBrowserRouter([
     {
         path: "/",
-        element: <Protected />,
+        element: <Layout />,
         errorElement: <ErrorPage />,
-        children: [{ path: "/", element: <Home /> }],
+        children: [
+            { path: "/", element: <Home /> },
+            {
+                path: "/payment", element: <PayMethod />,
+            },
+            { path: "/payment/visa-version", element: <Methods /> },
+
+
+        ],
     },
     {
         path: "/login",

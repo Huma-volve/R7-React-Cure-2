@@ -1,24 +1,21 @@
 import { BsHeartPulse } from 'react-icons/bs';
-import { MenuList } from '../common/navbar/MenuList';
-import { Notifications } from '../common/navbar/Notifications';
-import { ProfileList } from '../common/navbar/ProfileList';
 import { Link } from 'react-router';
-import { HamburgerMenu, Notifications, ProfileList } from '../common/navbar';
+import { HamburgerMenu, Notifications, ProfileList } from '../common/navbar/';
 import SearchBar from '../common/SearchBar';
-import { Container } from '../ui/Container';
+import { Container } from 'lucide-react';
 
 export default function Navbar() {
     return (
-        <nav className="py-10">
+        <nav className="!py-10 flex items-center justify-between w-full">
             {/* Logo */}
             <div className="logo">
                 <BsHeartPulse className="text-(--color-primary) text-3xl" />
             </div>
             {/* Search Bar */}
-            {/* <SearchBar /> */}
+            <SearchBar />
             <div className="right-content flex align-center gap-4">
                 {/* Menu List */}
-                <MenuList />
+                <HamburgerMenu />
 
                 {/* Notification */}
                 <Notifications />

@@ -59,7 +59,7 @@ export const verifyOTP = createAsyncThunk(
                 phoneNumber,
                 otp,
             });
-            return response.data; // usually { user, token }
+            return response.data;
         } catch (error) {
             return rejectWithValue((error as Error).message);
         }
@@ -72,7 +72,7 @@ export const googleLogin = createAsyncThunk(
     async (token: string, { rejectWithValue }) => {
         try {
             const response = await googleLoginThunk(token);
-            return response.data; // usually { user, token }
+            return response.data;
         } catch (error) {
             return rejectWithValue((error as Error).message);
         }

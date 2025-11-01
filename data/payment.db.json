@@ -1,0 +1,26 @@
+{
+    "payment": [
+        {
+            "id": 1,
+            "cat": "credit",
+            "name": "Visa",
+           "image": "/icons/payment icons/brandico_visa.svg"
+        },{
+            "id": 2,
+            "cat": "credit",
+            "name": "Master Card",
+            "image": "/icons/payment icons/logos_mastercard.svg"
+        },{
+            "id": 3,
+            "cat": "wallets",
+            "name": "PayPal",
+            "image": "/public/icons/payment icons/ic_outline-paypal.svg"
+        },{
+            "id": 4,
+            "cat": "wallets",
+            "name": "Apple Pay",
+            "image": "/public/icons/payment icons/logos_apple-pay.svg"
+        }
+
+    ]
+}
