@@ -1,6 +1,6 @@
 import { BsHeartPulse } from 'react-icons/bs';
 import { MenuList, Notifications, ProfileList } from '../common/navbar';
-import SearchBar from '../common/SearchBar';
+// import SearchBar from '../common/SearchBar';
 import { Container } from '../ui/Container';
 
 export default function Navbar() {
@@ -12,7 +12,7 @@ export default function Navbar() {
                     <BsHeartPulse className="text-(--color-primary) text-3xl" />
                 </div>
                 {/* Search Bar */}
-                <SearchBar />
+                {/* <SearchBar /> */}
                 <div className="right-content flex align-center gap-4">
                     {/* Menu List */}
                     <MenuList />
