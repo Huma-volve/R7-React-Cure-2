@@ -8,12 +8,14 @@ const BookingPage = () => {
   const [selectedDate, setSelectedDate] = useState(null);
 
   return (
-    <div className="w-full min-h-screen  p-8  gap-6">
-      <div className="flex items-center justify-between">
+    <div className="max-w-[1300px] mx-auto min-h-screen p-8 flex flex-col gap-10">
+      {/* العنوان والتصفية */}
+      <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
         <TabsSection selectedTab={selectedTab} onChangeTab={setSelectedTab} />
         <DateFilter selectedDate={selectedDate} onDateChange={setSelectedDate} />
       </div>
-     
+
+      {/* قائمة المواعيد */}
       <AppointmentsList tab={selectedTab} date={selectedDate} />
     </div>
   );

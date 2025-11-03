@@ -48,19 +48,20 @@ const AppointmentsList = ({ tab, date }) => {
     // 🔹 فلترة حسب التاريخ لو موجود
     const finalAppointments = date
         ? filteredAppointments.filter(
-            (a) =>
-                new Date(a.date).toDateString() === date.toDateString()
+            (a) => new Date(a.date).toDateString() === date.toDateString()
         )
         : filteredAppointments;
 
     return (
-        <div className="flex gap-6 items-center mt-8 flex-wrap">
+        <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 justify-items-center">
             {finalAppointments.length > 0 ? (
                 finalAppointments.map((a) => (
                     <AppointmentCard key={a.id} appointment={a} />
                 ))
             ) : (
-                <p className="text-gray-500 text-lg">No appointments found.</p>
+                <p className="text-gray-500 text-lg col-span-full text-center">
+                    No appointments found.
+                </p>
             )}
         </div>
     );

@@ -1,26 +1,27 @@
+import { lazy } from 'react';
 import { createBrowserRouter } from 'react-router-dom';
-import Layout from './Layout/Layout';
-import Error from './Pages/Error/Error';
-import Home from './Pages/Home/Home';
-import BookingPage from './Pages/BookingPage/BookingPage';
-import AppointmentsList from './Pages/BookingPage/AppointmentsList';
-import ChatSidebar from './Pages/Chatpage/ChatSidebar';
-import ChatPage from './Pages/Chatpage/ChatPage';
-import ChatWindow from './Pages/Chatpage/ChatWindow';
+
+// 🧱 Lazy loading لكل الصفحات (يجمع بين شغلك وشغل زمايلك)
+const Layout = lazy(() => import('./Layout/Layout'));
+const Home = lazy(() => import('./Pages/Home/Home'));
+const LogIn = lazy(() => import('./pages/login/LogIn'));
+const SignUp = lazy(() => import('./pages/signUp/SignUp'));
+const ErrorPage = lazy(() => import('./Pages/Error/Error'));
+const BookingPage = lazy(() => import('./Pages/BookingPage/BookingPage'));
+const ChatPage = lazy(() => import('./Pages/Chatpage/ChatPage'));
 
 const router = createBrowserRouter([
     {
         path: '/',
         element: <Layout />,
-        errorElement: <Error />,
+        errorElement: <ErrorPage />,
         children: [
-            { path: '/', element: <Home /> },
-            { path: '/booking', element: <BookingPage /> },
-            { path: '/chatpage', element: <ChatPage /> },
-           
-            
+            { index: true, element: <Home /> },
+            { path: 'login', element: <LogIn /> },
+            { path: 'signup', element: <SignUp /> },
+            { path: 'booking', element: <BookingPage /> },
+            { path: 'chatpage', element: <ChatPage /> },
         ],
-        
     },
 ]);
 

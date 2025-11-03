@@ -17,10 +17,7 @@ const AppointmentCard: React.FC<AppointmentProps> = ({ appointment }) => {
         appointment;
 
     // ✅ نحدد اللون والنص حسب الحالة
-    const statusStyles: Record<
-        string,
-        { text: string; color: string }
-    > = {
+    const statusStyles: Record<string, { text: string; color: string }> = {
         upcoming: { text: "Upcoming", color: "#145DB8" },
         completed: { text: "Completed", color: "#00A86B" },
         canceled: { text: "Canceled", color: "#D32F2F" },
@@ -34,36 +31,36 @@ const AppointmentCard: React.FC<AppointmentProps> = ({ appointment }) => {
             case "upcoming":
                 return (
                     <>
-                        <div className="cursor-pointer w-[170px] h-[40px] rounded-[10px] border border-[#99A2AB] text-[#99A2AB] flex items-center justify-center text-[14px] font-normal">
+                        <button className="flex-1 border border-[#99A2AB] text-[#99A2AB] rounded-[10px] py-2 text-[14px] font-normal">
                             Cancel
-                        </div>
-                        <div className="cursor-pointer w-[170px] h-[40px] rounded-[10px] text-white bg-[#145DB8] flex items-center justify-center text-[14px] font-normal">
+                        </button>
+                        <button className="flex-1 bg-[#145DB8] text-white rounded-[10px] py-2 text-[14px] font-normal">
                             Reschedule
-                        </div>
+                        </button>
                     </>
                 );
 
             case "completed":
                 return (
                     <>
-                        <div className="cursor-pointer w-[170px] h-[40px] rounded-[10px] border border-[#145DB8] text-[#145DB8] flex items-center justify-center text-[14px] font-normal">
+                        <button className="flex-1 border border-[#145DB8] text-[#145DB8] rounded-[10px] py-2 text-[14px] font-normal">
                             Book Again
-                        </div>
-                        <div className="cursor-pointer w-[170px] h-[40px] rounded-[10px] text-white bg-[#145DB8] flex items-center justify-center text-[14px] font-normal">
+                        </button>
+                        <button className="flex-1 bg-[#145DB8] text-white rounded-[10px] py-2 text-[14px] font-normal">
                             Feedback
-                        </div>
+                        </button>
                     </>
                 );
 
             case "canceled":
                 return (
                     <>
-                        <div className="cursor-pointer w-[170px] h-[40px] rounded-[10px] border border-[#145DB8] text-[#145DB8] flex items-center justify-center text-[14px] font-normal">
+                        <button className="flex-1 border border-[#145DB8] text-[#145DB8] rounded-[10px] py-2 text-[14px] font-normal">
                             Book Again
-                        </div>
-                        <div className="cursor-pointer w-[170px] h-[40px] rounded-[10px] text-white bg-[#145DB8] flex items-center justify-center text-[14px] font-normal">
+                        </button>
+                        <button className="flex-1 bg-[#145DB8] text-white rounded-[10px] py-2 text-[14px] font-normal">
                             Support
-                        </div>
+                        </button>
                     </>
                 );
 
@@ -73,7 +70,7 @@ const AppointmentCard: React.FC<AppointmentProps> = ({ appointment }) => {
     };
 
     return (
-        <div className="w-[396px] h-[210px] rounded-[20px] border border-solid border-[#BBC1C7] flex flex-col gap-4 px-[8px] py-[10px]">
+        <div className="w-full max-w-sm border border-[#BBC1C7] rounded-[20px] flex flex-col gap-3 p-4">
             {/* التاريخ والحالة */}
             <div className="flex items-center justify-between">
                 <div className="flex items-center gap-1">
@@ -113,8 +110,7 @@ const AppointmentCard: React.FC<AppointmentProps> = ({ appointment }) => {
                             strokeLinejoin="round"
                         />
                     </svg>
-
-                    <div className="text-[12px] font-normal text-[#05162C]">
+                    <span className="text-[12px] text-[#05162C]">
                         {new Date(date).toLocaleString("en-US", {
                             weekday: "long",
                             month: "long",
@@ -122,22 +118,19 @@ const AppointmentCard: React.FC<AppointmentProps> = ({ appointment }) => {
                             hour: "numeric",
                             minute: "2-digit",
                         })}
-                    </div>
+                    </span>
                 </div>
 
-                <div
-                    className="w-[120px] h-[20px] text-[14px] font-medium text-right"
-                    style={{ color }}
-                >
+                <span className="text-[14px] font-medium" style={{ color }}>
                     {text}
-                </div>
+                </span>
             </div>
 
-            <div className="w-[364px] border border-[#BBC1C7]" />
+            <div className="border-t border-[#BBC1C7]" />
 
             {/* بيانات الطبيب */}
-            <div className="w-[364px] h-[43px] flex items-center gap-2">
-                <div className="w-[43px] h-[43px] rounded-full bg-[#D9D9D9] overflow-hidden">
+            <div className="flex items-center gap-3">
+                <div className="w-[45px] h-[45px] rounded-full bg-[#D9D9D9] overflow-hidden">
                     {doctorImage && (
                         <img
                             src={doctorImage}
@@ -146,18 +139,14 @@ const AppointmentCard: React.FC<AppointmentProps> = ({ appointment }) => {
                         />
                     )}
                 </div>
-                <div className="flex flex-col gap-1">
-                    <div className="text-[16px] font-normal text-[#33384B]">
-                        {doctorName}
-                    </div>
-                    <div className="text-[14px] font-normal text-[#6D7379]">
-                        {specialization}
-                    </div>
+                <div className="flex flex-col">
+                    <span className="text-[16px] text-[#33384B]">{doctorName}</span>
+                    <span className="text-[14px] text-[#6D7379]">{specialization}</span>
                 </div>
             </div>
 
             {/* العنوان */}
-            <div className="w-[364px] h-[20px] flex items-center gap-1">
+            <div className="flex items-center gap-2">
                 <svg
                     width="12"
                     height="17"
@@ -170,13 +159,11 @@ const AppointmentCard: React.FC<AppointmentProps> = ({ appointment }) => {
                         fill="#99A2AB"
                     />
                 </svg>
-                <div className="text-[14px] font-normal text-[#6D7379]">{location}</div>
+                <span className="text-[14px] text-[#6D7379]">{location}</span>
             </div>
 
-            {/* الأزرار حسب الحالة */}
-            <div className="w-[364px] h-[40px] flex items-center gap-6">
-                {renderButtons()}
-            </div>
+            {/* الأزرار */}
+            <div className="flex items-center gap-3 mt-2">{renderButtons()}</div>
         </div>
     );
 };
