@@ -1,23 +1,55 @@
 import React from "react";
 import { useForm } from "react-hook-form";
 import { BsHeartPulse } from "react-icons/bs";
+import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router";
+import { parsePhoneNumberFromString } from "libphonenumber-js";
+import type { AppDispatch } from "@/store/Store";
+import { login } from "@/services/auth/Auth";
+import { setToken } from "@/store/UserSlice";
+
+interface LoginForm {
+    phoneNumber: string;
+}
 
 const LogIn: React.FC = () => {
     const navigate = useNavigate();
+    const dispatch = useDispatch<AppDispatch>();
+
     const {
         register,
         handleSubmit,
         formState: { errors },
-    } = useForm();
+        setError,
+    } = useForm<LoginForm>();
 
-    const onSubmit = (data: any) => {
-        console.log(data);
-        if (data !== null) {
-            navigate("/verify-otp", { state: data });
+    const onSubmit = async (data: LoginForm) => {
+        const fullNumber = `+20${data.phoneNumber.replace(/^0+/, "")}`;
+        const phoneNumber = parsePhoneNumberFromString(fullNumber);
+
+        if (!phoneNumber || !phoneNumber.isValid()) {
+            setError("phoneNumber", {
+                type: "manual",
+                message: "Invalid phone number",
+            });
+            return;
+        }
+        const formData = {
+            phoneNumber: phoneNumber.number,
+        };
+
+        try {
+            const res = await dispatch(login(formData)).unwrap();
+            console.log("✅ Login Success:", res);
+            sessionStorage.setItem("phone", phoneNumber.number);
+
+            navigate("/verify-otp", {
+                state: { phoneNumber: phoneNumber.number, type: "login" },
+            });
+        } catch (error) {
+            console.log(error);
         }
     };
-
     return (
         <section
             className="md:!p-8 !p-6 !px-8 md:!px-12 md:bg-[url('/image/background.jpg')] h-screen flex flex-col w-full md:w-auto items-start md:bg-no-repeat md:bg-right"
@@ -57,7 +89,7 @@ const LogIn: React.FC = () => {
                             <input
                                 type="tel"
                                 placeholder="Enter your Number"
-                                {...register("phone", {
+                                {...register("phoneNumber", {
                                     required: "Phone number is required",
 
                                     pattern: {
@@ -68,9 +100,9 @@ const LogIn: React.FC = () => {
                                 className=" focus:outline-none !p-2 rounded w-full mt-1"
                             />
                         </nav>
-                        {errors.phone && (
+                        {errors.phoneNumber && (
                             <p className="text-red-500 text-sm">
-                                {errors.phone.message as string}
+                                {errors.phoneNumber.message as string}
                             </p>
                         )}
                         <button

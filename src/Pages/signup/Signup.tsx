@@ -1,10 +1,54 @@
-import React from 'react'
-import { BsHeartPulse } from 'react-icons/bs'
-import { useForm, } from "react-hook-form";
-import { Link } from 'react-router';
+import React from "react";
+import { BsHeartPulse } from "react-icons/bs";
+import { useForm } from "react-hook-form";
+import { Link, useNavigate } from "react-router";
+import { signup } from "@/services/auth/Auth";
+import { useDispatch } from "react-redux";
+import type { AppDispatch } from "@/store/Store";
+import parsePhoneNumberFromString from "libphonenumber-js";
 
 const Signup: React.FC = () => {
-    const { register, formState: { errors }, } = useForm();
+    const {
+        register,
+        formState: { errors },
+        handleSubmit,
+        setError,
+    } = useForm();
+    const dispatch = useDispatch<AppDispatch>();
+    const navigate = useNavigate();
+
+    const onSubmit = async (data: any) => {
+        const fullNumber = `+20${data.phoneNumber.replace(/^0+/, "")}`;
+        const phoneNumber = parsePhoneNumberFromString(fullNumber);
+
+        if (!phoneNumber || !phoneNumber.isValid()) {
+            setError("phoneNumber", {
+                type: "manual",
+                message: "Invalid phone number",
+            });
+            return;
+        }
+        try {
+            const formData = {
+                phoneNumber: phoneNumber.number,
+                fullName: data.fullName,
+            };
+            const result = await dispatch(signup(formData)).unwrap();
+            console.log("✅ Register Success:", result);
+            navigate("/verify-otp", {
+                state: { phoneNumber: phoneNumber.number, type: "register" },
+            });
+        } catch (error: any) {
+            console.error("❌ Register Failed:", error);
+            // لو backend رجع error structured
+            if (error?.message) {
+                setError("phoneNumber", {
+                    type: "manual",
+                    message: error.message,
+                });
+            }
+        }
+    };
     return (
         <section className="md:!p-8 !p-6 !px-8 md:!px-12 md:bg-[url('/image/background.jpg')] h-screen flex flex-col w-full md:w-auto items-start md:bg-no-repeat md:bg-right">
             <div>
@@ -17,20 +61,12 @@ const Signup: React.FC = () => {
                         <p className="font-normal text-start md:text-center font-serif md:font-sans md:text-[.8rem] md:text-[#6D7379] md:!mb-2">
                             Please provide all information required to create your account                        </p>
                     </div>
-                    <form className="flex flex-col gap-4">
+                    <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
                         <nav className='flex flex-col items-start gap-2'>
                             <label className="label">
                                 <span className="label-text">Full name</span>
                             </label>
                             <input type="text" placeholder="Full name" className=" border-2 border-gray-300 rounded-md !p-2 w-full" />
-                        </nav>
-                        <nav className='flex flex-col items-start gap-2'>
-                            <label className="label">
-                                <span className="label-text">Email</span>
-                            </label>
-                            <input type="email"
-                                {...register("email", { required: true })}
-                                placeholder="Email" className="border-2 border-gray-300 rounded-md !p-2 w-full" />
                         </nav>
                         <nav className='flex flex-col  gap-2'>
                             <label className="text-start w-full">
@@ -48,7 +84,7 @@ const Signup: React.FC = () => {
                                 <input
                                     type="tel"
                                     placeholder="Enter your Number"
-                                    {...register("phone", {
+                                    {...register("phoneNumber", {
                                         required: "Phone number is required",
 
                                         pattern: {
@@ -79,7 +115,7 @@ const Signup: React.FC = () => {
                 </div>
             </div>
         </section>
-    )
-}
+    );
+};
 
-export default Signup
+export default Signup;

@@ -1,46 +1,58 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { signupThunk, loginThunk, verifyOTPThunk, googleLoginThunk } from "../api/AuhtApi";
-
+import axios from "axios";
+const base_url = `https://cure-doctor-booking.runasp.net/`;
 interface UserState {
     loading: boolean;
     user: any;
     error: string | null;
+    accessToken: string | null;
+    refreshToken: string | null;
 }
 
 const initialState: UserState = {
     loading: false,
     user: null,
     error: null,
+    accessToken: null,
+    refreshToken: null,
 };
 interface User {
-    fullname: string;
-    email: string;
-    loading: boolean;
-    error: string | null;
+    fullName: string;
+    phoneNumber: string;
 }
-const UserData: User = {
-    fullname: '',
-    email: '',
-    loading: false,
-    error: null
-}
+
 export const signup = createAsyncThunk(
-    'user/signup',
+    "user/signup",
     async (data: User, { rejectWithValue }) => {
         try {
-            const response = await signupThunk(data);
+            const response = await axios.post(
+                `${base_url}api/Identity/Accounts/register`,
+                data,
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                }
+            );
+
             return response.data;
-        } catch (error) {
-            return rejectWithValue((error as Error).message);
+        } catch (error: any) {
+            if (error.response && error.response.data) {
+                return rejectWithValue(error.response.data);
+            }
+            return rejectWithValue(error.message);
         }
     }
+);
 
-)
-export const phoneNumber = createAsyncThunk(
-    "user/phoneNumber",
-    async (phoneNumber: string, { rejectWithValue }) => {
+interface LoginForm {
+    phoneNumber: string
+}
+export const login = createAsyncThunk(
+    "user/login",
+    async (data: LoginForm, { rejectWithValue }) => {
         try {
-            const response = await loginThunk({ phoneNumber });
+            const response = await axios.post(`https://cure-doctor-booking.runasp.net/api/Identity/Accounts/login`, data);
             return response.data;
         } catch (error) {
             return rejectWithValue((error as Error).message);
@@ -48,16 +60,21 @@ export const phoneNumber = createAsyncThunk(
     }
 );
 
+interface VerifyOTP {
+    phoneNumber: string;
+    otpNumber: any;
+}
 export const verifyOTP = createAsyncThunk(
     "user/verifyOTP",
     async (
-        { phoneNumber, otp }: { phoneNumber: string; otp: string },
+        data: VerifyOTP,
         { rejectWithValue }
     ) => {
         try {
-            const response = await verifyOTPThunk({
-                phoneNumber,
-                otp,
+            const response = await axios.post(`${base_url}api/Identity/Accounts/verify-login`, data, {
+                headers: {
+                    "Content-Type": "application/json",
+                },
             });
             return response.data;
         } catch (error) {
@@ -66,12 +83,31 @@ export const verifyOTP = createAsyncThunk(
     }
 );
 
+export const verifyOTPRegister = createAsyncThunk(
+    "user/verifyOTPRegister",
+    async (data: VerifyOTP, { rejectWithValue }) => {
+        try {
+            const response = await axios.post(
+                `${base_url}api/Identity/Accounts/verify-register`,
+                { ...data }, {
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            }
+            );
+            return response.data; // ← هي فيها success + message + data {access + refresh}
+        } catch (error) {
+            return rejectWithValue((error as Error).message);
+        }
+    }
+);
 
 export const googleLogin = createAsyncThunk(
     "user/googleLogin",
     async (token: string, { rejectWithValue }) => {
         try {
-            const response = await googleLoginThunk(token);
+            const response = await axios.post(`${base_url}api/Identity/Accounts/google-login`, { token });
+
             return response.data;
         } catch (error) {
             return rejectWithValue((error as Error).message);
@@ -79,15 +115,45 @@ export const googleLogin = createAsyncThunk(
     }
 );
 
+export const refreshToken = createAsyncThunk(
+    "user/refreshToken",
+    async (_, { rejectWithValue }) => {
+        try {
+            const response = await axios.post(`${base_url}api/Identity/Accounts/refresh-token`, null, {
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
+            return response.data;
+        } catch (error) {
+            return rejectWithValue((error as Error).message);
+        }
+    }
+);
+
+export const logout = createAsyncThunk(
+    "user/logout",
+    async (_, { rejectWithValue }) => {
+        try {
+            const response = await axios.post(`${base_url}api/Identity/Accounts/logout`, null, {
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
+            return response.data;
+        } catch (error) {
+            return rejectWithValue((error as Error).message);
+        }
+    }
+)
+
+
 
 const userSlice = createSlice({
     name: "user",
     initialState,
     reducers: {
-        logout: (state) => {
-            state.user = null;
-            state.error = null;
-        },
+
     },
     extraReducers: (builder) => {
         builder
@@ -104,14 +170,28 @@ const userSlice = createSlice({
                 state.loading = false;
                 state.error = action.payload as string | null;
             })
-            .addCase(phoneNumber.pending, (state) => {
+            .addCase(verifyOTPRegister.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(verifyOTPRegister.fulfilled, (state, action) => {
+                state.loading = false;
+                state.accessToken = action.payload.data.accessToken;
+                state.refreshToken = action.payload.data.refreshToken;
+                localStorage.setItem("accessToken", action.payload.data.accessToken);
+                localStorage.setItem("refreshToken", action.payload.data.refreshToken);
+            })
+            .addCase(verifyOTPRegister.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload as string;
+            })
+            .addCase(login.pending, (state) => {
                 state.loading = true;
                 state.error = null;
             })
-            .addCase(phoneNumber.fulfilled, (state) => {
+            .addCase(login.fulfilled, (state) => {
                 state.loading = false;
             })
-            .addCase(phoneNumber.rejected, (state, action) => {
+            .addCase(login.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload as string | null;
             })
@@ -120,9 +200,12 @@ const userSlice = createSlice({
                 state.loading = true;
             })
             .addCase(verifyOTP.fulfilled, (state, action) => {
+                state.refreshToken = action.payload.data.refreshToken;
                 state.loading = false;
                 state.user = action.payload.user;
                 state.error = null;
+                localStorage.setItem("accessToken", action.payload.data.accessToken);
+                localStorage.setItem("refreshToken", action.payload.data.refreshToken);
             })
             .addCase(verifyOTP.rejected, (state, action) => {
                 state.loading = false;
@@ -144,5 +227,4 @@ const userSlice = createSlice({
     },
 });
 
-export const { logout } = userSlice.actions;
 export default userSlice.reducer;

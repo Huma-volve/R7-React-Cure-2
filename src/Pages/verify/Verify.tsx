@@ -6,35 +6,54 @@ import {
     InputOTPSlot,
 } from "@/components/ui/input-otp";
 import { useForm, Controller } from "react-hook-form";
-import { NavLink } from "react-router";
+import { NavLink, useLocation, useNavigate } from "react-router";
+import { verifyOTP, verifyOTPRegister } from "@/services/auth/Auth";
+import { useDispatch } from "react-redux";
+import type { AppDispatch } from "@/store/Store";
 
 interface FormValues {
-    otp: string;
+    otpNumber: string;
 }
 
 const Verify = () => {
     const [counter, setCounter] = React.useState<number>(60);
-    const [serverOtp] = React.useState<string>("1234");
     const [otpError, setOtpError] = React.useState<boolean>(false);
-
+    const navigate = useNavigate();
+    const dispatch = useDispatch<AppDispatch>();
     const { handleSubmit, control, reset } = useForm<FormValues>({
-        defaultValues: { otp: "" },
+        defaultValues: { otpNumber: "" },
     });
+    const location = useLocation();
+    const { phoneNumber, type } = location.state;
 
-    const onSubmit = (data: FormValues) => {
-        if (data.otp !== serverOtp) {
-            setOtpError(true);
-        } else {
-            setOtpError(false);
-            alert("OTP verified successfully!");
-            window.location.href = "/";
+    const onSubmit = async (data: any) => {
+        const payload = {
+            phoneNumber: phoneNumber,
+            otpNumber: data.otpNumber.toString(),
+        };
+        try {
+            if (type === "register") {
+                const res = await dispatch(verifyOTPRegister(payload));
+                console.log("Register Verify:", res);
+                console.log(" payload", payload);
+                console.log(type);
+                navigate("/login");
+            } else if (type === "login") {
+                const res = await dispatch(verifyOTP(payload));
+                console.log("✅ Login Verify:", res);
+                console.log("📤 Data sent to API:", payload);
+                console.log(type);
+                navigate("/");
+            }
+        } catch (error) {
+            console.log(error);
         }
     };
 
     const handleResend = () => {
         setCounter(60);
         setOtpError(false);
-        reset({ otp: "" });
+        reset({ otpNumber: "" });
     };
 
     React.useEffect(() => {
@@ -66,7 +85,7 @@ const Verify = () => {
                         className="flex items-center flex-col gap-4"
                     >
                         <Controller
-                            name="otp"
+                            name="otpNumber"
                             control={control}
                             rules={{ required: true }}
                             render={({ field }) => (
