@@ -1,7 +1,7 @@
+import DoctorCardInfo from '@/components/Doctor/DoctorCardInfo/DoctorCardInfo';
 import React, { useState } from 'react';
 // import { ChevronLeft, ChevronRight, Calendar, Clock, MapPin, Heart, Check } from 'lucide-react';
 import { Link } from 'react-router';
-import DoctorCardInfo from '@/components/DoctorCardInfo/DoctorCardInfo';
 
 // Estimation Data - Replace with real API data later
 const estimationData = {
@@ -133,11 +133,11 @@ export default function AppointmentBooking() {
     return `${slot.dayName}, ${month} ${day}, ${year}`;
   };
 
-  const handleConfirmBooking = () => {
-    if (selectedDate && selectedTime) {
-      alert(`Booking confirmed!\nDate: ${getSelectedDateInfo()}\nTime: ${selectedTime}\nDoctor: ${estimationData.doctor.name}\nPrice: ${estimationData.doctor.pricePerHour}$`);
-    }
-  };
+  // const handleConfirmBooking = () => {
+  //   if (selectedDate && selectedTime) {
+
+  //       }
+  // };
 
   if (!showBooking) {
 
@@ -280,8 +280,9 @@ export default function AppointmentBooking() {
               </div>
                         
               {/* Book Button */}
+              <Link to={'/paypage'} className='w-full'>
             <button 
-              onClick={handleConfirmBooking}
+              // onClick={handleConfirmBooking}
               disabled={!selectedDate || !selectedTime}
               className={`
                 w-full py-3 rounded-lg font-semibold transition
@@ -293,6 +294,7 @@ export default function AppointmentBooking() {
             >
               Confirm Booking - {estimationData.doctor.pricePerHour}$
             </button>
+            </Link>
 
             </div>
           </div>
