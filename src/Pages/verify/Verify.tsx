@@ -10,6 +10,7 @@ import { NavLink, useLocation, useNavigate } from "react-router";
 import { verifyOTP, verifyOTPRegister } from "@/services/auth/Auth";
 import { useDispatch } from "react-redux";
 import type { AppDispatch } from "@/store/Store";
+import { setToken } from "@/store/UserSlice";
 
 interface FormValues {
     otpNumber: string;
@@ -41,6 +42,15 @@ const Verify = () => {
             } else if (type === "login") {
                 const res = await dispatch(verifyOTP(payload));
                 console.log("✅ Login Verify:", res);
+                dispatch(
+
+                    setToken({
+                        accessToken: res.payload.data.accessToken,
+                        refreshToken: res.payload.data.refreshToken
+                    })
+
+                );
+
                 console.log("📤 Data sent to API:", payload);
                 console.log(type);
                 navigate("/");

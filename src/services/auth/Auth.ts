@@ -5,20 +5,25 @@ interface UserState {
     loading: boolean;
     user: any;
     error: string | null;
-    accessToken: string | null;
-    refreshToken: string | null;
+    data: {
+        acssessToken: string | null;
+        refreshToken: string | null;
+    }
 }
 
 const initialState: UserState = {
     loading: false,
     user: null,
     error: null,
-    accessToken: null,
-    refreshToken: null,
+    data: {
+        acssessToken: "",
+        refreshToken: "",
+    }
 };
 interface User {
     fullName: string;
     phoneNumber: string;
+    Email: string;
 }
 
 export const signup = createAsyncThunk(
@@ -175,8 +180,8 @@ const userSlice = createSlice({
             })
             .addCase(verifyOTPRegister.fulfilled, (state, action) => {
                 state.loading = false;
-                state.accessToken = action.payload.data.accessToken;
-                state.refreshToken = action.payload.data.refreshToken;
+                state.data.acssessToken = action.payload.data.accessToken;
+                state.data.refreshToken = action.payload.data.refreshToken;
                 localStorage.setItem("accessToken", action.payload.data.accessToken);
                 localStorage.setItem("refreshToken", action.payload.data.refreshToken);
             })
@@ -200,7 +205,7 @@ const userSlice = createSlice({
                 state.loading = true;
             })
             .addCase(verifyOTP.fulfilled, (state, action) => {
-                state.refreshToken = action.payload.data.refreshToken;
+                state.data.acssessToken = action.payload.data.refreshToken;
                 state.loading = false;
                 state.user = action.payload.user;
                 state.error = null;

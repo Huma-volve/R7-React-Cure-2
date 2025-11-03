@@ -32,6 +32,7 @@ const Signup: React.FC = () => {
             const formData = {
                 phoneNumber: phoneNumber.number,
                 fullName: data.fullName,
+                Email: data.Email
             };
             const result = await dispatch(signup(formData)).unwrap();
             console.log("✅ Register Success:", result);
@@ -66,7 +67,15 @@ const Signup: React.FC = () => {
                             <label className="label">
                                 <span className="label-text">Full name</span>
                             </label>
-                            <input type="text" placeholder="Full name" className=" border-2 border-gray-300 rounded-md !p-2 w-full" />
+                            <input type="text" placeholder="Full name" className=" border-2 border-gray-300 rounded-md !p-2 w-full"
+                                {...register("fullName", { required: "Full name is required" })} />
+                        </nav>
+                        <nav className='flex flex-col items-start gap-2'>
+                            <label className="label">
+                                <span className="label-text">Email</span>
+                            </label>
+                            <input type="text" placeholder="Email" className=" border-2 border-gray-300 rounded-md !p-2 w-full"
+                                {...register("Email", { required: "Email is required" })} />
                         </nav>
                         <nav className='flex flex-col  gap-2'>
                             <label className="text-start w-full">
