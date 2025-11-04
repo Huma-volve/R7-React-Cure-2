@@ -1,4 +1,8 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
+import Cookies from 'js-cookie';
+
+
+const cookies = Cookies;
 
 interface UserState {
     accessToken: string | null;
@@ -6,8 +10,8 @@ interface UserState {
 }
 
 const initialState: UserState = {
-    accessToken: localStorage.getItem("accessToken") as string | null,
-    refreshToken: localStorage.getItem("refreshToken") as string | null,
+    accessToken: cookies.get("accessToken") as string | null,
+    refreshToken: cookies.get("refreshToken") as string | null
 };
 
 const authSlice = createSlice({
@@ -23,16 +27,16 @@ const authSlice = createSlice({
             if (refreshToken) {
                 state.refreshToken = refreshToken;
             }
-            localStorage.setItem("accessToken", accessToken);
+            cookies.set("accessToken", accessToken);
             if (refreshToken) {
-                localStorage.setItem("refreshToken", refreshToken);
+                cookies.set("refreshToken", refreshToken);
             }
         },
         logout: (state) => {
             state.accessToken = null;
             state.refreshToken = null;
-            localStorage.removeItem("accessToken");
-            localStorage.removeItem("refreshToken");
+            Cookies.remove("accessToken");
+            Cookies.remove("refreshToken");
         },
     },
 });

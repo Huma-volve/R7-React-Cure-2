@@ -95,7 +95,6 @@ const Signup: React.FC = () => {
                                     placeholder="Enter your Number"
                                     {...register("phoneNumber", {
                                         required: "Phone number is required",
-
                                         pattern: {
                                             value: /^[0-9]{10,15}$/,
                                             message: "Enter a valid phone number",

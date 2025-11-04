@@ -2,11 +2,10 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { BsHeartPulse } from "react-icons/bs";
 import { useDispatch } from "react-redux";
-import { Link, useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router-dom";
 import { parsePhoneNumberFromString } from "libphonenumber-js";
 import type { AppDispatch } from "@/store/Store";
 import { login } from "@/services/auth/Auth";
-import { setToken } from "@/store/UserSlice";
 
 interface LoginForm {
     phoneNumber: string;
@@ -42,7 +41,6 @@ const LogIn: React.FC = () => {
             const res = await dispatch(login(formData)).unwrap();
             console.log("✅ Login Success:", res);
             sessionStorage.setItem("phone", phoneNumber.number);
-
             navigate("/verify-otp", {
                 state: { phoneNumber: phoneNumber.number, type: "login" },
             });
@@ -106,7 +104,6 @@ const LogIn: React.FC = () => {
                             </p>
                         )}
                         <button
-                            disabled={Object.keys(errors).length > 0}
                             type="submit"
                             className="bg-[#145DB8] hover:bg-blue-700 text-white !py-2 rounded-md transition"
                         >

@@ -6,8 +6,8 @@ import {
     InputOTPSlot,
 } from "@/components/ui/input-otp";
 import { useForm, Controller } from "react-hook-form";
-import { NavLink, useLocation, useNavigate } from "react-router";
-import { verifyOTP, verifyOTPRegister, resendVerifyOTP } from "@/services/auth/Auth";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
+import { verifyOTP, verifyOTPRegister } from "@/services/auth/Auth";
 import { useDispatch } from "react-redux";
 import type { AppDispatch } from "@/store/Store";
 import { setToken } from "@/store/UserSlice";
@@ -35,6 +35,12 @@ const Verify = () => {
         try {
             if (type === "register") {
                 const res = await dispatch(verifyOTPRegister(payload));
+                dispatch(
+                    setToken({
+                        accessToken: res.payload.data.accessToken,
+                        refreshToken: res.payload.data.refreshToken
+                    })
+                )
                 navigate("/login");
             } else if (type === "login") {
                 const res = await dispatch(verifyOTP(payload));
@@ -57,16 +63,6 @@ const Verify = () => {
         reset({ otpNumber: "" });
     };
 
-    const handleResendOtp = async () => {
-        const payload = {
-            phoneNumber: phoneNumber,
-        };
-        try {
-            const res = await dispatch(resendVerifyOTP(payload));
-        } catch (error) {
-            console.error(error);
-        }
-    }
     React.useEffect(() => {
         if (otpError && counter > 0) {
             const timer = setTimeout(() => setCounter((prev) => prev - 1), 1000);
@@ -133,9 +129,9 @@ const Verify = () => {
                                     ) : (
                                         <button
                                             disabled
+                                            onClick={handleResend}
                                             type="button"
                                             className="text-[#1490E3] font-semibold"
-                                            onClick={handleResend}
                                         >
                                             Resend
                                         </button>
@@ -152,8 +148,6 @@ const Verify = () => {
                         )}
 
                         <button
-                            onClick={handleResendOtp}
-                            disabled
                             type="submit"
                             className="bg-[#145DB8] w-full text-white !py-4 !px-4 rounded-lg"
                         >
