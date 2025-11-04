@@ -67,15 +67,15 @@ const Notifications = () => {
             </DropdownMenuTrigger>
 
             <DropdownMenuContent
-                className="w-75 sm:w-100 bg-[#F5F6F7] pt-4 px-3 rounded-xl shadow-md mt-2 mr-3"
+                className="w-75 sm:w-100 bg-white relative z-9999 rounded-xl border-0 mt-2 mr-3 p-0"
                 align="center"
                 side="bottom"
                 sideOffset={10}
             >
                 {existNotification ? (
                     <>
-                        <DropdownMenuLabel className="text-(--color-main) font-medium mb-2">
-                            Today
+                        <DropdownMenuLabel className="bg-[#F5F6F7] font-medium text-center p-4">
+                            <Link to="/notifications">Your Notification</Link>
                         </DropdownMenuLabel>
                         <DropdownMenuGroup>
                             {NotificationsList.map((notification) => (
@@ -83,8 +83,8 @@ const Notifications = () => {
                                     to={`/notifications/${notification.id}`}
                                     key={notification.id}
                                 >
-                                    <DropdownMenuItem className="mb-2 p-0 cursor-pointer hover:bg-gray-300! transition-colors justify-between">
-                                        <div className='flex items-center gap-2'>
+                                    <DropdownMenuItem className="mb-2 p- cursor-pointer hover:bg-gray-300! transition-colors justify-between">
+                                        <div className="flex items-center gap-2">
                                             <img
                                                 src={notification.image}
                                                 alt={notification.title}
