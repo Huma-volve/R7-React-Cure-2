@@ -9,6 +9,9 @@ import PayMethod from './Pages/paymethod/PayMethod';
 import MethodForm from './Pages/paymethod/MethodForm';
 import Verify from './Pages/verify/Verify';
 
+// 🧱 Lazy loading لكل الصفحات (يجمع بين شغلك وشغل زمايلك)
+const BookingPage = lazy(() => import('./Pages/BookingPage/BookingPage'));
+const ChatPage = lazy(() => import('./Pages/Chatpage/ChatPage'));
 const Layout = lazy(() => import("./layout/Layout"));
 const Error = lazy(() => import("./Pages/Error/Error"));
 const PayPage = lazy(() => import("./Pages/PayPage/PayPage"));
@@ -27,6 +30,12 @@ const router = createBrowserRouter([
         errorElement: <Error />,
         children: [
             { index: true, element: <Home /> },
+            { path: 'login', element: <LogIn /> },
+            { path: 'signup', element: <SignUp /> },
+            { path: 'booking', element: <BookingPage /> },
+            { path: 'chatpage', element: <ChatPage /> },
+        ],
+    },
             { path: 'doctors', element: <DoctorsPage /> },
             { path: '/favorites', element: <FavoritePage /> },
             { path: '/topDoctors', element: <TopDoctors /> }
