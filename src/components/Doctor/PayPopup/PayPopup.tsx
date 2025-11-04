@@ -1,25 +1,29 @@
 import DoctorCardInfo from "@/components/Doctor/DoctorCardInfo/DoctorCardInfo";
 import { CalendarIcon } from "@/components/Doctor/icons";
 import { useState } from "react";
-import { Plus, Check, X } from "lucide-react";
-import { useAppSelector } from "@/store/hooks";
+import { Plus, Check, X, Loader2 } from "lucide-react";
+import { useAppSelector, useAppDispatch } from "@/store/hooks";
+import { createBooking, resetBookingState } from "@/store/doctorSlice";
 
 interface PayPopupProps {
   onClose?: () => void;
   selectedDate?: Date;
   selectedTime?: string;
+  selectedSlotId?: number | null;
 }
 
-const PayPopup = ({ onClose, selectedDate, selectedTime }: PayPopupProps) => {
+const PayPopup = ({ onClose, selectedDate, selectedTime, selectedSlotId }: PayPopupProps) => {
+  const dispatch = useAppDispatch();
   const [selectedMethod, setSelectedMethod] = useState("credit-cart");
   
-  // Get doctor data from Redux
-  const { currentDoctor } = useAppSelector((state) => state.doctor);
+  // Get doctor data and booking state from Redux
+  const { currentDoctor, bookingLoading, bookingError, bookingSuccess } = useAppSelector((state) => state.doctor);
 
   const paymentOptions = [
-    { id: "credit-cart", label: "Credit Cart", icon: "VISA" },
+    { id: "credit-cart", label: "Credit Card", icon: "VISA" },
     { id: "paypal", label: "PayPal", icon: "PP" },
     { id: "apple-pay", label: "Apple Pay", icon: "AP" },
+    { id: "cash", label: "Cash", icon: "💵" },
   ];
 
   const formatAppointmentDate = () => {
@@ -46,20 +50,105 @@ const PayPopup = ({ onClose, selectedDate, selectedTime }: PayPopupProps) => {
     }
   };
 
-  const handlePayment = () => {
-    // هنا تقدر تضيف الـ API call للدفع
-    console.log("Payment processing...", {
-      method: selectedMethod,
-      doctorId: currentDoctor?.id,
-      price: currentDoctor?.price,
-      date: selectedDate,
-      time: selectedTime
-    });
+  const formatDateTimeForAPI = () => {
+    if (!selectedDate || !selectedTime) return new Date().toISOString();
     
-    // After successful payment
-    alert("Payment successful! 🎉");
-    if (onClose) onClose();
+    // تحويل الوقت من 12 ساعة إلى 24 ساعة
+    const timeParts = selectedTime.match(/(\d+):(\d+)\s*(AM|PM)/i);
+    if (!timeParts) return new Date().toISOString();
+    
+    let hours = parseInt(timeParts[1]);
+    const minutes = timeParts[2];
+    const period = timeParts[3].toUpperCase();
+    
+    if (period === 'PM' && hours !== 12) hours += 12;
+    if (period === 'AM' && hours === 12) hours = 0;
+    
+    const formattedHours = hours.toString().padStart(2, '0');
+    
+    // إنشاء التاريخ والوقت بصيغة ISO
+    const year = selectedDate.getFullYear();
+    const month = (selectedDate.getMonth() + 1).toString().padStart(2, '0');
+    const day = selectedDate.getDate().toString().padStart(2, '0');
+    
+    return `${year}-${month}-${day}T${formattedHours}:${minutes}:00`;
   };
+
+  // const getPaymentMethodName = () => {
+  //   switch (selectedMethod) {
+  //     case "credit-cart":
+  //       return "CreditCard";
+  //     case "paypal":
+  //       return "PayPal";
+  //     case "apple-pay":
+  //       return "ApplePay";
+  //     case "cash":
+  //       return "Cash";
+  //     default:
+  //       return "Cash";
+  //   }
+  // };
+
+const handlePayment = async () => {
+  if (!currentDoctor || !selectedSlotId) {
+    alert("Doctor or Slot information is missing.");
+    return;
+  }
+
+  console.log("🔍 Current Doctor:", currentDoctor);
+  console.log("🔍 Doctor ID:", currentDoctor.id);
+  console.log("🔍 Selected Slot ID:", selectedSlotId);
+
+  // 🕒 صيغة التاريخ والوقت بالـ ISO
+  const appointmentAt = formatDateTimeForAPI();
+
+  // ⚙️ تحديد قيمة Payment و Status بالأرقام المطلوبة للـ API
+  const getPaymentCode = () => {
+    switch (selectedMethod) {
+      case "credit-cart":
+        return 2; // 2 = CreditCard
+      case "paypal":
+        return 1; // 1 = PayPal
+      case "cash":
+        return 0; // 0 = Cash
+      default:
+        return 0;
+    }
+  };
+
+  // 💵 تحضير البيانات بالشكل المتوقع من الـ API
+const bookingData = {
+  DoctorId: Number(currentDoctor.id),
+  PatientId: 1,
+  SlotId: Number(selectedSlotId),
+  Amount: Number(currentDoctor?.pricePerHour || currentDoctor?.price || 300.0),
+  Payment: getPaymentCode(),
+  Status: 0,
+  AppointmentAt: appointmentAt,
+};
+
+
+  console.log("📤 Booking data being sent:", bookingData);
+  console.log("📤 Data types:", {
+    DoctorId: typeof bookingData.DoctorId,
+    PatientId: typeof bookingData.PatientId,
+    SlotId: typeof bookingData.SlotId,
+    Amount: typeof bookingData.Amount,
+  });
+
+  try {
+    const result = await dispatch(createBooking(bookingData)).unwrap();
+
+    console.log("✅ Booking Success:", result);
+    alert("✅ Booking successful! Your appointment has been confirmed.");
+
+    dispatch(resetBookingState());
+    if (onClose) onClose();
+  } catch (error: any) {
+    console.error("❌ Booking Error:", error);
+    alert(`❌ Booking failed: ${error || "Unknown error"}`);
+  }
+};
 
   return (
     <div
@@ -76,17 +165,17 @@ const PayPopup = ({ onClose, selectedDate, selectedTime }: PayPopupProps) => {
           lg:max-h-screen lg:overflow-y-auto relative
         "
       >
-        {/* ❌ زر الإغلاق للـ Popup */}
+        {/* زر الإغلاق للـ Popup */}
         <button
           onClick={() => onClose && onClose()}
-          className="hidden lg:block absolute top-4 right-4 text-gray-500 hover:text-gray-700 hover-text-2xl transition"
+          className="hidden lg:block absolute top-4 right-4 text-gray-500 hover:text-gray-700 transition"
         >
           <X size={22} />
         </button>
 
         {/* Doctor Info */}
         <div className="mb-8">
-          <DoctorCardInfo doctor={currentDoctor} />
+          {currentDoctor ? <DoctorCardInfo doctor={currentDoctor} /> : null}
         </div>
 
         {/* Appointment Info */}
@@ -103,7 +192,7 @@ const PayPopup = ({ onClose, selectedDate, selectedTime }: PayPopupProps) => {
         </div>
 
         {/* Payment Method Section */}
-        <div className="p-2 bg-white rounded-lg ">
+        <div className="p-2 bg-white rounded-lg">
           <h2 className="text-2xl font-semibold mb-6 text-gray-900">
             Payment Method
           </h2>
@@ -113,10 +202,10 @@ const PayPopup = ({ onClose, selectedDate, selectedTime }: PayPopupProps) => {
               <div
                 key={option.id}
                 onClick={() => setSelectedMethod(option.id)}
-                className={`flex items-center justify-between py-4 px-8 lg:py-4 lg:px-6 rounded-lg cursor-pointer transition-colors ${
+                className={`flex items-center justify-between py-4 px-8 lg:py-4 lg:px-6 rounded-lg cursor-pointer transition-colors  ${
                   selectedMethod === option.id
-                    ? "bg-[#EDF7EE]  "
-                    : " border-2 border-transparent hover:border-gray-200"
+                    ? "bg-[#EDF7EE]"
+                    : "border-2 border-transparent hover:border-gray-200"
                 }`}
               >
                 <div className="flex items-center gap-3">
@@ -148,7 +237,9 @@ const PayPopup = ({ onClose, selectedDate, selectedTime }: PayPopupProps) => {
                       ? "bg-blue-600 text-white"
                       : option.id === "paypal"
                       ? "bg-blue-700 text-white"
-                      : "bg-black text-white"
+                      : option.id === "apple-pay"
+                      ? "bg-black text-white"
+                      : "bg-green-600 text-white"
                   }`}
                 >
                   {option.icon}
@@ -156,18 +247,34 @@ const PayPopup = ({ onClose, selectedDate, selectedTime }: PayPopupProps) => {
               </div>
             ))}
 
-            {/* Add Card Button */}
-            <button
-              className="w-full py-4 px-8 lg:py-2 lg:px-4  border-2 border-dashed border-[#145DB8] rounded-lg text-[#145DB8] hover:border-blue-400 hover:bg-blue-50 transition-colors flex items-center justify-center gap-2 font-medium"
-            >
-              <Plus size={20} />
-              Add new card
-            </button>
+            {/* Add Card Button - إخفاءه عند اختيار Cash */}
+            {selectedMethod !== "cash" && (
+              <button
+                className="w-full py-4 px-8 lg:py-2 lg:px-4 border-2 border-dashed border-[#145DB8] rounded-lg text-[#145DB8] hover:border-blue-400 hover:bg-blue-50 transition-colors flex items-center justify-center gap-2 font-medium"
+              >
+                <Plus size={20} />
+                Add new card
+              </button>
+            )}
           </div>
         </div>
 
+        {/* Error Message */}
+        {bookingError && (
+          <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+            <p className="text-red-600 text-sm">❌ {bookingError}</p>
+          </div>
+        )}
+
+        {/* Success Message */}
+        {bookingSuccess && (
+          <div className="mt-4 p-3 bg-green-50 border border-green-200 rounded-lg">
+            <p className="text-green-600 text-sm">✅ Booking successful!</p>
+          </div>
+        )}
+
         {/* Total and Pay Button */}
-        <div className=" flex flex-col md:flex-col md:items-center md:justify-between gap-4 mt-10">
+        <div className="flex flex-col md:flex-col md:items-center md:justify-between gap-4 mt-10">
           <div className="text-lg text-gray-700 flex items-center gap-2 justify-between w-full">
             <div className="flex items-end">
               <h1 className="font-medium text-3xl">Price</h1>  
@@ -176,15 +283,23 @@ const PayPopup = ({ onClose, selectedDate, selectedTime }: PayPopupProps) => {
 
             <div>
               <span className="font-semibold text-xl text-red-500">
-                {currentDoctor?.price || 350}$
+                {currentDoctor?.pricePerHour || currentDoctor?.price || 350}$
               </span>
             </div>
           </div>
           <button
             onClick={handlePayment}
-            className="w-full cursor-pointer bg-[#145DB8] hover:bg-[#143761] active:bg-white active:outline active:outline-[#145DB8] active:text-[#145DB8] duration-300 text-white py-3 px-6 rounded-xl font-semibold"
+            disabled={bookingLoading}
+            className="w-full cursor-pointer bg-[#145DB8] hover:bg-[#143761] active:bg-white active:outline active:outline-[#145DB8] active:text-[#145DB8] duration-300 text-white py-3 px-6 rounded-xl font-semibold disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
           >
-            Pay Now
+            {bookingLoading ? (
+              <>
+                <Loader2 className="animate-spin" size={20} />
+                Processing...
+              </>
+            ) : (
+              "Pay Now"
+            )}
           </button>
         </div>
       </div>

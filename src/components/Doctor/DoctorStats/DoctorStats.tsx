@@ -25,28 +25,32 @@ const StatItem: React.FC<StatItemProps> = ({ icon, value, label, isSidebar = fal
 
 interface DoctorStatsProps {
   isSidebar?: boolean;
+  bookingCount?: number;
+  experienceYears?: number;
+  rating?: number;
+  reviewsCount?: number;
 }
 
-const DoctorStats: React.FC<DoctorStatsProps> = ({ isSidebar = false }) => {
+const DoctorStats: React.FC<DoctorStatsProps> = ({ isSidebar = false, bookingCount, experienceYears, rating, reviewsCount}) => {
   const stats = [
     {
       icon: <UsersIcon className={isSidebar ? "w-6 h-6" : "w-8 h-8 mx-auto mb-1"} />,
-      value: '2,000+',
+      value: String(bookingCount || 0),
       label: 'patients'
     },
     {
       icon: <AwardIcon className={isSidebar ? "w-6 h-6" : "w-8 h-8 mx-auto mb-1"} />,
-      value: '10+',
+      value: String(experienceYears || 0),
       label: 'experience'
     },
     {
-      icon: <StarState className={isSidebar ? "w-6 h-6" : "w-7 h-7 mx-auto mb-1"} />,
-      value: '4.5',
+      icon: <StarState className={isSidebar ? "w-6 h-6" : "w-8 h-8 mx-auto mb-1"} />,
+      value: String(Number(rating || 0).toFixed(1)),
       label: 'rating'
     },
     {
       icon: <MessageCircleIcon className={isSidebar ? "w-6 h-6" : "w-8 h-8 mx-auto mb-1"} />,
-      value: '1,872',
+      value: String(reviewsCount || 0),
       label: 'reviews'
     }
   ];

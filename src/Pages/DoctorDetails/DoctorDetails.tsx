@@ -9,9 +9,11 @@ import ReviewsSection from '@/components/Doctor/ReviewsSection';
 import React, { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { fetchDoctors, fetchDoctorById } from '@/store/doctorSlice';
+import { useParams } from 'react-router';
 
 export default function DoctorDetails() {
   const dispatch = useAppDispatch();
+  const { id } = useParams(); // دا اللي جاي من الـ URL
   
   // Get data from Redux
   const { currentDoctor, loading, error } = useAppSelector((state) => state.doctor);
@@ -20,13 +22,14 @@ export default function DoctorDetails() {
   const [selectedTime, setSelectedTime] = useState('11:00 AM');
   const [showMore, setShowMore] = useState(false);
 
+
+
   useEffect(() => {
-    // Fetch doctor by ID (مثلاً ID = 1)
-    dispatch(fetchDoctorById(1));
-    
-    // أو لو عايز تجيب كل الدكاترة
-    // dispatch(fetchDoctors());
-  }, [dispatch]);
+    if (id) {
+      dispatch(fetchDoctorById(Number(id))); // هنا لازم تمرر الـ id بشكل صريح
+    }
+    dispatch(fetchDoctors());
+  }, [id, dispatch]);
 
   // Loading State
   if (loading) {
