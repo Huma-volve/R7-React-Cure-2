@@ -1,23 +1,43 @@
-import { lazy } from 'react';
 import { createBrowserRouter } from 'react-router-dom';
+import DoctorDetails from './Pages/DoctorDetails/DoctorDetails';
+import BookAppointment from './Pages/BookAppointment/BookAppointment';
+import { lazy } from "react";
+import NotificationPage from './Pages/Notification/NotificationPage';
 
-const Layout = lazy(() => import('./Layout/Layout'));
-const Home = lazy(() => import('./Pages/Home/Home'));
-const LogIn = lazy(() => import('./pages/login/LogIn'));
-const SignUp = lazy(() => import('./pages/signUp/SignUp'));
-const ErrorPage = lazy(() => import('./pages/Error/Error'));
+const Layout = lazy(() => import("./Layout/Layout"));
+const Home = lazy(() => import("./Pages/Home/Home"));
+const LogIn = lazy(() => import("./Pages/login/LogIn"));
+const SignUp = lazy(() => import("./Pages/signUp/SignUp"));
+const Error = lazy(() => import("./Pages/Error/Error"));
+const PayPage = lazy(() => import("./Pages/PayPage/PayPage"));
+const Map = lazy(() => import("./Pages/Map/Map"));
+
+
 
 const router = createBrowserRouter([
     {
         path: '/',
         element: <Layout />,
-        errorElement: <ErrorPage />,
+
+        errorElement: <Error />,
         children: [
-            { index: true, element: <Home /> },
-            { path: 'login', element: <LogIn /> },
-            { path: 'signup', element: <SignUp /> }
+            { path: '/', element: <Home /> },
+            { path: "doctordetails/:id", element: <DoctorDetails /> },
+            { path: "bookappointment", element: <BookAppointment /> },
+            { path: "paypage", element: <PayPage /> },
+            { path: "map", element: <Map /> },
+            { path: "notificationpage" , element: <NotificationPage /> },
         ]
-    }
+    },
+    {
+        path: "/login",
+        element: <LogIn />,
+    },
+    {
+        path: "/signup",
+        element: <SignUp />,
+    },
+    
 ]);
 
 export default router;
