@@ -1,4 +1,9 @@
 import { DoctorsList, type DoctorsType } from '@/api/doctors/Doctors';
+
+
+// import { useState } from 'react';
+// import { BiSearch } from 'react-icons/bi';
+// import { Input } from "@/components/ui/input";
 import { Input } from '@/components/ui/input';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
