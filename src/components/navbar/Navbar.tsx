@@ -6,7 +6,7 @@ import { Container } from 'lucide-react';
 
 export default function Navbar() {
     return (
-        <nav className="py-10! flex items-center justify-between w-full">
+        <nav className="lg:py-10 py-6 mb-3 z-999 bg-white relative">
             {/* Logo */}
             <div className="logo">
                 <BsHeartPulse className="text-(--color-primary) text-3xl" />
@@ -28,11 +28,7 @@ export default function Navbar() {
                     {/* Logo */}
                     <div className="logo">
                         <Link to="/" className="cursor-pointer">
-                            <img
-                                src="/icons/BsHeartPulse.svg"
-                                alt="Logo"
-                                className="w-8 h-8"
-                            />
+                            <img src="/icons/BsHeartPulse.svg" alt="Logo" className="w-8 h-8" />
                         </Link>
                     </div>
 

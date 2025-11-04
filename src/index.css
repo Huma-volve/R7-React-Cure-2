@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap');
 @import 'tailwindcss';
 @import "tw-animate-css";
@@ -62,8 +63,19 @@
   --font-Noto: "Noto Serif", serif;
 }
 
-@custom-variant dark (&:is(.dark *));
+@import 'tailwindcss';
+@import 'tw-animate-css';
 
+:root {
+    --color-main: #145db8;
+    --color-text: #6d7379;
+    --font-primary: 'Montserrat', sans-serif;
+    --font-secondary: 'georgia', serif;
+    --bg-main: #145db8;
+}
+
+body {
+    font-family: var(--font-primary);
 :root
 {
   --color-primary: #145DB8;

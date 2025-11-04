@@ -1,0 +1,62 @@
+import { Container } from '@/components/ui/Container';
+import { Link } from 'react-router';
+
+const FindDoctors: React.FC = () => {
+    return (
+        <section className="relative py-15 sm:py-20">
+            <Container>
+                <div className="grid grid-cols-1 md:grid-cols-2 items-center gap-4">
+                    <div className="text-content mb-4">
+                        <h2
+                            className="md:text-[40px] text-3xl mb-3"
+                            style={{ fontFamily: 'var(--font-secondary)' }}
+                        >
+                            Find Care Near You <br /> in Seconds
+                        </h2>
+                        <p className="text-(--color-text) md:text-[20px] text-[17px] md:max-w-md mb-3">
+                            Allow location access or choose your city to instantly discover trusted
+                            doctors and clinics around you—quick, easy, and local.
+                        </p>
+                        <Link
+                            to="/map"
+                            className="flex items-center gap-2 w-fit text-(--bg-main) border hover:border-black  border-(--bg-main) hover:text-black font-medium duration-300 py-3 px-4 rounded-[10px]"
+                        >
+                            <img src="/icons/Search-location.svg" alt="Search Icon" />
+                            <span>Search by location</span>
+                        </Link>
+                    </div>
+                    <div className="map-content relative max-w-[583px] w-full h-[400px] sm:h-[450px] md:h-[500px] lg:h-[547px] rounded-[30px] sm:rounded-[40px] lg:rounded-[50px] overflow-hidden">
+                        <Link to="/map">
+                            <img
+                                src="/image/Responsive-Google-Map 1.png"
+                                alt="Google Map"
+                                className="w-full h-full object-cover"
+                            />
+
+                            {/* Icons Layer */}
+                            <div className="absolute inset-0">
+                                <img
+                                    src="/icons/Location-Image-1.svg"
+                                    alt="Location 1"
+                                    className="absolute top-[45%] left-[10%] sm:top-[50%] sm:left-[15%] md:top-[55%] md:left-[18%] lg:top-[56%] lg:left-[16%] w-12 md:w-15"
+                                />
+                                <img
+                                    src="/icons/Location-Image-2.svg"
+                                    alt="Location 2"
+                                    className="absolute top-[70%] right-[15%] sm:top-[68%] sm:right-[20%] md:top-[65%] md:right-[22%] lg:top-[60%] lg:right-[24%] w-12 md:w-15"
+                                />
+                                <img
+                                    src="/icons/Location-Image-3.svg"
+                                    alt="Location 3"
+                                    className="absolute top-[25%] right-[25%] sm:top-[22%] sm:right-[28%] md:top-[20%] md:right-[30%] lg:top-[24%] lg:right-[36%] w-12 md:w-15"
+                                />
+                            </div>
+                        </Link>
+                    </div>
+                </div>
+            </Container>
+        </section>
+    );
+};
+
+export default FindDoctors;

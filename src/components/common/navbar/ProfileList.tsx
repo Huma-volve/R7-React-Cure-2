@@ -24,7 +24,7 @@ const ProfileList = () => {
             </DropdownMenuTrigger>
 
             <DropdownMenuContent
-                className="w-75 sm:w-89 bg-[#F5F6F7] pt-4 rounded-xl shadow-md mt-2 mr-4"
+                className="w-75 sm:w-89 bg-[#F5F6F7] pt-4 relative z-9999 rounded-xl border-0 mt-2 mr-4"
                 align="center"
                 side="bottom"
                 sideOffset={10}

@@ -10,15 +10,15 @@ import MethodForm from './Pages/paymethod/MethodForm';
 import Verify from './Pages/verify/Verify';
 
 const Layout = lazy(() => import("./layout/Layout"));
-const Home = lazy(() => import("./Pages/Home/Home"));
-const LogIn = lazy(() => import("./Pages/login/LogIn"));
-const SignUp = lazy(() => import("./Pages/signup/Signup"));
 const Error = lazy(() => import("./Pages/Error/Error"));
 const PayPage = lazy(() => import("./Pages/PayPage/PayPage"));
 const Map = lazy(() => import("./Pages/Map/Map"));
-
-
-
+const Home = lazy(() => import('./pages/Home/Home'));
+const LogIn = lazy(() => import('./pages/login/LogIn'));
+const SignUp = lazy(() => import('./pages/signUp/SignUp'));
+const DoctorsPage = lazy(() => import('./pages/Doctors/Doctors'));
+const FavoritePage = lazy(() => import('./pages/Favorite/FavoritePage'));
+const TopDoctors = lazy(() => import('./pages/topDoctors/TopDoctors'));
 const router = createBrowserRouter([
     {
         path: '/',
@@ -26,7 +26,10 @@ const router = createBrowserRouter([
 
         errorElement: <Error />,
         children: [
-            { path: '/', element: <Home /> },
+            { index: true, element: <Home /> },
+            { path: 'doctors', element: <DoctorsPage /> },
+            { path: '/favorites', element: <FavoritePage /> },
+            { path: '/topDoctors', element: <TopDoctors /> }
             { path: "doctordetails/:id", element: <DoctorDetails /> },
             { path: "bookappointment", element: <BookAppointment /> },
             { path: "paypage", element: <PayPage /> },
