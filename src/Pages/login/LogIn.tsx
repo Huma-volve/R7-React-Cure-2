@@ -106,6 +106,7 @@ const LogIn: React.FC = () => {
                             </p>
                         )}
                         <button
+                            disabled={Object.keys(errors).length > 0}
                             type="submit"
                             className="bg-[#145DB8] hover:bg-blue-700 text-white !py-2 rounded-md transition"
                         >
@@ -123,7 +124,7 @@ const LogIn: React.FC = () => {
                         className="border border-gray-300 !py-2 w-full rounded-md flex items-center justify-center gap-2 hover:bg-gray-50 transition"
                     >
                         <img
-                            src="/public/icon/flat-color-icons_google.svg"
+                            src="/icon/flat-color-icons_google.svg"
                             alt="Google"
 
                             loading="lazy"

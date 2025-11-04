@@ -10,6 +10,7 @@ const Signup = lazy(() => import("../Pages/signup/Signup"));
 const ErrorPage = lazy(() => import("../Pages/Error/Error"));
 const PayMethod = lazy(() => import("../Pages/paymethod/PayMethod"));
 const Methods = lazy(() => import("../Pages/paymethod/Methods"));
+const Profile = lazy(() => import("../Pages/profile/Profile"));
 
 
 const router = createBrowserRouter([
@@ -23,7 +24,7 @@ const router = createBrowserRouter([
                 path: "/payment", element: <PayMethod />,
             },
             { path: "/payment/visa-version", element: <Methods /> },
-
+            { path: "/profile", element: <Profile /> },
 
         ],
     },

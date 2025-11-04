@@ -1,8 +1,9 @@
-
+import { lazy } from "react"
+const Faq = lazy(() => import('@/components/common/homeFaq/Faq'))
 const Home = () => {
   return (
     <div>
-      Home Page
+      <Faq />
     </div>
   )
 }

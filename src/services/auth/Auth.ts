@@ -106,7 +106,24 @@ export const verifyOTPRegister = createAsyncThunk(
         }
     }
 );
-
+interface ResendVerifyOTP {
+    phoneNumber: string
+}
+export const resendVerifyOTP = createAsyncThunk(
+    "user/resendVerifyOTP",
+    async (data: ResendVerifyOTP, { rejectWithValue }) => {
+        try {
+            const response = await axios.post(`${base_url}api/Identity/Accounts/resend-otp`, data, {
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
+            return response.data;
+        } catch (error) {
+            return rejectWithValue((error as Error).message);
+        }
+    }
+)
 export const googleLogin = createAsyncThunk(
     "user/googleLogin",
     async (token: string, { rejectWithValue }) => {

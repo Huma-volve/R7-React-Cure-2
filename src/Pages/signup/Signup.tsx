@@ -111,12 +111,25 @@ const Signup: React.FC = () => {
                             </p>
                         )}
                         <button
+                            disabled={Object.keys(errors).length > 0}
                             type="submit"
                             className="bg-[#145DB8] hover:bg-blue-700 text-white !py-2 rounded-md transition"
                         >
                             Sign up
                         </button>
                     </form>
+                    <button
+                        type="button"
+                        className="border border-gray-300 !py-2 w-full rounded-md flex items-center justify-center gap-2 hover:bg-gray-50 transition"
+                    >
+                        <img
+                            src="/icon/flat-color-icons_google.svg"
+                            alt="Google"
+
+                            loading="lazy"
+                        />
+                        Sign in with Google
+                    </button>
                     <nav className='flex items-center justify-center gap-2'>
                         <p className="text-[#99A2AB] text-sm">Already have an account! </p>
                         <Link to="/login" className="text-[#145DB8] text-sm">sign in</Link>
