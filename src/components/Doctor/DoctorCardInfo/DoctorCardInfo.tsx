@@ -1,12 +1,15 @@
 interface DoctorCardInfoProps {
   doctor: {
-    specialistTitle: string;
-    fullName: string;
-    name: string;
-    specialty: string;
-    location: string;
-    phone: string;
+    specialistTitle?: string;
+    fullName?: string;
+    name?: string;
+    specialty?: string;
+    location?: string;
+    phone?: string;
     image?: string;
+    about?: string;
+    rating?: number;
+    price?: number;
   };
 }
 const  DoctorCardInfo: React.FC<DoctorCardInfoProps> = ({ doctor }) => {
