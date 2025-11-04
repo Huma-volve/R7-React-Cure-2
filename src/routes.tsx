@@ -4,8 +4,8 @@ import { createBrowserRouter } from 'react-router-dom';
 // 🧱 Lazy loading لكل الصفحات (يجمع بين شغلك وشغل زمايلك)
 const Layout = lazy(() => import('./Layout/Layout'));
 const Home = lazy(() => import('./Pages/Home/Home'));
-const LogIn = lazy(() => import('./pages/login/LogIn'));
-const SignUp = lazy(() => import('./pages/signUp/SignUp'));
+const LogIn = lazy(() => import('./Pages/login/LogIn'));
+const SignUp = lazy(() => import('./Pages/signUp/SignUp'));
 const ErrorPage = lazy(() => import('./Pages/Error/Error'));
 const BookingPage = lazy(() => import('./Pages/BookingPage/BookingPage'));
 const ChatPage = lazy(() => import('./Pages/Chatpage/ChatPage'));

@@ -17,25 +17,35 @@ interface User {
 }
 
 interface ChatWindowProps {
-    selectedUser?: User;
+    selectedUser?: User | null;
 }
 
 const ChatWindow: React.FC<ChatWindowProps> = ({ selectedUser }) => {
-    const user =
-        selectedUser || {
-            id: 1,
-            name: "د. أحمد سامي",
-            avatar: "https://i.pravatar.cc/100?img=3",
-            messages: [],
-        };
+    
+    if (!selectedUser) {
+        return (
+            <div className="flex flex-col items-center justify-center w-2/3 h-full bg-gray-50 text-center">
+                <img
+                    src="https://cdn-icons-png.flaticon.com/512/4076/4076500.png"
+                    alt="No chat"
+                    className="w-24 h-24 mb-4 opacity-60"
+                />
+                <h3 className="text-gray-500 text-lg font-medium">
+                    اختر محادثة لبدء الدردشة
+                </h3>
+                <p className="text-gray-400 text-sm mt-1">
+                    لا توجد رسائل لعرضها حالياً
+                </p>
+            </div>
+        );
+    }
 
-    const [messages, setMessages] = useState<Message[]>(user.messages || []);
-
+    const [messages, setMessages] = useState<Message[]>(selectedUser.messages || []);
     const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
     useEffect(() => {
-        setMessages(user.messages || []);
-    }, [user]);
+        setMessages(selectedUser.messages || []);
+    }, [selectedUser]);
 
     useEffect(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -59,12 +69,12 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ selectedUser }) => {
             {/* Header */}
             <div className="flex items-center gap-3 bg-white border-b px-4 py-3 shadow-sm">
                 <img
-                    src={user.avatar}
-                    alt={user.name}
+                    src={selectedUser.avatar}
+                    alt={selectedUser.name}
                     className="w-10 h-10 rounded-full object-cover"
                 />
                 <div>
-                    <h3 className="font-semibold text-sm">{user.name}</h3>
+                    <h3 className="font-semibold text-sm">{selectedUser.name}</h3>
                     <p className="text-xs text-green-500">متصل الآن</p>
                 </div>
             </div>
@@ -81,7 +91,9 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ selectedUser }) => {
                         />
                     ))
                 ) : (
-                    <p className="text-center text-gray-400 text-sm mt-5">لا توجد رسائل بعد</p>
+                    <p className="text-center text-gray-400 text-sm mt-5">
+                        لا توجد رسائل بعد
+                    </p>
                 )}
                 <div ref={messagesEndRef} />
             </div>

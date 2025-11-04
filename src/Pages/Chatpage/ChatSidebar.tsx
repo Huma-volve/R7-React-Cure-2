@@ -32,7 +32,7 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({ onSelectChat }) => {
 
     const tabs: TabType[] = ["All", "Favourite", "Unreaded"];
 
-    // ✅ استخدم الداتا المستوردة بدل اللي كانت ثابتة
+    
     const conversations: Chat[] = chatData.chats;
 
     const filteredChats = conversations.filter((chat) => {
