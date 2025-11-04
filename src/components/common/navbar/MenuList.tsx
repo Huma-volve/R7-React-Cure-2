@@ -4,13 +4,27 @@ import {
     DropdownMenuContent,
     DropdownMenuGroup,
     DropdownMenuItem,
-    DropdownMenuTrigger
+    DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
+
+interface menuType {
+    id: number;
+    name: string;
+    link: string;
+}
+
+const MenuPages: menuType[] = [
+    { id: 1, name: 'Home', link: '/' },
+    { id: 2, name: 'Doctors', link: '/doctors' },
+    { id: 3, name: 'Booking', link: '/booking' },
+    { id: 4, name: 'Contact Us', link: '/contact-us' }
+];
 
 const HamburgerMenu: React.FC = () => {
     const [isOpen, setIsOpen] = useState(false);
+    const location = useLocation();
 
     return (
         <div className="relative">
@@ -19,41 +33,63 @@ const HamburgerMenu: React.FC = () => {
                     <Button
                         variant="outline"
                         className="w-12 cursor-pointer bg-[#F5F6F7] border-0 shadow-none outline-none
-                        focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:outline-none
-                        hover:bg-[#E9EAEB] transition-colors duration-200"
+              focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:outline-none
+              hover:bg-[#E9EAEB] transition-colors duration-200"
                     >
                         {!isOpen ? (
-                            <img
-                                src="/icons/MenuBar.svg"
-                                width={16}
-                                height={12}
-                                alt="Menu Icon"
-                            />
+                            <img src="/icons/MenuBar.svg" width={16} height={12} alt="Menu Icon" />
                         ) : (
+                            <img src="/icons/CloseMenu.svg" width={11} height={11} alt="Menu Icon" />
                             <img
                                 src="/icons/CloseMenu.svg"
                                 width={11}
                                 height={11}
-                                alt="Menu Icon"
+                                alt="Close Icon"
                             />
                         )}
                     </Button>
                 </DropdownMenuTrigger>
 
                 <DropdownMenuContent
-                    className="w-auto border-0 p-0 shadow-none"
+                    className="w-auto border-0 relative z-9999 p-0"
+                    align="center"
+                    side="bottom"
+                >
+                    <DropdownMenuGroup className="flex items-center flex-col bg-white">
+                        {MenuPages.map((item) => {
+                            const isActive = location.pathname === item.link;
+                            return (
+                                <DropdownMenuItem
+                                    key={item.id}
+                                    asChild
+                                    className={`hover:bg-[#F5F6F7] cursor-pointer p-3 block w-full text-center transition-colors duration-200 ${
+                                        isActive
+                                            ? 'text-(--color-main) font-semibold'
+                                            : 'text-black'
+                                    }`}
+                                >
+                                    <Link
+                                        to={item.link}
+                                        onClick={() => setIsOpen(false)}
+                                    >
+                                        {item.name}
+                                    </Link>
+                                </DropdownMenuItem>
+                            );
+                        })}
+=======
+                    className="w-48 border bg-white rounded-md shadow-lg"
                     align="end"
                     side="left"
                 >
-                    <DropdownMenuGroup className="flex items-center gap-2 px-2">
-                        <DropdownMenuItem asChild className="bg-[#F5F6F7] cursor-pointer p-2">
+                    <DropdownMenuGroup>
+                        <DropdownMenuItem asChild>
                             <NavLink
                                 to="/"
                                 className={({ isActive }) =>
-                                    `transition-colors duration-200 ${
-                                        isActive
-                                            ? 'text-(--color-main)! font-semibold'
-                                            : 'text-black'
+                                    `block w-full px-3 py-2 transition-colors duration-200 ${isActive
+                                        ? 'text-[var(--color-main)] font-semibold'
+                                        : 'text-black'
                                     }`
                                 }
                             >
@@ -61,14 +97,55 @@ const HamburgerMenu: React.FC = () => {
                             </NavLink>
                         </DropdownMenuItem>
 
-                        <DropdownMenuItem asChild className="bg-[#F5F6F7] cursor-pointer p-2">
+                        <DropdownMenuItem asChild>
+                            <NavLink
+                                to="/about"
+                                className={({ isActive }) =>
+                                    `block w-full px-3 py-2 transition-colors duration-200 ${isActive
+                                        ? 'text-[var(--color-main)] font-semibold'
+                                        : 'text-black'
+                                    }`
+                                }
+                            >
+                                About
+                            </NavLink>
+                        </DropdownMenuItem>
+
+                        <DropdownMenuItem asChild>
+                            <NavLink
+                                to="/services"
+                                className={({ isActive }) =>
+                                    `block w-full px-3 py-2 transition-colors duration-200 ${isActive
+                                        ? 'text-[var(--color-main)] font-semibold'
+                                        : 'text-black'
+                                    }`
+                                }
+                            >
+                                Services
+                            </NavLink>
+                        </DropdownMenuItem>
+
+                        <DropdownMenuItem asChild>
+                            <NavLink
+                                to="/contact"
+                                className={({ isActive }) =>
+                                    `block w-full px-3 py-2 transition-colors duration-200 ${isActive
+                                        ? 'text-[var(--color-main)] font-semibold'
+                                        : 'text-black'
+                                    }`
+                                }
+                            >
+                                Contact
+                            </NavLink>
+                        </DropdownMenuItem>
+
+                        <DropdownMenuItem asChild>
                             <NavLink
                                 to="/booking"
                                 className={({ isActive }) =>
-                                    `transition-colors duration-200 ${
-                                        isActive
-                                            ? 'text-(--color-main)! font-semibold'
-                                            : 'text-black'
+                                    `block w-full px-3 py-2 transition-colors duration-200 ${isActive
+                                        ? 'text-[var(--color-main)] font-semibold'
+                                        : 'text-black'
                                     }`
                                 }
                             >
