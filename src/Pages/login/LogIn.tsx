@@ -50,14 +50,14 @@ const LogIn: React.FC = () => {
     };
     return (
         <section
-            className="md:!p-8 !p-6 !px-8 md:!px-12 md:bg-[url('/image/background.jpg')] h-screen flex flex-col w-full md:w-auto items-start md:bg-no-repeat md:bg-right"
+            className="md:p-8! p-6! px-8! md:px-12! md:bg-[url('/image/background.jpg')] h-screen flex flex-col w-full md:w-auto items-start md:bg-no-repeat md:bg-right"
         >
             <div>
                 <BsHeartPulse className="text-(--color-primary) text-3xl" />
             </div>
 
-            <div className="h-full w-full flex items-center text-center !py-6 md:!px-44">
-                <div className="md:w-[420px] w-full !p-4">
+            <div className="h-full w-full flex items-center text-center py-6! md:px-44!">
+                <div className="md:w-[420px] w-full p-4!">
                     <div className="flex flex-col items-center gap-3">
                         <img
                             src="/image/undraw_welcome.jpg"
@@ -65,18 +65,18 @@ const LogIn: React.FC = () => {
                             loading="lazy"
                             className="block md:hidden"
                         />
-                        <h2 className="hidden md:block text-3xl font-serif font-medium !mb-2">Sign in</h2>
-                        <p className=" flex gap-1 font-serif text-[1.2rem] text-start w-full md:w-auto text-black md:text-[#6D7379] mb-4">
+                        <h2 className="hidden md:block text-3xl font-serif font-medium mb-2!">Sign in</h2>
+                        <p className=" flex gap-1 font-serif text-[1.2rem] text-start w-full md:w-auto text-black md:text-[#6D7379] mb-4!">
                             <span className="md:block hidden">Please </span> Enter your phone number
                         </p>
                     </div>
 
                     <form
                         onSubmit={handleSubmit(onSubmit)}
-                        className="!mt-4 flex flex-col gap-4"
+                        className="mt-4! flex flex-col gap-4"
                     >
                         <nav className="flex items-center border border-gray-300 bg-[#F5F6F7] rounded-md focus:outline-none">
-                            <div className="flex gap-2  !p-2">
+                            <div className="flex gap-2  p-2!">
                                 <span >
                                     <img src="/icon/Flag.svg" alt="flag" loading="lazy" />
                                 </span>
@@ -95,7 +95,7 @@ const LogIn: React.FC = () => {
                                         message: "Enter a valid phone number",
                                     },
                                 })}
-                                className=" focus:outline-none !p-2 rounded w-full mt-1"
+                                className=" focus:outline-none p-2! rounded w-full mt-1"
                             />
                         </nav>
                         {errors.phoneNumber && (
@@ -105,20 +105,20 @@ const LogIn: React.FC = () => {
                         )}
                         <button
                             type="submit"
-                            className="bg-[#145DB8] hover:bg-blue-700 text-white !py-2 rounded-md transition"
+                            className="bg-[#145DB8] hover:bg-blue-700 text-white py-2! rounded-md transition"
                         >
                             Sign in
                         </button>
                     </form>
-                    <div className="!my-4 flex items-center">
+                    <div className="my-4! flex items-center">
                         <hr className="flex-1 border-gray-300" />
-                        <span className="!mx-2 text-gray-500 text-sm">or</span>
+                        <span className="mx-2! text-gray-500 text-sm">or</span>
                         <hr className="flex-1 border-gray-300" />
                     </div>
 
                     <button
                         type="button"
-                        className="border border-gray-300 !py-2 w-full rounded-md flex items-center justify-center gap-2 hover:bg-gray-50 transition"
+                        className="border border-gray-300 py-2! w-full rounded-md flex items-center justify-center gap-2 hover:bg-gray-50 transition"
                     >
                         <img
                             src="/icon/flat-color-icons_google.svg"

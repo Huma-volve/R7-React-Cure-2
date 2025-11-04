@@ -1,12 +1,12 @@
 import { BsHeartPulse } from 'react-icons/bs';
 import { Link } from 'react-router';
-import { HamburgerMenu, Notifications, ProfileList } from '../common/navbar/';
+import { HamburgerMenu, Notifications, ProfileList } from '../common/navbar';
 import SearchBar from '../common/SearchBar';
 import { Container } from 'lucide-react';
 
 export default function Navbar() {
     return (
-        <nav className="!py-10 flex items-center justify-between w-full">
+        <nav className="py-10! flex items-center justify-between w-full">
             {/* Logo */}
             <div className="logo">
                 <BsHeartPulse className="text-(--color-primary) text-3xl" />
@@ -38,9 +38,9 @@ export default function Navbar() {
 
                     {/* Right Content for Small Screen*/}
                     <div className="sm:hidden flex items-center gap-4">
-                        <HamburgerMenu />
+                        {/* <HamburgerMenu />
                         <Notifications />
-                        <ProfileList />
+                        <ProfileList /> */}
                     </div>
                 </div>
 
@@ -51,9 +51,9 @@ export default function Navbar() {
 
                 {/* Right Content for large screen*/}
                 <div className="hidden sm:flex items-center gap-4">
-                    <HamburgerMenu />
+                    {/* <HamburgerMenu />
                     <Notifications />
-                    <ProfileList />
+                    <ProfileList /> */}
                 </div>
             </Container>
         </nav>
