@@ -1,83 +1,45 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
+import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
+import Cookies from 'js-cookie';
+
+
+const cookies = Cookies;
 
 interface UserState {
-    loading: boolean;
-    user: any;
-    error: string | null;
+    accessToken: string | null;
+    refreshToken: string | null;
 }
 
 const initialState: UserState = {
-    loading: false,
-    user: null,
-    error: null,
+    accessToken: cookies.get("accessToken") as string | null,
+    refreshToken: cookies.get("refreshToken") as string | null
 };
 
-// 🔹 Register user
-export const registerUser = createAsyncThunk(
-    "user/registerUser",
-    async (userData: any, { rejectWithValue }) => {
-        try {
-            const response = await axios.post("https://jsonplaceholder.typicode.com/users", userData);
-            return response.data;
-        } catch (error) {
-            return rejectWithValue((error as Error).message);
-        }
-    }
-);
-
-// 🔹 Login user
-export const loginUser = createAsyncThunk(
-    "user/loginUser",
-    async (userData: any, { rejectWithValue }) => {
-        try {
-            const response = await axios.post("https://jsonplaceholder.typicode.com/login", userData);
-            return response.data;
-        } catch (error) {
-            return rejectWithValue((error as Error).message);
-        }
-    }
-);
-
-const userSlice = createSlice({
-    name: "user",
+const authSlice = createSlice({
+    name: "auth",
     initialState,
     reducers: {
-        logout: (state) => {
-            state.user = null;
-            state.error = null;
+        setToken: (
+            state,
+            action: PayloadAction<{ accessToken: string; refreshToken?: string }>
+        ) => {
+            const { accessToken, refreshToken } = action.payload;
+            state.accessToken = accessToken;
+            if (refreshToken) {
+                state.refreshToken = refreshToken;
+            }
+            cookies.set("accessToken", accessToken);
+            if (refreshToken) {
+                cookies.set("refreshToken", refreshToken);
+            }
         },
-    },
-    extraReducers: (builder) => {
-        builder
-            .addCase(registerUser.pending, (state) => {
-                state.loading = true;
-            })
-            .addCase(registerUser.fulfilled, (state, action) => {
-                state.loading = false;
-                state.user = action.payload;
-                state.error = null;
-            })
-            .addCase(registerUser.rejected, (state, action) => {
-                state.loading = false;
-                state.error = action.payload as string | null;
-            })
-
-            // ✅ Login cases
-            .addCase(loginUser.pending, (state) => {
-                state.loading = true;
-            })
-            .addCase(loginUser.fulfilled, (state, action) => {
-                state.loading = false;
-                state.user = action.payload;
-                state.error = null;
-            })
-            .addCase(loginUser.rejected, (state, action) => {
-                state.loading = false;
-                state.error = action.payload as string | null;
-            });
+        logout: (state) => {
+            state.accessToken = null;
+            state.refreshToken = null;
+            Cookies.remove("accessToken");
+            Cookies.remove("refreshToken");
+        },
     },
 });
 
-export const { logout } = userSlice.actions;
-export default userSlice.reducer;
+export const { setToken, logout } = authSlice.actions;
+export default authSlice.reducer;
