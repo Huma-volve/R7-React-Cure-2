@@ -1,4 +1,4 @@
-import FAQS from '@/components/sections/homeSections/FAQS/FAQS';
+import Faq from '@/components/common/homeFaq/Faq';
 import FindDoctors from '@/components/sections/homeSections/findDoctors/FindDoctors';
 import HeroSection from '@/components/sections/homeSections/heroSection/HeroSection';
 import HowItWorks from '@/components/sections/homeSections/howItWork/HowItWork';
@@ -47,7 +47,8 @@ const Home = () => {
             <Reviews />
 
             {/* FAQS Section */}
-            <FAQS />
+            <Faq />
+
 
             {/* Our Apps Section */}
             <OurApps />
@@ -56,15 +57,3 @@ const Home = () => {
 };
 
 export default Home;
-
-import { lazy } from "react"
-const Faq = lazy(() => import('@/components/common/homeFaq/Faq'))
-const Home = () => {
-  return (
-    <div>
-      <Faq />
-    </div>
-  )
-}
-
-export default Home

@@ -7,7 +7,7 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, NavLink, useLocation } from 'react-router-dom';
 
 interface menuType {
     id: number;
@@ -39,7 +39,6 @@ const HamburgerMenu: React.FC = () => {
                         {!isOpen ? (
                             <img src="/icons/MenuBar.svg" width={16} height={12} alt="Menu Icon" />
                         ) : (
-                            <img src="/icons/CloseMenu.svg" width={11} height={11} alt="Menu Icon" />
                             <img
                                 src="/icons/CloseMenu.svg"
                                 width={11}
@@ -62,11 +61,10 @@ const HamburgerMenu: React.FC = () => {
                                 <DropdownMenuItem
                                     key={item.id}
                                     asChild
-                                    className={`hover:bg-[#F5F6F7] cursor-pointer p-3 block w-full text-center transition-colors duration-200 ${
-                                        isActive
-                                            ? 'text-(--color-main) font-semibold'
-                                            : 'text-black'
-                                    }`}
+                                    className={`hover:bg-[#F5F6F7] cursor-pointer p-3 block w-full text-center transition-colors duration-200 ${isActive
+                                        ? 'text-(--color-main) font-semibold'
+                                        : 'text-black'
+                                        }`}
                                 >
                                     <Link
                                         to={item.link}
@@ -77,11 +75,7 @@ const HamburgerMenu: React.FC = () => {
                                 </DropdownMenuItem>
                             );
                         })}
-=======
-                    className="w-48 border bg-white rounded-md shadow-lg"
-                    align="end"
-                    side="left"
-                >
+                    </DropdownMenuGroup>
                     <DropdownMenuGroup>
                         <DropdownMenuItem asChild>
                             <NavLink
