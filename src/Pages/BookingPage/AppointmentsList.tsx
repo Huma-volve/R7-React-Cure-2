@@ -3,13 +3,13 @@ import AppointmentCard from "./AppointmentCard";
 
 interface AppointmentsListProps {
     tab: string;
-    date: string | Date;
+    date: string | Date | null;
 }
 
 interface AppointmentProps {
     id: number;
     date: string;
-    status: string; // Change this line to allow for any string value
+    status: "upcoming" | "completed" | "canceled";
     doctorName: string;
     specialization: string;
     doctorImage?: string;

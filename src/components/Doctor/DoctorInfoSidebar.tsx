@@ -1,26 +1,30 @@
 // components/DoctorInfoSidebar.tsx
-import React, { type ReactNode } from 'react';
+import React from 'react';
 import { VerifiedBadgeIcon } from './icons';
 import AboutSection from './AboutSection';
 import DoctorStats from './DoctorStats/DoctorStats';
 
 interface DoctorInfoSidebarProps {
   doctor: {
-    specialities: string;
+    id: number;
+    fullName: string;
+    about: string;
+    imgUrl: string;
+    specialityId?: number;
     specialistTitle?: string;
-    fullName?: string;
-    name?: string;
-    specialty?: string;
-    location?: string;
-    phone?: string;
-    image?: string;
-    about?: string;
-    rating?: number;
+    address: string;
+    rating: number;
+    distance?: number | null;
+    isFavourite?: boolean;
     price?: number;
-    bookingCount?: number;
+    pricePerHour?: number;
+    startDate?: string | null;
+    endDate?: string | null;
+    specialities: string | string[];
     experienceYears?: number;
+    email?: string;
     reviewsCount?: number;
-    imgUrl?: string;
+    bookingCount?: number;
   }
   showMore: boolean;
   setShowMore: (value: boolean) => void;
@@ -45,7 +49,7 @@ const DoctorInfoSidebar: React.FC<DoctorInfoSidebarProps> = ({ doctor, text, sho
               <VerifiedBadgeIcon />
             </div>
           </div>
-          
+
           <div className='text-center'>
             <h2 className="font-semibold text-lg">{doctor.fullName}</h2>
             <p className="text-gray-500 text-sm">{doctor.specialities}</p>
@@ -53,13 +57,13 @@ const DoctorInfoSidebar: React.FC<DoctorInfoSidebarProps> = ({ doctor, text, sho
         </div>
       </div>
 
-      <DoctorStats 
-      bookingCount={doctor.bookingCount} 
-      experienceYears={doctor.experienceYears}
-      rating={doctor.rating}
-      reviewsCount={doctor.reviewsCount}
-       isSidebar 
-       />
+      <DoctorStats
+        bookingCount={doctor.bookingCount}
+        experienceYears={doctor.experienceYears}
+        rating={doctor.rating}
+        reviewsCount={doctor.reviewsCount}
+        isSidebar
+      />
       <AboutSection text={text || ''} showMore={showMore} setShowMore={setShowMore} />
 
       {/* Location */}

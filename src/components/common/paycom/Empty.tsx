@@ -1,6 +1,6 @@
 import React from 'react'
 
-const Empty = () => {
+const Empty: React.FC = () => {
     return (
         <div className='flex items-center justify-center flex-col gap-4'>
             <img src="/public/icons/payment icons/credit-card 1.svg" alt="empty page icon" loading='lazy' />

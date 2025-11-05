@@ -4,12 +4,17 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
 import dayjs, { Dayjs } from "dayjs";
 import { Box } from "@mui/material";
+interface DateFilterProps {
+    selectedDate: string | null;
+    onDateChange: (date: string | null) => void;
+}
 
-const DateFilter: React.FC = () => {
+const DateFilter: React.FC<DateFilterProps> = ({ selectedDate, onDateChange }) => {
     const [showCalendar, setShowCalendar] = React.useState(false);
     const [value, setValue] = React.useState<Dayjs | null>(dayjs());
 
     const toggleCalendar = () => setShowCalendar(!showCalendar);
+    console.log("🔍 Selected Date:", selectedDate, onDateChange);
 
     return (
         <div className="relative w-[396px]">

@@ -1,6 +1,6 @@
 import React from "react";
 
-const TabsSection = ({ selectedTab, onChangeTab }) => {
+const TabsSection: React.FC<{ selectedTab: string; onChangeTab: (tab: string) => void }> = ({ selectedTab, onChangeTab }) => {
     const tabs = ["All", "Upcoming", "Completed", "Canceled"];
 
     return (

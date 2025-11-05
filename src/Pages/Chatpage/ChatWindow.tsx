@@ -39,7 +39,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ selectedUser }) => {
         }
 
         const newMsg = await sendMessage("c26b1ea0-1d14-4044-a3b1-2a9d057c0076", selectedUser.doctorId, chatId, text);
-
+        console.log(newMsg);
         const msg: Message = {
             id: Date.now(),
             sender: "me",

@@ -1,6 +1,6 @@
 // components/DoctorStats.tsx
 import React from 'react';
-import { UsersIcon, AwardIcon, StarIcon, MessageCircleIcon, StarState } from '../icons';
+import { UsersIcon, AwardIcon, MessageCircleIcon, StarState } from '../icons';
 
 interface StatItemProps {
   icon: React.ReactNode;
@@ -31,7 +31,7 @@ interface DoctorStatsProps {
   reviewsCount?: number;
 }
 
-const DoctorStats: React.FC<DoctorStatsProps> = ({ isSidebar = false, bookingCount, experienceYears, rating, reviewsCount}) => {
+const DoctorStats: React.FC<DoctorStatsProps> = ({ isSidebar = false, bookingCount, experienceYears, rating, reviewsCount }) => {
   const stats = [
     {
       icon: <UsersIcon className={isSidebar ? "w-6 h-6" : "w-8 h-8 mx-auto mb-1"} />,

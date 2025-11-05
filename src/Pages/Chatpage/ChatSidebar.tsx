@@ -1,6 +1,6 @@
-import React, { useState, useEffect, ChangeEvent } from "react";
+import { getChats, getUnreadChats, searchDoctors, searchUnreadChats } from "@/api/Chat/chatService";
+import React, { useState, useEffect, type ChangeEvent } from "react";
 import { FiSearch } from "react-icons/fi";
-import { getChats, searchDoctors, getUnreadChats, searchUnreadChats } from "../../api/Chat/chatService";
 
 interface Chat {
     id: number;
