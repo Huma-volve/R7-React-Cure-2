@@ -63,8 +63,7 @@
   --font-Noto: "Noto Serif", serif;
 }
 
-@import 'tailwindcss';
-@import 'tw-animate-css';
+
 
 :root {
     --color-main: #145db8;
@@ -75,7 +74,7 @@
 }
 
 body {
-    font-family: var(--font-primary);
+    font-family: var(--font-primary)};
 :root
 {
   --color-primary: #145DB8;
