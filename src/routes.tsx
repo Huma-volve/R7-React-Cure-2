@@ -7,7 +7,7 @@ import Home from './Pages/Home/Home';
 
 const BookingPage = lazy(() => import('./Pages/BookingPage/BookingPage'));
 const ChatPage = lazy(() => import('./Pages/Chatpage/ChatPage'));
-const Layout = lazy(() => import("./layout/Layout"));
+const Layout = lazy(() => import("./Layout/Layout"));
 const ProtectedRoute = lazy(() => import("./routes/ProtectedRoute"));
 const Error = lazy(() => import("./Pages/Error/Error"));
 const PayPage = lazy(() => import("./Pages/PayPage/PayPage"));
