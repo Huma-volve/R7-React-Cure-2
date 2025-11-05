@@ -1,4 +1,5 @@
-import React, { useState, ChangeEvent, KeyboardEvent } from "react";
+import React, { useState } from "react";
+import type { ChangeEvent, KeyboardEvent } from "react";
 import { FiSend, FiImage } from "react-icons/fi";
 import { BsEmojiSmile } from "react-icons/bs";
 

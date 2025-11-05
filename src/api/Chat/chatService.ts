@@ -57,12 +57,9 @@ export const searchUnreadChats = async (query: string) => {
 };
 
 // ------------------ START CHAT ------------------
-export const startChat = async (receiverId: string , chatId:number) => {
+export const startChat = async (receiverId: string) => {
     try {
-       const response = await axiosInstance.post("api/chat/chat/startChat", null, {
-           params: { chatId, receiverId },
-       });
-
+        const response = await axiosInstance.post(`api/chat/chat/startChat?receiverId=${receiverId}`);
         return response.data.data;
     } catch (error) {
         console.error("Error starting chat:", error);
