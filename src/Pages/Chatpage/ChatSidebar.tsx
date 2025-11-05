@@ -1,4 +1,4 @@
-import { useState, ChangeEvent } from "react";
+import { useState } from "react";
 import { FiSearch } from "react-icons/fi";
 import chatData from "./dummyData.json"; // استيراد الداتا من ملف JSON
 
@@ -32,7 +32,7 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({ onSelectChat }) => {
 
     const tabs: TabType[] = ["All", "Favourite", "Unreaded"];
 
-    
+
     const conversations: Chat[] = chatData.chats;
 
     const filteredChats = conversations.filter((chat) => {

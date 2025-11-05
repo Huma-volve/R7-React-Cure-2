@@ -5,7 +5,7 @@ import SpecialtiesCarousel from '@/components/ui/doctors/Specialties';
 import { Input } from '@/components/ui/input';
 import { DoctorsFilterProvider, useDoctorsFilter } from '@/context/DoctorsFilterContext';
 import { cn } from '@/lib/utils';
-import { Link, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 const DoctorsPageContent = () => {
     const {
@@ -19,7 +19,6 @@ const DoctorsPageContent = () => {
         toggleFilter
     } = useDoctorsFilter();
 
-    const realLocation = useLocation();
 
     return (
         // when drawer open on mobile we prevent page scroll (optional)

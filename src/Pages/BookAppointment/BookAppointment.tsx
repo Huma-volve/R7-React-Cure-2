@@ -1,5 +1,5 @@
 import DoctorCardInfo from '@/components/Doctor/DoctorCardInfo/DoctorCardInfo';
-import React, { useState } from 'react';
+import { useState } from 'react';
 // import { ChevronLeft, ChevronRight, Calendar, Clock, MapPin, Heart, Check } from 'lucide-react';
 import { Link } from 'react-router';
 
@@ -54,7 +54,7 @@ const estimationData = {
 };
 
 export default function AppointmentBooking() {
-  const [showBooking, setShowBooking] = useState(false);
+  const [showBooking] = useState(false);
   const [currentMonth, setCurrentMonth] = useState(new Date(2025, 6)); // July 2025
   const [selectedDate, setSelectedDate] = useState("2025-07-20");
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
