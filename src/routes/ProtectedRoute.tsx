@@ -5,9 +5,10 @@ import type { RootState } from "@/store/Store";
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
     const accessToken = useSelector((state: RootState) => state.auth.accessToken);
 
-    if (!accessToken) {
-        return <Navigate to="/login" replace />;
-    }
+    // 🧠 تعليق الشرط مؤقت علشان تقدر تدخل على الصفحات أثناء التطوير
+    // if (!accessToken) {
+    //     return <Navigate to="/login" replace />;
+    // }
 
     return (
         <div>

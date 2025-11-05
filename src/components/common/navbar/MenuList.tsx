@@ -19,7 +19,7 @@ const MenuPages: menuType[] = [
     { id: 1, name: 'Home', link: '/' },
     { id: 2, name: 'Doctors', link: '/doctors' },
     { id: 3, name: 'Booking', link: '/booking' },
-    { id: 4, name: 'Contact Us', link: '/contact-us' }
+    { id: 4, name: 'Contact Us', link: '/contact-us' },
 ];
 
 const HamburgerMenu: React.FC = () => {
@@ -50,7 +50,7 @@ const HamburgerMenu: React.FC = () => {
                 </DropdownMenuTrigger>
 
                 <DropdownMenuContent
-                    className="w-auto border-0 relative z-9999 p-0"
+                    className="w-auto border-0 relative z-[9999] p-0"
                     align="center"
                     side="bottom"
                 >
@@ -62,8 +62,8 @@ const HamburgerMenu: React.FC = () => {
                                     key={item.id}
                                     asChild
                                     className={`hover:bg-[#F5F6F7] cursor-pointer p-3 block w-full text-center transition-colors duration-200 ${isActive
-                                        ? 'text-(--color-main) font-semibold'
-                                        : 'text-black'
+                                            ? 'text-[var(--color-main)] font-semibold'
+                                            : 'text-black'
                                         }`}
                                 >
                                     <Link
@@ -75,77 +75,6 @@ const HamburgerMenu: React.FC = () => {
                                 </DropdownMenuItem>
                             );
                         })}
-                    </DropdownMenuGroup>
-                    <DropdownMenuGroup>
-                        <DropdownMenuItem asChild>
-                            <NavLink
-                                to="/"
-                                className={({ isActive }) =>
-                                    `block w-full px-3 py-2 transition-colors duration-200 ${isActive
-                                        ? 'text-[var(--color-main)] font-semibold'
-                                        : 'text-black'
-                                    }`
-                                }
-                            >
-                                Home
-                            </NavLink>
-                        </DropdownMenuItem>
-
-                        <DropdownMenuItem asChild>
-                            <NavLink
-                                to="/about"
-                                className={({ isActive }) =>
-                                    `block w-full px-3 py-2 transition-colors duration-200 ${isActive
-                                        ? 'text-[var(--color-main)] font-semibold'
-                                        : 'text-black'
-                                    }`
-                                }
-                            >
-                                About
-                            </NavLink>
-                        </DropdownMenuItem>
-
-                        <DropdownMenuItem asChild>
-                            <NavLink
-                                to="/services"
-                                className={({ isActive }) =>
-                                    `block w-full px-3 py-2 transition-colors duration-200 ${isActive
-                                        ? 'text-[var(--color-main)] font-semibold'
-                                        : 'text-black'
-                                    }`
-                                }
-                            >
-                                Services
-                            </NavLink>
-                        </DropdownMenuItem>
-
-                        <DropdownMenuItem asChild>
-                            <NavLink
-                                to="/contact"
-                                className={({ isActive }) =>
-                                    `block w-full px-3 py-2 transition-colors duration-200 ${isActive
-                                        ? 'text-[var(--color-main)] font-semibold'
-                                        : 'text-black'
-                                    }`
-                                }
-                            >
-                                Contact
-                            </NavLink>
-                        </DropdownMenuItem>
-
-                        <DropdownMenuItem asChild>
-                            <NavLink
-                                to="/booking"
-                                className={({ isActive }) =>
-                                    `block w-full px-3 py-2 transition-colors duration-200 ${isActive
-                                        ? 'text-[var(--color-main)] font-semibold'
-                                        : 'text-black'
-                                    }`
-                                }
-                            >
-                                Booking
-                            </NavLink>
-                        </DropdownMenuItem>
                     </DropdownMenuGroup>
                 </DropdownMenuContent>
             </DropdownMenu>

@@ -2,6 +2,7 @@ import { createBrowserRouter } from 'react-router-dom';
 import DoctorDetails from './Pages/DoctorDetails/DoctorDetails';
 import BookAppointment from './Pages/BookAppointment/BookAppointment';
 import { lazy } from "react";
+import Home from './Pages/Home/Home';
 
 
 const BookingPage = lazy(() => import('./Pages/BookingPage/BookingPage'));
@@ -11,7 +12,6 @@ const ProtectedRoute = lazy(() => import("./routes/ProtectedRoute"));
 const Error = lazy(() => import("./Pages/Error/Error"));
 const PayPage = lazy(() => import("./Pages/PayPage/PayPage"));
 const Map = lazy(() => import("./Pages/Map/Map"));
-const Home = lazy(() => import('./pages/Home/Home'));
 const LogIn = lazy(() => import('./Pages/login/LogIn'));
 const SignUp = lazy(() => import('./Pages/signup/Signup'));
 const Verify = lazy(() => import('./Pages/verify/Verify'));

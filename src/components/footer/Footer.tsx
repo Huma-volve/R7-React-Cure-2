@@ -1,10 +1,10 @@
 import { Link } from 'react-router';
-import { Container } from '../ui/Container';
+// import { Container } from '../ui/Container';
 
 export default function Footer() {
     return (
         <footer className="relative py-14 lg:py-20 bg-[#05162C] text-white pb-10!">
-            <Container>
+            
                 <div className="grid grid-cols-1 lg:grid-cols-10 border-b border-white/10 pb-10 gap-8">
                     {/* --- Column 1: Brand Info (3 columns) --- */}
                     <div className="lg:col-span-3">
@@ -160,7 +160,7 @@ export default function Footer() {
                         </Link>
                     </div>
                 </div>
-            </Container>
+            
         </footer>
     );
 }
