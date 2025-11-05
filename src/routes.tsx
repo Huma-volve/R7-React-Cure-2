@@ -1,57 +1,56 @@
 import { createBrowserRouter } from 'react-router-dom';
-import { lazy } from "react";
 import DoctorDetails from './Pages/DoctorDetails/DoctorDetails';
 import BookAppointment from './Pages/BookAppointment/BookAppointment';
-import NotificationPage from './Pages/Notification/NotificationPage';
-import ProtectedRoute from './routes/ProtectedRoute';
-import Profile from './Pages/profile/Profile';
-import PayMethod from './Pages/paymethod/PayMethod';
-import MethodForm from './Pages/paymethod/MethodForm';
-import Verify from './Pages/verify/Verify';
+import { lazy } from "react";
+import Home from './Pages/Home/Home';
 
-// 🧱 Lazy loading لكل الصفحات
+
 const BookingPage = lazy(() => import('./Pages/BookingPage/BookingPage'));
 const ChatPage = lazy(() => import('./Pages/Chatpage/ChatPage'));
-const Layout = lazy(() => import("./Layout/Layout"));
+const Layout = lazy(() => import("./layout/Layout"));
+const ProtectedRoute = lazy(() => import("./routes/ProtectedRoute"));
 const Error = lazy(() => import("./Pages/Error/Error"));
 const PayPage = lazy(() => import("./Pages/PayPage/PayPage"));
 const Map = lazy(() => import("./Pages/Map/Map"));
-const Home = lazy(() => import('./pages/Home/Home'));
-const LogIn = lazy(() => import('./pages/login/LogIn'));
-const SignUp = lazy(() => import('./pages/signUp/SignUp'));
-const DoctorsPage = lazy(() => import('./pages/Doctors/Doctors'));
-const FavoritePage = lazy(() => import('./pages/Favorite/FavoritePage'));
-const TopDoctors = lazy(() => import('./pages/topDoctors/TopDoctors'));
-
+const LogIn = lazy(() => import('./Pages/login/LogIn'));
+const SignUp = lazy(() => import('./Pages/signup/Signup'));
+const Verify = lazy(() => import('./Pages/verify/Verify'));
+const DoctorsPage = lazy(() => import('./Pages/Doctors/Doctors'));
+const FavoritePage = lazy(() => import('./Pages/Favorite/FavoritePage'));
+const TopDoctors = lazy(() => import('./Pages/topDoctors/TopDoctors'));
+const MethodForm = lazy(() => import('./Pages/paymethod/MethodForm'));
+const NotificationPage = lazy(() => import('./Pages/Notification/NotificationPage'));
+const PayMethod = lazy(() => import('./Pages/paymethod/PayMethod'));
+const Privacy = lazy(() => import('./Pages/privacyPolicy/Privacy'));
+const Profile = lazy(() => import('./Pages/profile/Profile'));
 const router = createBrowserRouter([
     {
         path: '/',
-        element: (
-            <ProtectedRoute>
-                <Layout />
-            </ProtectedRoute>
-        ),
+        element: <ProtectedRoute> <Layout /> </ProtectedRoute>,
         errorElement: <Error />,
         children: [
-            { index: true, element: <Home /> },
+            { path: '/', element: <Home /> },
+            { path: 'doctors', element: <DoctorsPage /> },
+            { path: '/favorites', element: <FavoritePage /> },
+            { path: '/topDoctors', element: <TopDoctors /> },
+            { path: "doctordetails/:id", element: <DoctorDetails /> },
+            { path: "bookappointment", element: <BookAppointment /> },
+            { path: "paypage", element: <PayPage /> },
+            { path: "profile", element: <Profile /> },
+            { path: "payment", element: <PayMethod /> },
+            { path: "payment/visa-version", element: <MethodForm /> },
+            { path: "map", element: <Map /> },
+            { path: "notificationpage", element: <NotificationPage /> },
             { path: 'booking', element: <BookingPage /> },
             { path: 'chatpage', element: <ChatPage /> },
-            { path: 'doctors', element: <DoctorsPage /> },
-            { path: 'favorites', element: <FavoritePage /> },
-            { path: 'topDoctors', element: <TopDoctors /> },
-            { path: 'doctordetails/:id', element: <DoctorDetails /> },
-            { path: 'bookappointment', element: <BookAppointment /> },
-            { path: 'paypage', element: <PayPage /> },
-            { path: 'profile', element: <Profile /> },
-            { path: 'payment', element: <PayMethod /> },
-            { path: 'payment/visa-version', element: <MethodForm /> },
-            { path: 'map', element: <Map /> },
-            { path: 'notificationpage', element: <NotificationPage /> },
+            { path: 'privcy', element: <Privacy /> },
         ],
     },
-    { path: '/login', element: <LogIn /> },
-    { path: '/verify-otp', element: <Verify /> },
-    { path: '/signup', element: <SignUp /> },
-]);
+
+    { path: 'login', element: <LogIn /> },
+    { path: 'signup', element: <SignUp /> },
+    { path: 'verify-otp', element: <Verify /> },
+]
+);
 
 export default router;

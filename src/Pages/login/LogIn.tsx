@@ -14,6 +14,7 @@ interface LoginForm {
 const LogIn: React.FC = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch<AppDispatch>();
+    const [loading, setLoading] = React.useState(false);
 
     const {
         register,
@@ -46,6 +47,8 @@ const LogIn: React.FC = () => {
             });
         } catch (error) {
             console.log(error);
+        } finally {
+            setLoading(false);
         }
     };
     return (
@@ -104,10 +107,11 @@ const LogIn: React.FC = () => {
                             </p>
                         )}
                         <button
+                            disabled={loading}
                             type="submit"
                             className="bg-[#145DB8] hover:bg-blue-700 text-white py-2! rounded-md transition"
                         >
-                            Sign in
+                            {loading ? "Loading..." : "Sign in"}
                         </button>
                     </form>
                     <div className="my-4! flex items-center">

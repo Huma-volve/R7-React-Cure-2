@@ -1,8 +1,22 @@
 import React from "react";
 import AppointmentCard from "./AppointmentCard";
 
-const AppointmentsList = ({ tab, date }) => {
-    const appointments = [
+interface AppointmentsListProps {
+    tab: string;
+    date: string | Date;
+}
+
+interface AppointmentProps {
+    id: number;
+    date: string;
+    status: string; // Change this line to allow for any string value
+    doctorName: string;
+    specialization: string;
+    doctorImage?: string;
+    location: string;
+}
+const AppointmentsList: React.FC<AppointmentsListProps> = ({ tab, date }) => {
+    const appointments: AppointmentProps[] = [
         {
             id: 1,
             date: "2025-07-21T11:00:00Z",
@@ -37,18 +51,21 @@ const AppointmentsList = ({ tab, date }) => {
         },
     ];
 
-    // 🔹 فلترة حسب التاب
+    // ✅ فلترة حسب التاب
     const filteredAppointments =
-        tab === "All"
+        tab.toLowerCase() === "all"
             ? appointments
             : appointments.filter(
                 (a) => a.status.toLowerCase() === tab.toLowerCase()
             );
 
-    // 🔹 فلترة حسب التاريخ لو موجود
-    const finalAppointments = date
+    const selectedDate = date ? new Date(date) : null;
+
+    const finalAppointments = selectedDate
         ? filteredAppointments.filter(
-            (a) => new Date(a.date).toDateString() === date.toDateString()
+            (a) =>
+                new Date(a.date).toDateString() ===
+                selectedDate.toDateString()
         )
         : filteredAppointments;
 
