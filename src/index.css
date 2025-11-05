@@ -66,16 +66,20 @@
 @import 'tailwindcss';
 @import 'tw-animate-css';
 
-:root {
-    --color-main: #145db8;
-    --color-text: #6d7379;
-    --font-primary: 'Montserrat', sans-serif;
-    --font-secondary: 'georgia', serif;
-    --bg-main: #145db8;
+:root
+{
+  --color-main: #145db8;
+  --color-text: #6d7379;
+  --font-primary: 'Montserrat', sans-serif;
+  --font-secondary: 'georgia', serif;
+  --bg-main: #145db8;
 }
 
-body {
-    font-family: var(--font-primary);
+body
+{
+  font-family: var(--font-primary);
+}
+
 :root
 {
   --color-primary: #145DB8;
