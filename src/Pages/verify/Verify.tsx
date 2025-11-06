@@ -6,7 +6,7 @@ import {
     InputOTPSlot,
 } from "@/components/ui/input-otp";
 import { useForm, Controller } from "react-hook-form";
-import { NavLink, useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { verifyOTP, verifyOTPRegister } from "@/services/auth/Auth";
 import { useDispatch } from "react-redux";
 import type { AppDispatch } from "@/store/Store";
@@ -30,6 +30,7 @@ const Verify = () => {
         defaultValues: { otpNumber: "" },
     });
 
+    const phone = sessionStorage.getItem("phone");
     const onSubmit = async (data: FormValues) => {
         if (data.otpNumber.length < 4) return;
         setLoading(true);
@@ -60,7 +61,7 @@ const Verify = () => {
         setOtpError(false);
         reset({ otpNumber: "" });
     };
-
+    console.log(handleResend);
     React.useEffect(() => {
         if (otpError && counter > 0) {
             const timer = setTimeout(() => setCounter((prev) => prev - 1), 1000);
@@ -70,18 +71,18 @@ const Verify = () => {
 
     return (
         <section
-            className="w-full !p-8 !px-12 h-screen flex flex-col items-start md:bg-[url('/image/background.jpg')] md:bg-no-repeat md:bg-right"
+            className="w-full p-8! px-12! h-screen flex flex-col items-start md:bg-[url('/image/background.jpg')] md:bg-no-repeat md:bg-right"
         >
             <div>
                 <BsHeartPulse className="text-(--color-primary) text-3xl" />
             </div>
 
-            <div className="h-full w-full  flex items-center text-center !py-6 md:!px-44">
-                <div className="md:w-[420px] w-full !p-4 flex flex-col gap-6">
+            <div className="h-full w-full  flex items-center text-center py-6! md:px-44!">
+                <div className="md:w-[420px] w-full p-4! flex flex-col gap-6">
                     <div className="flex flex-col gap-2">
-                        <h2 className="text-2xl font-semibold !mb-2">Code Verification</h2>
-                        <p className="font-light text-[1.2rem] text-[#404448] mb-4">
-                            Code has been sent to your phone number
+                        <h2 className="text-2xl font-semibold mb-2!">Code Verification</h2>
+                        <p className="font-light text-[1.2rem] text-[#404448] mb-4!">
+                            Code has been sent to <span className="font-semibold text-[#1490E3]">{phone}</span>
                         </p>
                         <p className="text-2xl text-[#1490E3]">Check your phone number</p>
                     </div>
