@@ -7,7 +7,7 @@ import Home from './Pages/Home/Home';
 
 const BookingPage = lazy(() => import('./Pages/BookingPage/BookingPage'));
 const ChatPage = lazy(() => import('./Pages/Chatpage/ChatPage'));
-const Layout = lazy(() => import("./layout/Layout"));
+const Layout = lazy(() => import("./Layout/Layout"));
 const ProtectedRoute = lazy(() => import("./routes/ProtectedRoute"));
 const Error = lazy(() => import("./Pages/Error/Error"));
 const PayPage = lazy(() => import("./Pages/PayPage/PayPage"));
@@ -31,19 +31,19 @@ const router = createBrowserRouter([
         children: [
             { path: '/', element: <Home /> },
             { path: 'doctors', element: <DoctorsPage /> },
-            { path: '/favorites', element: <FavoritePage /> },
-            { path: '/topDoctors', element: <TopDoctors /> },
+            { path: 'favorites', element: <FavoritePage /> },
+            { path: 'topDoctors', element: <TopDoctors /> },
             { path: "doctordetails/:id", element: <DoctorDetails /> },
             { path: "bookappointment", element: <BookAppointment /> },
             { path: "paypage", element: <PayPage /> },
             { path: "profile", element: <Profile /> },
             { path: "payment", element: <PayMethod /> },
-            { path: "payment/visa-version", element: <MethodForm /> },
+            { path: "visa-version", element: <MethodForm /> },
             { path: "map", element: <Map /> },
             { path: "notificationpage", element: <NotificationPage /> },
             { path: 'booking', element: <BookingPage /> },
             { path: 'chatpage', element: <ChatPage /> },
-            { path: 'privcy', element: <Privacy /> },
+            { path: 'privacy', element: <Privacy /> },
         ],
     },
 

@@ -11,6 +11,7 @@ import { verifyOTP, verifyOTPRegister } from "@/services/auth/Auth";
 import { useDispatch } from "react-redux";
 import type { AppDispatch } from "@/store/Store";
 import { setToken } from "@/store/UserSlice";
+import { Spinner } from "@/components/ui/spinner";
 
 interface FormValues {
     otpNumber: string;
@@ -21,41 +22,38 @@ const Verify = () => {
     const [otpError, setOtpError] = React.useState<boolean>(false);
     const navigate = useNavigate();
     const dispatch = useDispatch<AppDispatch>();
-    const { handleSubmit, control, reset } = useForm<FormValues>({
-        defaultValues: { otpNumber: "" },
-    });
+
     const location = useLocation();
     const { phoneNumber, type } = location.state;
+    const [loading, setLoading] = React.useState(false);
+    const { handleSubmit, control, reset, formState: { errors } } = useForm<FormValues>({
+        defaultValues: { otpNumber: "" },
+    });
 
-    const onSubmit = async (data: any) => {
-        const payload = {
-            phoneNumber: phoneNumber,
-            otpNumber: data.otpNumber.toString(),
-        };
+    const onSubmit = async (data: FormValues) => {
+        if (data.otpNumber.length < 4) return;
+        setLoading(true);
+
+        const payload = { phoneNumber, otpNumber: data.otpNumber };
+
         try {
-            if (type === "register") {
-                const res = await dispatch(verifyOTPRegister(payload));
-                dispatch(
-                    setToken({
-                        accessToken: res.payload.data.accessToken,
-                        refreshToken: res.payload.data.refreshToken
-                    })
-                )
-                navigate("/login");
-            } else if (type === "login") {
-                const res = await dispatch(verifyOTP(payload));
-                dispatch(
-                    setToken({
-                        accessToken: res.payload.data.accessToken,
-                        refreshToken: res.payload.data.refreshToken
-                    })
-                );
-                navigate("/");
-            }
+            const res = type === "register"
+                ? await dispatch(verifyOTPRegister(payload))
+                : await dispatch(verifyOTP(payload));
+
+            dispatch(setToken({
+                accessToken: res.payload.data.accessToken,
+                refreshToken: res.payload.data.refreshToken,
+            }));
+
+            navigate(type === "register" ? "/login" : "/");
         } catch (error) {
-            console.error(error);
+            setOtpError(true);
+        } finally {
+            setLoading(false);
         }
     };
+
 
     const handleResend = () => {
         setCounter(60);
@@ -94,14 +92,18 @@ const Verify = () => {
                         <Controller
                             name="otpNumber"
                             control={control}
-                            rules={{ required: true }}
+                            rules={{
+                                required: "Code is required",
+                                minLength: { value: 4, message: "Code must be 4 digits" },
+                                maxLength: { value: 4, message: "Code must be 4 digits" },
+                            }}
                             render={({ field }) => (
                                 <InputOTP
                                     maxLength={4}
                                     value={field.value}
                                     onChange={(val) => field.onChange(val)}
                                 >
-                                    <InputOTPGroup className="flex gap-4">
+                                    <InputOTPGroup className="flex gap-4 ">
                                         <InputOTPSlot index={0} />
                                         <InputOTPSlot index={1} />
                                         <InputOTPSlot index={2} />
@@ -111,47 +113,16 @@ const Verify = () => {
                             )}
                         />
 
-                        {otpError && (
-                            <>
-                                <p className="text-red-500 text-sm font-medium">
-                                    Wrong Code
-                                </p>
-
-                                <div className="!my-4 flex items-center">
-                                    {counter > 0 ? (
-                                        <p className="text-gray-500 text-sm">
-                                            Resend code in{" "}
-                                            <span className="text-[#1490E3] font-semibold">
-                                                {counter}
-                                            </span>{" "}
-                                            s
-                                        </p>
-                                    ) : (
-                                        <button
-                                            disabled
-                                            onClick={handleResend}
-                                            type="button"
-                                            className="text-[#1490E3] font-semibold"
-                                        >
-                                            Resend
-                                        </button>
-                                    )}
-                                    <span className="!mx-2 text-gray-500 text-sm">or</span>
-                                    <NavLink
-                                        to="/login"
-                                        className="text-[#1490E3] font-semibold"
-                                    >
-                                        Enter another phone number
-                                    </NavLink>
-                                </div>
-                            </>
+                        {errors.otpNumber && (
+                            <p className="text-red-500 text-sm">{errors.otpNumber.message}</p>
                         )}
 
                         <button
+                            disabled={loading}
                             type="submit"
                             className="bg-[#145DB8] w-full text-white !py-4 !px-4 rounded-lg"
                         >
-                            Verify
+                            {loading ? <Spinner color="white" /> : "Verify"}
                         </button>
                     </form>
                 </div>

@@ -6,6 +6,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { parsePhoneNumberFromString } from "libphonenumber-js";
 import type { AppDispatch } from "@/store/Store";
 import { login } from "@/services/auth/Auth";
+import { Spinner } from "@/components/ui/spinner";
 
 interface LoginForm {
     phoneNumber: string;
@@ -111,7 +112,7 @@ const LogIn: React.FC = () => {
                             type="submit"
                             className="bg-[#145DB8] hover:bg-blue-700 text-white py-2! rounded-md transition"
                         >
-                            {loading ? "Loading..." : "Sign in"}
+                            {loading ? <Spinner /> : "Sign in"}
                         </button>
                     </form>
                     <div className="my-4! flex items-center">
