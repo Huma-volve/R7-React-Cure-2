@@ -26,11 +26,13 @@ const ProfileForm: React.FC = () => {
         dispatch(getProfile());
     }, [dispatch]);
 
-    const onSubmit = async (formValues: any) => {
+
+    const onSubmit = async () => {
         const birthDate = year && month && day
             ? `${year}-${month}-${day}T00:00:00`
             : data?.birthDate || null;
 
+        console.log(birthDate)
         const payload = {
             fullName: data?.fullName || "",
             Email: data?.email || "",
@@ -46,7 +48,6 @@ const ProfileForm: React.FC = () => {
             console.error("❌ Update Profile Failed:", error);
         }
     };
-
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error: {error}</p>;
 
