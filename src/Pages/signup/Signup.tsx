@@ -6,6 +6,7 @@ import { signup } from "@/services/auth/Auth";
 import { useDispatch } from "react-redux";
 import type { AppDispatch } from "@/store/Store";
 import parsePhoneNumberFromString from "libphonenumber-js";
+import { Spinner } from "@/components/ui/spinner";
 
 const Signup: React.FC = () => {
     const {
@@ -14,6 +15,7 @@ const Signup: React.FC = () => {
         handleSubmit,
         setError,
     } = useForm();
+    const [loading, setLoading] = React.useState(false);
     const dispatch = useDispatch<AppDispatch>();
     const navigate = useNavigate();
 
@@ -48,6 +50,8 @@ const Signup: React.FC = () => {
                     message: error.message,
                 });
             }
+        } finally {
+            setLoading(false);
         }
     };
     return (
@@ -110,11 +114,11 @@ const Signup: React.FC = () => {
                             </p>
                         )}
                         <button
-                            disabled={Object.keys(errors).length > 0}
+                            disabled={loading}
                             type="submit"
                             className="bg-[#145DB8] hover:bg-blue-700 text-white !py-2 rounded-md transition"
                         >
-                            Sign up
+                            {loading ? <Spinner /> : "Sign Up"}
                         </button>
                     </form>
                     <button
