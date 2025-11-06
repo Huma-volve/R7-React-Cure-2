@@ -22,15 +22,15 @@ const UserInfo: React.FC = () => {
                         className="rounded-full w-[100px] h-[100px] object-cover"
                         src={
                             data?.imgUrl
-                                ? `/public/icons/profile/user.png`
-                                : "/public/icons/profile/profile.jpg"
+                                ? `/icons/profile/user.png`
+                                : "/icons/profile/profile.jpg"
                         }
                         alt="user image"
                         loading="lazy"
                     />
                 </picture>
                 <nav className="flex flex-col gap-2 items-center bg-[#ffffffce] rounded-full absolute z-20 bottom-0 right-8 p-2 cursor-pointer">
-                    <img src="/public/icons/profile/addImage.svg" alt="icon" loading="lazy" />
+                    <img src="/icons/profile/addImage.svg" alt="icon" loading="lazy" />
                 </nav>
             </div>
 
