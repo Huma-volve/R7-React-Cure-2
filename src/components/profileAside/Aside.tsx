@@ -1,5 +1,5 @@
 import React from 'react'
-import { NavLink, useNavigate } from 'react-router'
+import { NavLink } from 'react-router'
 import UserInfo from './UserInfo'
 import Cookies from 'js-cookie'
 import type { AppDispatch } from "@/store/Store";
@@ -7,7 +7,6 @@ import { useDispatch } from 'react-redux'
 import { logout } from '@/services/auth/Auth'
 
 const Aside: React.FC = () => {
-    const navigate = useNavigate()
     const dispatch = useDispatch<AppDispatch>();
 
     const handleLogout = async () => {
@@ -21,7 +20,6 @@ const Aside: React.FC = () => {
         } finally {
             Cookies.remove("refreshToken");
             Cookies.remove("accessToken");
-            navigate("/login");
             window.location.reload();
         }
     };

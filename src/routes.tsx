@@ -18,9 +18,10 @@ const Verify = lazy(() => import('./Pages/verify/Verify'));
 const DoctorsPage = lazy(() => import('./Pages/Doctors/Doctors'));
 const FavoritePage = lazy(() => import('./Pages/Favorite/FavoritePage'));
 const TopDoctors = lazy(() => import('./Pages/topDoctors/TopDoctors'));
-const MethodForm = lazy(() => import('./Pages/paymethod/MethodForm'));
+const Methods = lazy(() => import('./Pages/paymethod/Methods'));
 const NotificationPage = lazy(() => import('./Pages/Notification/NotificationPage'));
 const PayMethod = lazy(() => import('./Pages/paymethod/PayMethod'));
+const MethodForm = lazy(() => import('./Pages/paymethod/MethodForm'));
 const Privacy = lazy(() => import('./Pages/privacyPolicy/Privacy'));
 const Profile = lazy(() => import('./Pages/profile/Profile'));
 const router = createBrowserRouter([
@@ -38,7 +39,8 @@ const router = createBrowserRouter([
             { path: "paypage", element: <PayPage /> },
             { path: "profile", element: <Profile /> },
             { path: "payment", element: <PayMethod /> },
-            { path: "visa-version", element: <MethodForm /> },
+            { path: "methods", element: <Methods /> },
+            { path: "methodform", element: <MethodForm /> },
             { path: "map", element: <Map /> },
             { path: "notificationpage", element: <NotificationPage /> },
             { path: 'booking', element: <BookingPage /> },

@@ -37,8 +37,8 @@ const Signup: React.FC = () => {
                 Email: data.Email
             };
             const result = await dispatch(signup(formData)).unwrap();
-            console.log("✅ Register Success:", result);
             navigate("/verify-otp", {
+
                 state: { phoneNumber: phoneNumber.number, type: "register" },
             });
         } catch (error: any) {

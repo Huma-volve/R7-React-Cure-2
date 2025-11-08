@@ -40,7 +40,7 @@ const LogIn: React.FC = () => {
         };
 
         try {
-            const res = await dispatch(login(formData)).unwrap();
+            const res = await dispatch(login(formData))
             console.log("✅ Login Success:", res);
             sessionStorage.setItem("phone", phoneNumber.number);
             navigate("/verify-otp", {
