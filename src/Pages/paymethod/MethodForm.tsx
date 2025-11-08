@@ -138,7 +138,7 @@ const MethodForm: React.FC = () => {
                 </div>
 
                 <div className="flex gap-4 items-center">
-                    <div className="flex items-center mt[1.4rem] gap-2">
+                    <div className="flex items-center mt-[1.4rem]! gap-2">
                         {/* Month Select */}
                         <select
                             value={expiryMonth}
