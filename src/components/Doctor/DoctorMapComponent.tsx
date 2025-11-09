@@ -70,6 +70,7 @@ const DoctorMapComponent: React.FC = () => {
       if (data.display_name) {
         setLocationName(data.display_name);
       }
+      console.log(data)
     } catch (error) {
       console.error("Error reverse geocoding:", error);
     }
@@ -85,6 +86,7 @@ const DoctorMapComponent: React.FC = () => {
         `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(searchAddress)}&format=json&limit=1`
       );
       const data = await response.json();
+      console.log(data)
 
       if (data && data.length > 0) {
         const { lat, lon, display_name } = data[0];
@@ -131,6 +133,7 @@ const DoctorMapComponent: React.FC = () => {
       const data = await res.json();
       const doctorsList = Array.isArray(data) ? data : Array.isArray(data.data) ? data.data : [];
 
+      
       console.log("📍 Nearby Doctors:", doctorsList);
       setDoctors(doctorsList);
     } catch (error) {

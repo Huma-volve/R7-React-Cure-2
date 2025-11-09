@@ -11,6 +11,7 @@ import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { fetchDoctors, fetchDoctorById } from '@/store/doctorSlice';
 import { useParams } from 'react-router';
 import { ChevronLeft } from 'lucide-react';
+import { BackwardArrow, ChatIcon } from '@/components/Doctor/icons';
 
 export default function DoctorDetails() {
   const dispatch = useAppDispatch();
@@ -145,15 +146,20 @@ const MobileHeader: React.FC = () => (
       <ChevronLeft className="w-6 h-6" />
     </button>
     <h1 className="text-lg font-semibold">Doctor Details</h1>
-    <button className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center">
-      <span className="text-xl">−</span>
+    <button className="p-2 bg-white  rounded-full cursor-pointer hover:bg-[#b9d9ff] text-white transition duration-500">
+        <ChatIcon />
     </button>
   </div>
 );
 
 // Desktop Breadcrumb Component
 const DesktopBreadcrumb: React.FC = () => (
-  <div className="flex items-center gap-2 mb-6">
+  <div className="flex items-center gap-8 mb-6">
+    <button 
+      onClick={() => window.history.back()}
+      className=' cursor-pointer hover:text-6xl w-6 h-6 flex items-center justify-center hover:text-gray-600 '>
+      <BackwardArrow/>
+    </button>
     <span className="text-gray-700">Make an appointment</span>
   </div>
 );
