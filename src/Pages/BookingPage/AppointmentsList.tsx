@@ -1,12 +1,8 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import AppointmentCard from "./AppointmentCard";
 
-interface AppointmentsListProps {
-    tab: string;
-    date: string | Date | null;
-}
-
-interface AppointmentProps {
+interface Appointment {
     id: number;
     date: string;
     status: "upcoming" | "completed" | "canceled";
@@ -15,59 +11,69 @@ interface AppointmentProps {
     doctorImage?: string;
     location: string;
 }
-const AppointmentsList: React.FC<AppointmentsListProps> = ({ tab, date }) => {
-    const appointments: AppointmentProps[] = [
-        {
-            id: 1,
-            date: "2025-07-21T11:00:00Z",
-            status: "upcoming",
-            doctorName: "Jennifer Miller",
-            specialization: "Psychiatrist",
-            location: "129, El-Nasr Street, Cairo, Egypt",
-        },
-        {
-            id: 2,
-            date: "2025-06-10T09:00:00Z",
-            status: "completed",
-            doctorName: "Ahmed Hassan",
-            specialization: "Dermatologist",
-            location: "12, Tahrir Square, Cairo",
-        },
-        {
-            id: 3,
-            date: "2025-08-03T15:00:00Z",
-            status: "canceled",
-            doctorName: "Sarah Nabil",
-            specialization: "Dentist",
-            location: "50, Dokki Street, Giza",
-        },
-        {
-            id: 4,
-            date: "2025-10-28T18:00:00Z",
-            status: "canceled",
-            doctorName: "Omar Fathy",
-            specialization: "Cardiologist",
-            location: "10, Abbas El Akkad, Nasr City",
-        },
-    ];
 
-    // ✅ فلترة حسب التاب
+interface AppointmentsListProps {
+    tab: string;
+    date: Date | null;
+}
+
+const AppointmentsList: React.FC<AppointmentsListProps> = ({ tab, date }) => {
+    const [appointments, setAppointments] = useState<Appointment[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+
+    const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjMjZiMWVhMC0xZDE0LTQwNDQtYTNiMS0yYTlkMDU3YzAwNzYiLCJ1bmlxdWVfbmFtZSI6IisyMDEwOTMxMzA0ODg4IiwiZmlyc3ROYW1lIjoiQWhtZWQiLCJsYXN0TmFtZSI6Ik91ZiIsImFkZHJlc3MiOiIiLCJpbWdVcmwiOiIiLCJiaXJ0aERhdGUiOiIwMDAxLTAxLTAxIiwiZ2VuZGVyIjoiTWFsZSIsImxvY2F0aW9uIjoiIiwiaXNOb3RpZmljYXRpb25zRW5hYmxlZCI6IlRydWUiLCJleHAiOjE3NjI2MTg5NzUsImlzcyI6Imh0dHBzOi8vY3VyZS1kb2N0b3ItYm9va2luZy5ydW5hc3AubmV0LyIsImF1ZCI6Imh0dHBzOi8vbG9jYWxob3N0OjUwMDAsaHR0cHM6Ly9sb2NhbGhvc3Q6NTUwMCxodHRwczovL2xvY2FsaG9zdDo0MjAwICxodHRwczovL2N1cmUtZG9jdG9yLWJvb2tpbmcucnVuYXNwLm5ldC8ifQ.jlcMAdUwmaoX_h6-DX61ViWc-ttmlhOw6_ukr0_aML0"; // ضع التوكن هنا
+
+    useEffect(() => {
+        const fetchAppointments = async () => {
+            try {
+                setLoading(true);
+                const response = await axios.get(
+                    "https://cure-doctor-booking.runasp.net/api/Customer/Booking/PatientBookings",
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                            Accept: "*/*",
+                        },
+                    }
+                );
+
+                if (response.data?.data) {
+                    setAppointments(response.data.data);
+                } else {
+                    setAppointments([]);
+                }
+            } catch (err) {
+                console.error("Fetch error:", err);
+                setError("No bookings found for this patient.");
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchAppointments();
+    }, []);
+
+    // فلترة حسب التاب
     const filteredAppointments =
-        tab.toLowerCase() === "all"
+        tab === "All"
             ? appointments
             : appointments.filter(
-                (a) => a.status.toLowerCase() === tab.toLowerCase()
+                (a) => a.status?.toLowerCase() === tab.toLowerCase()
             );
 
-    const selectedDate = date ? new Date(date) : null;
-
-    const finalAppointments = selectedDate
+    // فلترة حسب التاريخ
+    const finalAppointments = date
         ? filteredAppointments.filter(
             (a) =>
-                new Date(a.date).toDateString() ===
-                selectedDate.toDateString()
+                new Date(a.date).toDateString() === date.toDateString()
         )
         : filteredAppointments;
+
+    if (loading)
+        return <p className="text-center text-gray-500">Loading appointments...</p>;
+    if (error)
+        return <p className="text-center text-red-500">{error}</p>;
 
     return (
         <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 justify-items-center">

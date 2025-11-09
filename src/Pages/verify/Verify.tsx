@@ -12,6 +12,7 @@ import { useDispatch } from "react-redux";
 import type { AppDispatch } from "@/store/Store";
 import { setToken } from "@/store/UserSlice";
 import { Spinner } from "@/components/ui/spinner";
+import toast from "react-hot-toast";
 
 interface FormValues {
     otpNumber: string;
@@ -41,7 +42,7 @@ const Verify = () => {
             const res = type === "register"
                 ? await dispatch(verifyOTPRegister(payload))
                 : await dispatch(verifyOTP(payload));
-
+            toast.success("OTP verified successfully!");
             dispatch(setToken({
                 accessToken: res.payload.data.accessToken,
                 refreshToken: res.payload.data.refreshToken,
@@ -50,6 +51,7 @@ const Verify = () => {
             navigate(type === "register" ? "/login" : "/");
         } catch (error) {
             setOtpError(true);
+            toast.error("OTP verification failed!");
         } finally {
             setLoading(false);
         }

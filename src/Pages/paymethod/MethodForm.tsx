@@ -30,7 +30,7 @@ const MethodForm: React.FC = () => {
     const method = validMethods.includes(methodFromCookie || "")
         ? methodFromCookie
         : "Visa";
-
+    console.log(data);
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error: {error}</p>;
 
