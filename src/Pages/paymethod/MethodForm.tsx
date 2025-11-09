@@ -56,7 +56,6 @@ const MethodForm: React.FC = () => {
         < section className="md:py-8! py-6! px-8! md:px-12! w-full flex flex-col items-center gap-8 h-full">
             <CreditCard>
                 <CreditCardFlipper>
-                    {/* FRONT */}
                     <CreditCardFront className="bg-gradient-to-r from-[#19D9C2] to-[#3B58E7]">
                         <CreditCardChip />
                         <div className="absolute bottom-1/2 translate-y-1/2 left-20 text-sm">
@@ -78,8 +77,6 @@ const MethodForm: React.FC = () => {
 
                         <CreditCardServiceProvider type={method as any} />
                     </CreditCardFront>
-
-                    {/* BACK */}
                     <CreditCardBack className="bg-gradient-to-r from-gray-800 to-gray-700">
                         <CreditCardMagStripe />
                         <div className="absolute bottom-16 right-6 text-right">
@@ -89,8 +86,6 @@ const MethodForm: React.FC = () => {
                     </CreditCardBack>
                 </CreditCardFlipper>
             </CreditCard>
-
-            {/* ✅ الفورم */}
             <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4 w-full max-w-sm text-gray-900">
                 <div>
                     <label className="block mb-1 text-sm text-black">Card Number</label>
@@ -139,7 +134,6 @@ const MethodForm: React.FC = () => {
 
                 <div className="flex gap-4 items-center">
                     <div className="flex items-center mt-[1.4rem]! gap-2">
-                        {/* Month Select */}
                         <select
                             value={expiryMonth}
                             {...register("expMonth", {
@@ -163,8 +157,6 @@ const MethodForm: React.FC = () => {
                                 );
                             })}
                         </select>
-
-                        {/* Year Select */}
                         <select
                             value={expiryYear}
                             {...register("expYear", {
@@ -187,8 +179,6 @@ const MethodForm: React.FC = () => {
                             })}
                         </select>
                     </div>
-
-
                     <div className="flex-1">
                         <label className="block mb-1 text-sm text-black">CVV</label>
                         <input
