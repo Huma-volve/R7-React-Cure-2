@@ -1,6 +1,16 @@
-import { getChats, getUnreadChats, searchDoctors, searchUnreadChats } from "@/api/Chat/chatService";
 import React, { useState, useEffect, type ChangeEvent } from "react";
 import { FiSearch } from "react-icons/fi";
+import {
+    getChats,
+    searchDoctors,
+    getUnreadChats,
+    searchUnreadChats,
+} from "../../api/Chat/chatService";
+
+interface ChatSidebarProps {
+    onSelectChat: (chat: any) => void;
+    favouriteChats: any[];
+}
 
 interface Chat {
     id: number;
@@ -8,33 +18,47 @@ interface Chat {
     doctorName: string;
     img: string;
     lastMessageContent: string;
+    isLastMessageSentByPatient: boolean;
     unReadMessages: number;
+    isFavourite?: boolean;
 }
 
-interface ChatSidebarProps {
-    onSelectChat: (chat: Chat) => void;
-}
-
-const ChatSidebar: React.FC<ChatSidebarProps> = ({ onSelectChat }) => {
+const ChatSidebar: React.FC<ChatSidebarProps> = ({ onSelectChat, favouriteChats }) => {
     const [searchValue, setSearchValue] = useState("");
     const [chats, setChats] = useState<Chat[]>([]);
-    const [selectedTab, setSelectedTab] = useState<"All" | "Unread">("All");
+    const [selectedTab, setSelectedTab] = useState<"All" | "Unread" | "Favourite">("All");
 
-    const tabs = ["All", "Unread"];
+    const tabs = ["All", "Unread", "Favourite"];
 
     const fetchChats = async () => {
         try {
-            let data;
+            let data: any = [];
+
             if (selectedTab === "All" && searchValue === "") {
                 data = await getChats();
             } else if (selectedTab === "All") {
                 data = (await searchDoctors(searchValue)).chatListDTOs;
             } else if (selectedTab === "Unread" && searchValue === "") {
                 data = (await getUnreadChats()).chatListDTOs;
-            } else {
+            } else if (selectedTab === "Unread") {
                 data = (await searchUnreadChats(searchValue)).chatListDTOs;
+            } else if (selectedTab === "Favourite") {
+                data = favouriteChats;
             }
-            setChats(data);
+
+            // تحويل البيانات لتتناسب مع Sidebar
+            const mappedChats: Chat[] = data.map((c: any) => ({
+                id: c.id,
+                doctorId: c.doctorId,
+                doctorName: c.doctorName,
+                img: c.img,
+                lastMessageContent: c.lastMessageContent || "لا توجد رسائل بعد",
+                isLastMessageSentByPatient: c.isLastMessageSentByPatient ?? true,
+                unReadMessages: c.unReadMessages,
+                isFavourite: c.isFavourite ?? false,
+            }));
+
+            setChats(mappedChats);
         } catch (error) {
             console.error("Error fetching chats:", error);
             setChats([]);
@@ -43,7 +67,7 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({ onSelectChat }) => {
 
     useEffect(() => {
         fetchChats();
-    }, [selectedTab, searchValue]);
+    }, [selectedTab, searchValue, favouriteChats]);
 
     return (
         <div className="w-1/3 min-w-[280px] h-full bg-white border-r flex flex-col p-4">

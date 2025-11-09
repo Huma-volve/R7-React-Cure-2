@@ -1,6 +1,11 @@
 import React from "react";
 
-const TabsSection: React.FC<{ selectedTab: string; onChangeTab: (tab: string) => void }> = ({ selectedTab, onChangeTab }) => {
+interface TabsSectionProps {
+    selectedTab: string;
+    onChangeTab: (tab: string) => void;
+}
+
+const TabsSection: React.FC<TabsSectionProps> = ({ selectedTab, onChangeTab }) => {
     const tabs = ["All", "Upcoming", "Completed", "Canceled"];
 
     return (
