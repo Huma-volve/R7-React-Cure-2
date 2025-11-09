@@ -6,23 +6,19 @@ import './index.css';
 import router from './routes.tsx';
 
 import { store } from './store/Store';
-import { FavoriteProvider } from './context/FavoriteContext';
+import { FavoriteProvider } from './context/FavoriteContext.tsx';
 
-createRoot(document.getElementById('root')!).render(
-    <Provider store={store}>
-        <FavoriteProvider>
-            <Suspense fallback={<div>Loading...</div>}>
-                <RouterProvider router={router} />
-            </Suspense>
-        </FavoriteProvider>
-import { GoogleOAuthProvider } from '@react-oauth/google';
+import { GoogleOAuthProvider } from '@react-oauth/google'
+
 const ClintID = "https://60136975563-f3l7uhdpim7ciikh8rkt0qafdim77pcj.apps.googleusercontent.com"
 
 createRoot(document.getElementById('root')!).render(
     <Provider store={store}>
         <Suspense fallback={<div>Loading...</div>}>
             <GoogleOAuthProvider clientId={ClintID}>
+        <FavoriteProvider>
                 <RouterProvider router={router} />
+        </FavoriteProvider>
             </GoogleOAuthProvider>
         </Suspense>
     </Provider>
