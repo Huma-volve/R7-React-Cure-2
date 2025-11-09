@@ -24,9 +24,17 @@ export const getProfile = createAsyncThunk(
     }
 );
 
+interface updateProfileData {
+    FullName: string;
+    Email: string;
+    PhoneNumber: string;
+    Address: string;
+    BirthDate: string;
+}
+
 export const updateProfile = createAsyncThunk(
     "user/updateProfile",
-    async (data: any, { rejectWithValue }) => {
+    async (data: updateProfileData, { rejectWithValue }) => {
         try {
             const response = await axios.put(
                 `${Api_url}api/profile/editprofile/updateprofile`,
@@ -38,7 +46,7 @@ export const updateProfile = createAsyncThunk(
                     },
                 }
             );
-            return response.data.data;
+            return response.data;
         } catch (error) {
             return rejectWithValue((error as Error).message);
         }
