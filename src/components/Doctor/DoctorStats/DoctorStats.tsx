@@ -12,7 +12,7 @@ interface StatItemProps {
 const StatItem: React.FC<StatItemProps> = ({ icon, value, label, isSidebar = false }) => (
   <div className={`text-center flex flex-col ${isSidebar ? 'items-center' : 'gap-1'}`}>
     {isSidebar ? (
-      <div className='bg-white rounded-full shadow-md p-3 flex items-center justify-center mb-1'>
+      <div className='lg:bg-white rounded-full  p-3 flex items-center justify-center mb-1'>
         {icon}
       </div>
     ) : (
@@ -40,7 +40,7 @@ const DoctorStats: React.FC<DoctorStatsProps> = ({ isSidebar = false, bookingCou
     },
     {
       icon: <AwardIcon className={isSidebar ? "w-6 h-6" : "w-8 h-8 mx-auto mb-1"} />,
-      value: String(experienceYears || 0),
+      value: String( experienceYears || 0),
       label: 'experience'
     },
     {

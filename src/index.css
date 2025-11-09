@@ -4,7 +4,7 @@
 @import "tw-animate-css";
 @custom-variant dark (&:is(.dark *));
 
-
+/* 
 *
 {
   cursor: url('/public/icons/cursor.svg'), auto !important;
@@ -292,4 +292,4 @@ input::placeholder
   {
     @apply bg-background text-foreground;
   }
-}
+} */

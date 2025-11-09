@@ -1,12 +1,12 @@
 // components/DoctorInfoSidebar.tsx
-import React, { type ReactNode } from 'react';
-import { VerifiedBadgeIcon } from './icons';
+import React from 'react';
+import { ChatIcon, FavoriteHeart, VerifiedBadgeIcon } from './icons';
 import AboutSection from './AboutSection';
 import DoctorStats from './DoctorStats/DoctorStats';
 
 interface DoctorInfoSidebarProps {
   doctor: {
-    specialities: string;
+    specialities: string | string[];
     specialistTitle?: string;
     fullName?: string;
     name?: string;
@@ -21,6 +21,8 @@ interface DoctorInfoSidebarProps {
     experienceYears?: number;
     reviewsCount?: number;
     imgUrl?: string;
+    phoneNumber?: string;
+    address?: string;
   }
   showMore: boolean;
   setShowMore: (value: boolean) => void;
@@ -28,8 +30,19 @@ interface DoctorInfoSidebarProps {
 }
 
 const DoctorInfoSidebar: React.FC<DoctorInfoSidebarProps> = ({ doctor, text, showMore, setShowMore }) => {
+    const displaySpecialities = Array.isArray(doctor.specialities) 
+    ? doctor.specialities.join(', ') 
+    : doctor.specialities;
   return (
-    <div className="bg-[#F5F6F7] rounded-lg p-6 shadow-sm h-fit relative z-1 fixed">
+    <div className="bg-[#F5F6F7] rounded-lg p-6 shadow-sm h-fit relative z-1">
+
+      <div className='p-2 bg-white absolute top-4 left-4 rounded-full cursor-pointer hover:bg-[#fca5a6] transition duration-500'>
+        <FavoriteHeart />
+      </div>      
+      <div className='p-2 bg-white absolute top-4 right-4 rounded-full cursor-pointer hover:bg-[#b9d9ff] text-white transition duration-500'>
+        <ChatIcon />
+      </div>
+
       <div className="flex items-start justify-center mb-4">
         <div className="flex gap-3 flex-col">
           {/* Doctor Profile Image */}
@@ -41,7 +54,7 @@ const DoctorInfoSidebar: React.FC<DoctorInfoSidebarProps> = ({ doctor, text, sho
                 className="w-28 h-28 rounded-full object-cover"
               />
             </div>
-            <div className="absolute bottom-0 right-[-2px] bg-white/40 rounded-full p-1">
+            <div className="absolute bottom-0 -right-0.5 bg-white/40 rounded-full p-1">
               <VerifiedBadgeIcon />
             </div>
           </div>
@@ -49,6 +62,9 @@ const DoctorInfoSidebar: React.FC<DoctorInfoSidebarProps> = ({ doctor, text, sho
           <div className='text-center'>
             <h2 className="font-semibold text-lg">{doctor.fullName}</h2>
             <p className="text-gray-500 text-sm">{doctor.specialities}</p>
+            <p className="text-gray-500 text-sm">{doctor.address}</p>
+            <p className="text-gray-500 text-sm">{doctor.phoneNumber}</p>
+
           </div>
         </div>
       </div>

@@ -30,7 +30,7 @@ const DoctorCard: React.FC<DoctorCardProps> = ({
                 {/* ====== Doctor Info ====== */}
                 <div className="flex items-center gap-3 mb-3">
                     {/* Doctor Image */}
-                    <Link to={`/doctors/${id}`} className="shrink-0">
+                    <Link to={`/doctordetails/${id}`} className="shrink-0">
                         <Avatar className="w-[70px] h-[70px] sm:w-[85px] sm:h-20 md:w-[95px] md:h-[90px] rounded-[10px] overflow-hidden cursor-pointer hover:scale-[1.05] transition-transform duration-300">
                             <AvatarImage
                                 className="w-[97px] h-[88px] object-cover"
@@ -48,7 +48,7 @@ const DoctorCard: React.FC<DoctorCardProps> = ({
 
                     {/* Doctor Details */}
                     <div className="flex-1 min-w-0">
-                        <Link to={`/doctors/${id}`}>
+                        <Link to={`/doctordetails/${id}`}>
                             <h3
                                 className="text-[15px] sm:text-[16px] md:text-[17px] font-semibold truncate cursor-pointer transition-colors duration-300 group-hover:text-(--color-main)"
                                 style={{ fontFamily: 'var(--font-secondary)' }}

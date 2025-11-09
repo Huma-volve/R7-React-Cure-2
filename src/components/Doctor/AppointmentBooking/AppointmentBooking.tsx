@@ -19,9 +19,7 @@ const AppointmentBooking: React.FC<AppointmentBookingProps> = ({
   selectedDate,
   setSelectedDate,
   selectedTime,
-  setSelectedTime,
-  doctorPrice
-}) => {
+  setSelectedTime}) => {
   const { currentDoctor } = useAppSelector((state) => state.doctor);
   const [isPaymentOpen, setIsPaymentOpen] = React.useState(false);
   const [selectedSlotId, setSelectedSlotId] = React.useState<number | null>(null);
@@ -72,9 +70,6 @@ const AppointmentBooking: React.FC<AppointmentBookingProps> = ({
   const eveningSlots = groupedSlots[selectedDateKey]?.evening || [];
 
   // التواريخ المتاحة للحجز
-  const availableDates = useMemo(() => {
-    return availableSlots.map(slot => new Date(slot.dateTime));
-  }, [availableSlots]);
 
   // تعيين أول موعد متاح عند التحميل
   useEffect(() => {

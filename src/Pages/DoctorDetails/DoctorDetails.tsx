@@ -10,6 +10,7 @@ import React, { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { fetchDoctors, fetchDoctorById } from '@/store/doctorSlice';
 import { useParams } from 'react-router';
+import { ChevronLeft } from 'lucide-react';
 
 export default function DoctorDetails() {
   const dispatch = useAppDispatch();
@@ -70,20 +71,20 @@ export default function DoctorDetails() {
     );
   }
 
-  const reviews = [
-    {
-      name: 'Nabila Reyna',
-      time: '30 min ago',
-      rating: 4.5,
-      text: 'Excellent service! Dr. Jessica Turner was attentive and thorough. The clinic was clean, and the staff were friendly. Highly recommend for in-person care!'
-    },
-    {
-      name: 'Ferry Ichsan A',
-      time: '4 week ago',
-      rating: 4.5,
-      text: 'Quick and easy appointment! Dr. Jessica Turner was professional, and the staff made me feel comfortable. Highly recommend!'
-    }
-  ];
+  // const reviews = [
+  //   {
+  //     name: 'Nabila Reyna',
+  //     time: '30 min ago',
+  //     rating: 4.5,
+  //     text: 'Excellent service! Dr. Jessica Turner was attentive and thorough. The clinic was clean, and the staff were friendly. Highly recommend for in-person care!'
+  //   },
+  //   {
+  //     name: 'Ferry Ichsan A',
+  //     time: '4 week ago',
+  //     rating: 4.5,
+  //     text: 'Quick and easy appointment! Dr. Jessica Turner was professional, and the staff made me feel comfortable. Highly recommend!'
+  //   }
+  // ];
 
   return (
     <div className="min-h-screen">
@@ -93,10 +94,16 @@ export default function DoctorDetails() {
         
         <div className="bg-white p-4">
           <DoctorCardInfo doctor={currentDoctor} />
-          <DoctorStats rating={currentDoctor.rating} />
+          <DoctorStats
+          bookingCount={currentDoctor.bookingCount} 
+          experienceYears={currentDoctor.experienceYears}
+          rating={currentDoctor.rating}
+          reviewsCount={currentDoctor.reviewsCount}
+          isSidebar 
+           />
           <AboutSection text={currentDoctor.about} showMore={showMore} setShowMore={setShowMore} />
-          <ReviewsSection reviews={reviews} isMobile />
-          <PriceFooter price={currentDoctor.price} />
+          <ReviewsSection rating={currentDoctor.rating} reviews={currentDoctor.reviews} isMobile />
+          <PriceFooter price={currentDoctor.pricePerHour} />
         </div>
       </div>
 
@@ -113,7 +120,7 @@ export default function DoctorDetails() {
               setSelectedTime={setSelectedTime}
               doctorPrice={currentDoctor.price}
             />
-            <ReviewsSection reviews={reviews} />
+            <ReviewsSection  rating={currentDoctor.rating} reviews={currentDoctor.reviews}/>
           </div>
 
           <DoctorInfoSidebar 
@@ -131,6 +138,12 @@ export default function DoctorDetails() {
 // Mobile Header Component
 const MobileHeader: React.FC = () => (
   <div className="bg-white px-4 py-3 flex items-center justify-between">
+    <button 
+      onClick={() => window.history.back()}
+      className="mr-4 p-1 hover:bg-gray-100 rounded-full transition-colors"
+    >
+      <ChevronLeft className="w-6 h-6" />
+    </button>
     <h1 className="text-lg font-semibold">Doctor Details</h1>
     <button className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center">
       <span className="text-xl">−</span>
