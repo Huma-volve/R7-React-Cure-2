@@ -10,6 +10,7 @@ import { Spinner } from "@/components/ui/spinner";
 import PhoneInput, { isValidPhoneNumber } from "react-phone-number-input";
 import "react-phone-number-input/style.css";
 import toast from "react-hot-toast";
+import Google from "@/components/googleAuth/Google";
 
 
 const Signup: React.FC = () => {
@@ -176,18 +177,7 @@ const Signup: React.FC = () => {
                         </button>
                     </form>
 
-                    <button
-                        type="button"
-                        className="border border-gray-300 !py-2 w-full rounded-md flex items-center justify-center gap-2 hover:bg-gray-50 transition"
-                    >
-                        <img
-                            src="/icon/flat-color-icons_google.svg"
-                            alt="Google"
-                            loading="lazy"
-                        />
-                        Sign in with Google
-                    </button>
-
+                    <Google />
                     <nav className="flex items-center justify-center gap-2">
                         <p className="text-[#99A2AB] text-sm">Already have an account!</p>
                         <Link to="/login" className="text-[#145DB8] hover:underline hover:text-[#173d6c] font-bold text-sm">
