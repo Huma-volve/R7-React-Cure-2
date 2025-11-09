@@ -124,11 +124,18 @@ export const resendVerifyOTP = createAsyncThunk(
         }
     }
 )
+interface GoogleLogin {
+    idToken: string
+}
 export const googleLogin = createAsyncThunk(
     "user/googleLogin",
-    async (token: string, { rejectWithValue }) => {
+    async (data: GoogleLogin, { rejectWithValue }) => {
         try {
-            const response = await axios.post(`${base_url}api/Identity/Accounts/google-login`, { token });
+            const response = await axios.post(`${base_url}api/Identity/Accounts/google-login`, data, {
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
 
             return response.data;
         } catch (error) {
@@ -152,12 +159,16 @@ export const refreshToken = createAsyncThunk(
         }
     }
 );
+interface logoutForm {
+    refreshToken: string
+
+}
 
 export const logout = createAsyncThunk(
     "user/logout",
-    async (_, { rejectWithValue }) => {
+    async (data: logoutForm, { rejectWithValue }) => {
         try {
-            const response = await axios.post(`${base_url}api/Identity/Accounts/logout`, null, {
+            const response = await axios.post(`${base_url}api/Identity/Accounts/logout`, data, {
                 headers: {
                     "Content-Type": "application/json",
                 },
@@ -240,12 +251,37 @@ const userSlice = createSlice({
             .addCase(googleLogin.fulfilled, (state, action) => {
                 state.loading = false;
                 state.user = action.payload.user;
+
                 state.error = null;
             })
             .addCase(googleLogin.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload as string | null;
-            });
+            })
+            .addCase(refreshToken.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(refreshToken.fulfilled, (state, action) => {
+                state.loading = false;
+                state.user = action.payload.user;
+                state.error = null;
+            })
+            .addCase(refreshToken.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload as string | null;
+            })
+            .addCase(logout.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(logout.fulfilled, (state) => {
+                state.loading = false;
+                state.user = null;
+                state.error = null;
+            })
+            .addCase(logout.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload as string | null;
+            })
     },
 });
 
