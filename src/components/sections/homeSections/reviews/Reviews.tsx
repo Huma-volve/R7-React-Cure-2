@@ -57,14 +57,14 @@ const Reviews: React.FC = () => {
     const offsets = isMobile ? [-1, 0, 1] : [-2, -1, 0, 1, 2];
 
     // autoplay loop
-    React.useEffect(() => {
-        autoplayRef.current = window.setInterval(() => {
-            setActive((s) => clampIndex(s + 1, len));
-        }, 3800);
-        return () => {
-            if (autoplayRef.current) window.clearInterval(autoplayRef.current);
-        };
-    }, [len]);
+    // React.useEffect(() => {
+    //     autoplayRef.current = window.setInterval(() => {
+    //         setActive((s) => clampIndex(s + 1, len));
+    //     }, 3800);
+    //     return () => {
+    //         if (autoplayRef.current) window.clearInterval(autoplayRef.current);
+    //     };
+    // }, [len]);
 
     // pause on hover
     const handleMouseEnter = () => {

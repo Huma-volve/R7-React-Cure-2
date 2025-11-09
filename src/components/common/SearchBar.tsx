@@ -1,14 +1,16 @@
 
-import { DoctorsList, type DoctorsType } from '@/api/doctors/Doctors';
+import { type DoctorsType } from '@/api/doctors/Doctors';
 
 
 // import { useState } from 'react';
 // import { BiSearch } from 'react-icons/bi';
 // import { Input } from "@/components/ui/input";
 import { Input } from '@/components/ui/input';
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useState, useContext } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import FavoriteDoctors from '../ui/doctors/favorite/FavoriteDoctors';
+import { searchDoctors } from '@/api/services/doctorsService';
+import { DoctorsFilterContext } from '@/context/DoctorsFilterContext';
 
 const SearchBar = () => {
     const [searchTerm, setSearchTerm] = useState('');
@@ -18,8 +20,14 @@ const SearchBar = () => {
     const [lastSearches, setLastSearches] = useState<string[]>([]);
     const [filteredLastSearches, setFilteredLastSearches] = useState<string[]>([]);
     const [isFocused, setIsFocused] = useState(false);
+    const [error, setError] = useState<string | null>(null);
 
     const navigate = useNavigate();
+    const location = useLocation();
+    
+    // Try to get DoctorsFilterContext if available (for pages that use it)
+    // Context will be undefined if provider is not available, which is fine
+    const doctorsFilterContext = useContext(DoctorsFilterContext);
 
     // Load last searches from localStorage on mount
     useEffect(() => {
@@ -33,32 +41,42 @@ const SearchBar = () => {
         return () => clearTimeout(handler);
     }, [searchTerm]);
 
-    // Perform local search
+    // Perform API search
     useEffect(() => {
         if (debouncedTerm.length >= 3) {
             setIsLoading(true);
-            const filtered = DoctorsList.filter(
-                (doctor) =>
-                    doctor.name.toLowerCase().includes(debouncedTerm.toLowerCase()) ||
-                    doctor.specialty.toLowerCase().includes(debouncedTerm.toLowerCase())
-            );
-            setResults(filtered);
-            setIsLoading(false);
+            setError(null);
 
-            // Update last searches (only if results are found for the search term)
-            if (filtered.length > 0 || searchTerm.length > 0) {
-                setLastSearches((prev) => {
-                    const newList = [
-                        debouncedTerm,
-                        ...prev.filter((t) => t.toLowerCase() !== debouncedTerm.toLowerCase())
-                    ];
-                    const uniqueList = Array.from(new Set(newList)).slice(0, 4);
-                    localStorage.setItem('lastSearched', JSON.stringify(uniqueList));
-                    return uniqueList;
-                });
-            }
+            const fetchResults = async () => {
+                try {
+                    const response = await searchDoctors({ search: debouncedTerm });
+                    console.log('[SearchBar] searchDoctors raw response:', response.raw);
+                    setResults(response.doctors);
+
+                    if (response.doctors.length > 0 || searchTerm.length > 0) {
+                        setLastSearches((prev) => {
+                            const newList = [
+                                debouncedTerm,
+                                ...prev.filter((t) => t.toLowerCase() !== debouncedTerm.toLowerCase())
+                            ];
+                            const uniqueList = Array.from(new Set(newList)).slice(0, 4);
+                            localStorage.setItem('lastSearched', JSON.stringify(uniqueList));
+                            return uniqueList;
+                        });
+                    }
+                } catch (err) {
+                    console.error('[SearchBar] searchDoctors error:', err);
+                    setError(err instanceof Error ? err.message : 'Failed to search doctors');
+                    setResults([]);
+                } finally {
+                    setIsLoading(false);
+                }
+            };
+
+            void fetchResults();
         } else {
             setResults([]);
+            setError(null);
         }
     }, [debouncedTerm, searchTerm.length]);
 
@@ -78,14 +96,28 @@ const SearchBar = () => {
         setDebouncedTerm(term);
     };
 
-    // Navigate to doctors page when pressing Enter
+    // Navigate to appropriate page when pressing Enter
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter') {
             e.preventDefault();
 
             const trimmed = searchTerm.trim();
             if (trimmed.length > 0) {
-                navigate(`/doctors?q=${encodeURIComponent(trimmed)}`);
+                // If we're on topDoctors page, navigate there with search query
+                if (location.pathname === '/topDoctors' || location.pathname.includes('topDoctors')) {
+                    navigate(`/topDoctors?q=${encodeURIComponent(trimmed)}`);
+                } else if (location.pathname === '/doctors' || location.pathname.includes('doctors')) {
+                    navigate(`/doctors?q=${encodeURIComponent(trimmed)}`);
+                } else {
+                    // Default to doctors page
+                    navigate(`/doctors?q=${encodeURIComponent(trimmed)}`);
+                }
+                
+                // Also update the context searchTerm directly if context is available
+                if (doctorsFilterContext && doctorsFilterContext.setSearchTerm) {
+                    doctorsFilterContext.setSearchTerm(trimmed);
+                }
+                
                 setSearchTerm('');
             }
         }
@@ -121,14 +153,18 @@ const SearchBar = () => {
                             <p className="p-3 text-center text-black">Loading...</p>
                         ) : (
                             <>
-                                {searchTerm.length >= 3 && results.length > 0 && (
+                                {searchTerm.length >= 3 && error && (
+                                    <p className="p-3 text-center text-red-500">{error}</p>
+                                )}
+
+                                {searchTerm.length >= 3 && !error && results.length > 0 && (
                                     <FavoriteDoctors
                                         doctors={results}
                                         onSelect={() => setIsFocused(false)}
                                     />
                                 )}
 
-                                {searchTerm.length >= 3 && !isLoading && results.length === 0 && (
+                                {searchTerm.length >= 3 && !isLoading && !error && results.length === 0 && (
                                     <p className="p-3 text-center text-gray-600">
                                         "{debouncedTerm}"{' '}
                                         <span className="text-black">Not Found</span>

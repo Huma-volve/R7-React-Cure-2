@@ -6,12 +6,14 @@ import './index.css';
 import router from './routes.tsx';
 
 import { store } from './store/Store';
-
+import { FavoriteProvider } from './context/FavoriteContext';
 
 createRoot(document.getElementById('root')!).render(
     <Provider store={store}>
-        <Suspense fallback={<div>Loading...</div>}>
-            <RouterProvider router={router} />
-        </Suspense>
+        <FavoriteProvider>
+            <Suspense fallback={<div>Loading...</div>}>
+                <RouterProvider router={router} />
+            </Suspense>
+        </FavoriteProvider>
     </Provider>
 );
