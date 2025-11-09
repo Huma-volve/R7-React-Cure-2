@@ -9,6 +9,7 @@ import { parsePhoneNumberFromString } from "libphonenumber-js";
 import type { AppDispatch } from "@/store/Store";
 import { login } from "@/services/auth/Auth";
 import { Spinner } from "@/components/ui/spinner";
+import toast from "react-hot-toast";
 
 interface LoginForm {
     phoneNumber: string;
@@ -64,12 +65,14 @@ const LogIn: React.FC = () => {
             setLoading(true);
             const res = await dispatch(login(formData));
             console.log("✅ Login Success:", res);
+            toast.success("Login Success");
             sessionStorage.setItem("phone", phoneNumber.number);
             navigate("/verify-otp", {
                 state: { phoneNumber: phoneNumber.number, type: "login" },
             });
         } catch (error) {
             console.log(error);
+            toast.error("Login Failed");
         } finally {
             setLoading(false);
         }

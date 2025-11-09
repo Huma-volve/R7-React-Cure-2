@@ -9,6 +9,7 @@ import parsePhoneNumberFromString from "libphonenumber-js";
 import { Spinner } from "@/components/ui/spinner";
 import PhoneInput, { isValidPhoneNumber } from "react-phone-number-input";
 import "react-phone-number-input/style.css";
+import toast from "react-hot-toast";
 
 
 const Signup: React.FC = () => {
@@ -50,11 +51,13 @@ const Signup: React.FC = () => {
             };
             const result = await dispatch(signup(formData)).unwrap();
             console.log("✅ Register Success:", result);
+            toast.success("Register Success");
             navigate("/verify-otp", {
                 state: { phoneNumber: phoneNumber.number, type: "register" },
             });
         } catch (error: any) {
             console.error("❌ Register Failed:", error);
+            toast.error("Register Failed");
             if (error?.message) {
                 setError("phoneNumber", {
                     type: "manual",
