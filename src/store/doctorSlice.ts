@@ -21,6 +21,7 @@ interface Review {
 
 
 interface Doctor {
+  experienceYears: number | undefined;
   bookingCount: number | undefined;
   reviewsCount: number | undefined;
   reviews: Review[];
@@ -40,9 +41,7 @@ interface Doctor {
   endDate?: string | null;
   specialities: string | string[];
   availableSlots?: AvailableSlot[];
-  experienceYears?: number;
-  email?: string;
-}
+};
 
 interface BookingData {
   DoctorId: number;
@@ -97,10 +96,9 @@ export const fetchDoctors = createAsyncThunk(
       console.log("Fetched Doctors:", res.data.data);
       return res.data.data;
     } catch (error: any) {
-      if (error.response?.status === 401) {
-        return rejectWithValue("Unauthorized! Check your token.");
-      }
-      return rejectWithValue(error.message || "Failed to fetch doctors");
+      const message =
+        error?.response?.data?.message || error?.message || 'Failed to fetch doctors';
+      return rejectWithValue(message as string);
     }
   }
 );
@@ -125,7 +123,9 @@ export const fetchDoctorById = createAsyncThunk(
       console.log("Available Slots:", res.data.data.availableSlots);
       return res.data.data;
     } catch (error: any) {
-      return rejectWithValue(error.message || "Failed to fetch doctor");
+      const message =
+        error?.response?.data?.message || error?.message || 'Failed to fetch doctor';
+      return rejectWithValue(message as string);
     }
   }
 );
@@ -155,10 +155,10 @@ export const createBooking = createAsyncThunk(
       return res.data;
     } catch (error: any) {
       console.error("❌ Full Error:", error);
-      console.error("❌ Response Data:", error.response?.data);
-      return rejectWithValue(
-        error.response?.data?.message || error.message || "Failed to create booking"
-      );
+      console.error("❌ Response Data:", error?.response?.data);
+      const message =
+        error?.response?.data?.message || error?.message || "Failed to create booking";
+      return rejectWithValue(message as string);
     }
   }
 );

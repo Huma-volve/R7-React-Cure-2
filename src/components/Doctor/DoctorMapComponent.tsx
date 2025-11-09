@@ -133,7 +133,7 @@ const DoctorMapComponent: React.FC = () => {
       const data = await res.json();
       const doctorsList = Array.isArray(data) ? data : Array.isArray(data.data) ? data.data : [];
 
-      
+
       console.log("📍 Nearby Doctors:", doctorsList);
       setDoctors(doctorsList);
     } catch (error) {
@@ -233,11 +233,11 @@ const DoctorMapComponent: React.FC = () => {
                 >
                   <div className="flex gap-3">
                     {/* Doctor Image */}
-                    <Link to={`doctordetails/${doc.doctorId}`}>
+                    <Link to={`doctordetails/${doc.Id}`}>
                       <div className="shrink-0">
                         <img
-                          src={doc.imageUrl || "https://via.placeholder.com/80x80?text=Dr"}
-                          alt={doc.name}
+                          src={doc.ImageUrl || "https://via.placeholder.com/80x80?text=Dr"}
+                          alt={doc.FullName}
                           className="w-20 h-20 rounded-lg object-cover"
                         />
                       </div>
@@ -245,26 +245,26 @@ const DoctorMapComponent: React.FC = () => {
                     {/* Doctor Info */}
                     <div className="flex-1 min-w-0">
                       <h3 className="font-bold text-gray-900 text-base mb-1 truncate">
-                        {doc.name}
+                        {doc.FullName}
                       </h3>
 
                       <p className="text-gray-600 text-xs mb-2 flex items-center gap-1">
                         <MapPin size={12} className="shrink-0" />
-                        <span className="truncate">{ doc.specialization || doc.hospital|| "Location not specified"}</span>
+                        <span className="truncate">{ doc.SpecialistTitle || doc.Address|| "Location not specified"}</span>
                       </p>
                       
                       {/* Rating & Working Hours */}
                       <div className="flex items-center gap-3 text-xs text-gray-600">
                         <div className="flex items-center gap-1">
                           <Star size={14} className="text-yellow-500 fill-yellow-500" />
-                          <span className="font-semibold text-gray-900">{doc.rating || "4.8"}</span>
+                          <span className="font-semibold text-gray-900">{doc.Rating || "4.8"}</span>
                         </div>
                         <div className="flex items-center gap-1">
                           <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <circle cx="12" cy="12" r="10" strokeWidth="2"/>
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6l4 2"/>
                           </svg>
-                          <span>{doc.workingHours || "9:30am - 8:00pm"}</span>
+                          <span>{doc.StartDate | doc.EndDate}</span>
                         </div>
                       </div>
                     </div>
@@ -349,26 +349,26 @@ const DoctorMapComponent: React.FC = () => {
           {/* Doctor Markers */}
           {doctors.map((doc: any) => (
             <Marker
-              key={doc.id}
+              key={doc.Id}
               position={[doc.latitude, doc.longitude]}
               icon={doctorIcon}
             >
               <Popup>
                 <div className="p-3 min-w-[200px]">
-                  <div className="font-bold text-gray-800 mb-2 text-base">{doc.name}</div>
+                  <div className="font-bold text-gray-800 mb-2 text-base">{doc.FullName}</div>
                   <div className="text-blue-600 font-semibold text-sm mb-2">
-                    {doc.specialization}
+                    {doc.Specialisttitle}
                   </div>
                   <div className="text-gray-600 text-xs mb-2 flex items-center gap-1">
-                    <MapPin size={12} /> {doc.hospital || "غير محدد"}
+                    <MapPin size={12} /> {doc.hospital || "Not Specified"}
                   </div>
                   <div className="flex items-center gap-1 text-xs text-gray-700">
                     <Star size={14} className="text-yellow-500 fill-yellow-500" />
-                    <span className="font-semibold">{doc.rating || "N/A"}</span>
-                    <span className="text-gray-500">(تقييم)</span>
+                    <span className="font-semibold">{doc.Rating || "N/A"}</span>
+                    <span className="text-gray-500">Rating</span>
                   </div>
                   <button className="mt-3 w-full bg-blue-600 text-white py-2 rounded-lg text-xs hover:bg-blue-700 transition">
-                    احجز الآن
+                   Book Now
                   </button>
                 </div>
               </Popup>

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Bell, Calendar, CheckCircle, XCircle, ChevronLeft } from 'lucide-react';
+import { ChevronLeft } from 'lucide-react';
 import { CancelledNotification, CompletedNotification, EmptyNotification, UpcomingNotification } from '@/components/Doctor/icons';
 
 interface NotificationsPage {
@@ -15,7 +15,7 @@ interface NotificationsPage {
 const NotificationsPage: React.FC = () => {
   const [hasNotifications, setHasNotifications] = useState(true);
 
-  const notifications: Notification[] = [
+  const notifications: { id: string, type: 'upcoming' | 'completed' | 'cancelled', title: string, description: string, time: string, icon: React.ReactNode, bgColor: string }[] = [
     {
       id: '1',
       type: 'upcoming',
@@ -50,7 +50,7 @@ const NotificationsPage: React.FC = () => {
       {/* Header */}
       <div className="sticky top-0 z-10">
         <div className="max-w-2xl mx-auto px-4 py-4 flex items-center">
-          <button 
+          <button
             onClick={() => window.history.back()}
             className="mr-4 p-1 hover:bg-gray-100 rounded-full transition-colors"
           >
@@ -66,7 +66,7 @@ const NotificationsPage: React.FC = () => {
           <>
             {/* Today Section */}
             <h2 className="text-sm font-semibold text-blue-600 mb-4 ml-3">Today</h2>
-            
+
             {/* Notifications List */}
             <div className="space-y-3">
               {notifications.map((notification) => (
@@ -79,7 +79,7 @@ const NotificationsPage: React.FC = () => {
                     <div className={`${notification.bgColor} rounded-full p-[18px] shrink-0`}>
                       {notification.icon}
                     </div>
-                    
+
                     {/* Content */}
                     <div className="flex-1 min-w-0">
                       <div className="flex items-start justify-between gap-2">

@@ -9,24 +9,24 @@ interface DoctorInfoSidebarProps {
   doctor: {
     specialities: string | string[];
     specialistTitle?: string;
-    fullName?: string;
-    name?: string;
-    specialty?: string;
-    location?: string;
-    phone?: string;
-    image?: string;
-    about?: string;
-    rating?: number;
+    address: string;
+    rating: number;
+    distance?: number | null;
+    isFavourite?: boolean;
     price?: number;
-    bookingCount?: number;
+    pricePerHour?: number;
+    startDate?: string | null;
+    endDate?: string | null;
     experienceYears?: number;
+    email?: string;
     reviewsCount?: number;
     imgUrl?: string;
     phoneNumber?: string;
-    address?: string;
     latitude?: number;
     longitude?: number;
     langtude?: number;
+    fullName?: string; 
+    bookingCount?: number;
   }
   showMore: boolean;
   setShowMore: (value: boolean) => void;
@@ -65,7 +65,7 @@ const DoctorInfoSidebar: React.FC<DoctorInfoSidebarProps> = ({ doctor, text, sho
               <VerifiedBadgeIcon />
             </div>
           </div>
-          
+
           <div className='text-center'>
             <h2 className="font-semibold text-lg">{doctor.fullName}</h2>
             <p className="text-gray-500 text-sm">{doctor.specialities}</p>

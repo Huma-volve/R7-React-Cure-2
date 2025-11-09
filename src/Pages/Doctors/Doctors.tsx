@@ -5,13 +5,15 @@ import SpecialtiesCarousel from '@/components/ui/doctors/Specialties';
 import { Input } from '@/components/ui/input';
 import { DoctorsFilterProvider, useDoctorsFilter } from '@/context/DoctorsFilterContext';
 import { cn } from '@/lib/utils';
-import { Link, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 const DoctorsPageContent = () => {
     const {
         searchTerm,
         setSearchTerm,
         filteredDoctors,
+        loading,
+        error,
         selectedSpecialty,
         specialties,
         handleSpecialtySelect,
@@ -19,7 +21,8 @@ const DoctorsPageContent = () => {
         toggleFilter
     } = useDoctorsFilter();
 
-    const realLocation = useLocation();
+    // Check if there are no filtered results (after applying search/filters)
+    const hasNoFilteredResults = !loading && !error && filteredDoctors.length === 0;
 
     return (
         // when drawer open on mobile we prevent page scroll (optional)
@@ -143,33 +146,48 @@ const DoctorsPageContent = () => {
                         )}
                     >
                         {/* Specialties Carousel */}
-                        <div className="mb-6">
-                            <SpecialtiesCarousel
-                                specialties={specialties}
-                                selectedSpecialty={selectedSpecialty}
-                                onSelect={handleSpecialtySelect}
-                            />
-                        </div>
+                        {!(searchTerm && hasNoFilteredResults) && (
+                            <div className="mb-6">
+                                <SpecialtiesCarousel
+                                    specialties={specialties}
+                                    selectedSpecialty={selectedSpecialty}
+                                    onSelect={handleSpecialtySelect}
+                                />
+                            </div>
+                        )}
 
                         {/* Doctors Grid */}
                         <div className="mt-6 w-full">
-                            {filteredDoctors.length > 0 ? (
+                            {loading ? (
+                                <p className="text-center text-gray-500">Loading doctors...</p>
+                            ) : error ? (
+                                <p className="text-center text-red-500">{error}</p>
+                            ) : filteredDoctors.length > 0 ? (
                                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
                                     {filteredDoctors.map((doc) => (
                                         <DoctorsCard key={doc.id} {...doc} />
                                     ))}
                                 </div>
                             ) : (
-                                <p className="text-center text-gray-500">No doctors found.</p>
+                                <div className="text-center text-gray-500 flex flex-col items-center justify-center">
+                                    <p className="text-lg font-semibold">
+                                        No doctors match your filters.
+                                    </p>
+                                    <p className="text-gray-500">
+                                        Try adjusting your search or filters.
+                                    </p>
+                                </div>
                             )}
                         </div>
 
                         {/* Next Page Button */}
-                        <div className="flex justify-center mt-12">
-                            <button className="border border-blue-500 text-blue-600 rounded-lg bg-white px-10 py-3 font-medium text-lg transition-all hover:bg-blue-50">
-                                Next Page
-                            </button>
-                        </div>
+                        {filteredDoctors.length > 0 && (
+                            <div className="flex justify-center mt-12">
+                                <button className="border border-blue-500 text-blue-600 rounded-lg bg-white px-10 py-3 font-medium text-lg transition-all hover:bg-blue-50">
+                                    Next Page
+                                </button>
+                            </div>
+                        )}
                     </main>
                 </div>
             </Container>

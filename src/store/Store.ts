@@ -6,6 +6,8 @@ import reviewReducer from './reviewSlice';
 import locationReducer from './locationSlice';
 import notificationsReducer from './notificationsSlice';
 
+import profileReducer from './profileSlice';
+import MethodsReducer from './MethodsSlice';
 export const store = configureStore({
 
     reducer: {
@@ -17,6 +19,8 @@ export const store = configureStore({
         notifications: notificationsReducer,
 
 
+        profile: profileReducer,
+        methods: MethodsReducer
     },
 });
 

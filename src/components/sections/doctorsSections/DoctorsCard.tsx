@@ -2,8 +2,11 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { CardContent } from '@/components/ui/card';
 import { Link } from 'react-router-dom';
+import BtnFavorite from '@/components/ui/doctors/favorite/BtnFavorite';
+import { type DoctorsType } from '@/api/doctors/Doctors';
 
-interface DoctorCardProps {
+// Use DoctorsType directly but make some fields optional for backward compatibility
+interface DoctorCardProps extends Partial<DoctorsType> {
     id: number;
     name: string;
     image: string;
@@ -14,18 +17,41 @@ interface DoctorCardProps {
     price: number;
 }
 
-const DoctorCard: React.FC<DoctorCardProps> = ({
-    id,
-    name,
-    image,
-    specialty,
-    hospital,
-    rate,
-    availability,
-    price
-}) => {
+const DoctorCard: React.FC<DoctorCardProps> = (props) => {
+    const {
+        id,
+        name,
+        image,
+        specialty,
+        hospital,
+        rate,
+        availability,
+        price
+    } = props;
+
+    // Create doctor data object to pass to BtnFavorite using all props
+    const doctorData: DoctorsType = {
+        id,
+        name,
+        image,
+        specialty,
+        hospital,
+        rate,
+        availability,
+        price,
+        gender: props.gender || 'All',
+        isFavorite: props.isFavorite || false,
+        isFavourite: props.isFavourite || false,
+        // Include any other optional fields that might be passed
+        ...props
+    };
+
     return (
-        <CardContent className="p-0 group transition-all duration-300 shadow-[0_0_12px_rgba(0,0,0,0.1)] hover:shadow-[0_0_16px_rgba(0,0,0,0.2)] rounded-xl">
+        <CardContent className="p-0 group transition-all duration-300 shadow-[0_0_12px_rgba(0,0,0,0.1)] hover:shadow-[0_0_16px_rgba(0,0,0,0.2)] rounded-xl relative">
+            {/* Favorite Button - Top Right */}
+            <div className="absolute top-3 right-3 z-10">
+                <BtnFavorite id={id} doctorData={doctorData} />
+            </div>
             <div className="p-4 flex flex-col h-full">
                 {/* ====== Doctor Info ====== */}
                 <div className="flex items-center gap-3 mb-3">

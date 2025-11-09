@@ -1,11 +1,11 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import TabsSection from "./TabsSection";
 import DateFilter from "./DateFilter";
 import AppointmentsList from "./AppointmentsList";
 
-const BookingPage = () => {
-  const [selectedTab, setSelectedTab] = useState("All");
-  const [selectedDate, setSelectedDate] = useState(null);
+const BookingPage: React.FC = () => {
+  const [selectedTab, setSelectedTab] = useState<string>("All");
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
 
   return (
     <div className="max-w-[1300px] mx-auto min-h-screen p-8 flex flex-col gap-10">

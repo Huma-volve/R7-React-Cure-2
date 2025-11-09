@@ -5,9 +5,16 @@ import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
 import dayjs, { Dayjs } from "dayjs";
 import { Box } from "@mui/material";
 
-const DateFilter: React.FC = () => {
+interface DateFilterProps {
+    selectedDate: Date | null;
+    onDateChange: (date: Date | null) => void;
+}
+
+const DateFilter: React.FC<DateFilterProps> = ({ selectedDate, onDateChange }) => {
     const [showCalendar, setShowCalendar] = React.useState(false);
-    const [value, setValue] = React.useState<Dayjs | null>(dayjs());
+    const [value, setValue] = React.useState<Dayjs | null>(
+        selectedDate ? dayjs(selectedDate) : dayjs()
+    );
 
     const toggleCalendar = () => setShowCalendar(!showCalendar);
 
@@ -95,6 +102,7 @@ const DateFilter: React.FC = () => {
                             value={value}
                             onChange={(newValue) => {
                                 setValue(newValue);
+                                onDateChange(newValue ? newValue.toDate() : null);
                                 setShowCalendar(false);
                             }}
                             sx={{

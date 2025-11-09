@@ -1,52 +1,77 @@
-import { useState, ChangeEvent } from "react";
+import React, { useState, useEffect, type ChangeEvent } from "react";
 import { FiSearch } from "react-icons/fi";
-import chatData from "./dummyData.json"; // استيراد الداتا من ملف JSON
+import {
+    getChats,
+    searchDoctors,
+    getUnreadChats,
+    searchUnreadChats,
+} from "../../api/Chat/chatService";
+
+interface ChatSidebarProps {
+    onSelectChat: (chat: any) => void;
+    favouriteChats: any[];
+}
 
 interface Chat {
     id: number;
-    name: string;
-    lastMessage: string;
-    unread: number;
-    time: string;
-    avatar: string;
+    doctorId: string;
+    doctorName: string;
+    img: string;
+    lastMessageContent: string;
+    isLastMessageSentByPatient: boolean;
+    unReadMessages: number;
     isFavourite?: boolean;
-    messages?: Message[];
 }
 
-interface Message {
-    id: number;
-    sender: "me" | "other";
-    content: string;
-    time: string;
-}
+const ChatSidebar: React.FC<ChatSidebarProps> = ({ onSelectChat, favouriteChats }) => {
+    const [searchValue, setSearchValue] = useState("");
+    const [chats, setChats] = useState<Chat[]>([]);
+    const [selectedTab, setSelectedTab] = useState<"All" | "Unread" | "Favourite">("All");
 
-type TabType = "All" | "Favourite" | "Unreaded";
+    const tabs = ["All", "Unread", "Favourite"];
 
-interface ChatSidebarProps {
-    onSelectChat: (chat: Chat) => void;
-}
+    const fetchChats = async () => {
+        try {
+            let data: any = [];
 
-const ChatSidebar: React.FC<ChatSidebarProps> = ({ onSelectChat }) => {
-    const [selectedTab, setSelectedTab] = useState<TabType>("All");
-    const [searchValue, setSearchValue] = useState<string>("");
+            if (selectedTab === "All" && searchValue === "") {
+                data = await getChats();
+            } else if (selectedTab === "All") {
+                data = (await searchDoctors(searchValue)).chatListDTOs;
+            } else if (selectedTab === "Unread" && searchValue === "") {
+                data = (await getUnreadChats()).chatListDTOs;
+            } else if (selectedTab === "Unread") {
+                data = (await searchUnreadChats(searchValue)).chatListDTOs;
+            } else if (selectedTab === "Favourite") {
+                data = favouriteChats;
+            }
 
-    const tabs: TabType[] = ["All", "Favourite", "Unreaded"];
+            // تحويل البيانات لتتناسب مع Sidebar
+            const mappedChats: Chat[] = data.map((c: any) => ({
+                id: c.id,
+                doctorId: c.doctorId,
+                doctorName: c.doctorName,
+                img: c.img,
+                lastMessageContent: c.lastMessageContent || "لا توجد رسائل بعد",
+                isLastMessageSentByPatient: c.isLastMessageSentByPatient ?? true,
+                unReadMessages: c.unReadMessages,
+                isFavourite: c.isFavourite ?? false,
+            }));
 
-    
-    const conversations: Chat[] = chatData.chats;
+            setChats(mappedChats);
+        } catch (error) {
+            console.error("Error fetching chats:", error);
+            setChats([]);
+        }
+    };
 
-    const filteredChats = conversations.filter((chat) => {
-        const matchesSearch = chat.name.toLowerCase().includes(searchValue.toLowerCase());
-        const matchesTab =
-            selectedTab === "All" ||
-            (selectedTab === "Favourite" && chat.isFavourite) ||
-            (selectedTab === "Unreaded" && chat.unread > 0);
-        return matchesSearch && matchesTab;
-    });
+    useEffect(() => {
+        fetchChats();
+    }, [selectedTab, searchValue, favouriteChats]);
 
     return (
         <div className="w-1/3 min-w-[280px] h-full bg-white border-r flex flex-col p-4">
-            {/* 🔍 Search Bar */}
+            {/* Search */}
             <div className="flex items-center bg-gray-100 rounded-lg px-3 py-2 mb-4">
                 <FiSearch className="text-gray-500 mr-2" />
                 <input
@@ -58,15 +83,13 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({ onSelectChat }) => {
                 />
             </div>
 
-            {/* 🗂️ Tabs */}
+            {/* Tabs */}
             <div className="flex gap-3 mb-4 justify-around">
                 {tabs.map((tab) => (
                     <button
                         key={tab}
-                        onClick={() => setSelectedTab(tab)}
-                        className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all duration-200 ${selectedTab === tab
-                            ? "bg-blue-500 text-white"
-                            : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                        onClick={() => setSelectedTab(tab as any)}
+                        className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all duration-200 ${selectedTab === tab ? "bg-blue-500 text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                             }`}
                     >
                         {tab}
@@ -74,43 +97,33 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({ onSelectChat }) => {
                 ))}
             </div>
 
-            {/* 💬 Chat List */}
+            {/* Chat List */}
             <div className="flex-1 overflow-y-auto">
-                {filteredChats.length > 0 ? (
-                    filteredChats.map((chat) => (
+                {chats.length > 0 ? (
+                    chats.map((chat) => (
                         <div
                             key={chat.id}
                             onClick={() => onSelectChat(chat)}
                             className="flex items-center justify-between p-3 hover:bg-gray-100 rounded-lg cursor-pointer transition"
                         >
                             <div className="flex items-center gap-3">
-                                <img
-                                    src={chat.avatar}
-                                    alt={chat.name}
-                                    className="w-10 h-10 rounded-full object-cover"
-                                />
+                                <img src={chat.img} alt={chat.doctorName} className="w-10 h-10 rounded-full object-cover" />
                                 <div>
-                                    <h4 className="font-semibold text-sm">{chat.name}</h4>
-                                    <p className="text-xs text-gray-500 truncate w-[130px]">
-                                        {chat.lastMessage}
-                                    </p>
+                                    <h4 className="font-semibold text-sm">{chat.doctorName}</h4>
+                                    <p className="text-xs text-gray-500 truncate w-[130px]">{chat.lastMessageContent}</p>
                                 </div>
                             </div>
-
                             <div className="flex flex-col items-end gap-1">
-                                <span className="text-[11px] text-gray-400">{chat.time}</span>
-                                {chat.unread > 0 && (
+                                {chat.unReadMessages > 0 && (
                                     <span className="bg-blue-500 text-white text-[10px] px-2 py-0.5 rounded-full">
-                                        {chat.unread}
+                                        {chat.unReadMessages}
                                     </span>
                                 )}
                             </div>
                         </div>
                     ))
                 ) : (
-                    <p className="text-gray-500 text-sm text-center mt-10">
-                        No conversations found
-                    </p>
+                    <p className="text-gray-500 text-sm text-center mt-10">No conversations found</p>
                 )}
             </div>
         </div>

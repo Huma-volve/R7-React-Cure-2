@@ -1,8 +1,8 @@
 // components/AppointmentBooking.tsx
 import React, { useEffect, useMemo } from 'react';
 import { CalendarIcon } from '../icons';
-import { DayPicker } from "react-day-picker";
-import "react-day-picker/style.css";
+import { DayPicker } from 'react-day-picker';
+import 'react-day-picker/dist/style.css';
 import PayPopup from '../PayPopup/PayPopup';
 import { useAppSelector } from '@/store/hooks';
 
@@ -27,18 +27,18 @@ const AppointmentBooking: React.FC<AppointmentBookingProps> = ({
   // استخراج المواعيد المتاحة من بيانات الدكتور
   const availableSlots = useMemo(() => {
     if (!currentDoctor?.availableSlots) return [];
-    
+
     return currentDoctor.availableSlots.filter(slot => !slot.isBooked);
   }, [currentDoctor]);
 
   // تجميع المواعيد حسب التاريخ والفترة
   const groupedSlots = useMemo(() => {
     const grouped: { [date: string]: { morning: any[], evening: any[] } } = {};
-    
+
     availableSlots.forEach(slot => {
       const slotDate = new Date(slot.dateTime);
       const dateKey = slotDate.toISOString().split('T')[0];
-      
+
       if (!grouped[dateKey]) {
         grouped[dateKey] = { morning: [], evening: [] };
       }
@@ -47,7 +47,7 @@ const AppointmentBooking: React.FC<AppointmentBookingProps> = ({
       const [hours, minutes] = slot.startTime.split(':');
       const hour = parseInt(hours);
       const timeFormatted = `${hour > 12 ? hour - 12 : hour === 0 ? 12 : hour}:${minutes} ${hour >= 12 ? 'PM' : 'AM'}`;
-      
+
       const slotWithFormatted = {
         ...slot,
         formattedTime: timeFormatted
@@ -60,7 +60,7 @@ const AppointmentBooking: React.FC<AppointmentBookingProps> = ({
         grouped[dateKey].evening.push(slotWithFormatted);
       }
     });
-    
+
     return grouped;
   }, [availableSlots]);
 
@@ -76,7 +76,7 @@ const AppointmentBooking: React.FC<AppointmentBookingProps> = ({
     if (availableSlots.length > 0 && !selectedTime) {
       const firstSlot = availableSlots[0];
       setSelectedDate(new Date(firstSlot.dateTime));
-      
+
       const [hours, minutes] = firstSlot.startTime.split(':');
       const hour = parseInt(hours);
       const timeFormatted = `${hour > 12 ? hour - 12 : hour === 0 ? 12 : hour}:${minutes} ${hour >= 12 ? 'PM' : 'AM'}`;
@@ -97,11 +97,11 @@ const AppointmentBooking: React.FC<AppointmentBookingProps> = ({
   const formatSelectedDateTime = () => {
     const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-    
+
     const dayName = days[selectedDate.getDay()];
     const monthName = months[selectedDate.getMonth()];
     const date = selectedDate.getDate();
-    
+
     return `${dayName}, ${monthName} ${date} - ${selectedTime}`;
   };
 
@@ -130,7 +130,7 @@ const AppointmentBooking: React.FC<AppointmentBookingProps> = ({
             </label>
             <DayPicker
               selected={selectedDate}
-              onSelect={(date) => {
+              onSelect={(date: Date | undefined) => {
                 if (date && isDateAvailable(date)) {
                   setSelectedDate(date);
                   // اختيار أول موعد متاح في هذا اليوم
@@ -143,16 +143,16 @@ const AppointmentBooking: React.FC<AppointmentBookingProps> = ({
                 }
               }}
               mode="single"
-              disabled={(date) => {
+              disabled={(date: Date) => {
                 const isPast = date < new Date();
                 const isUnavailable = !isDateAvailable(date);
                 return isPast || isUnavailable;
               }}
               modifiers={{
-                available: (date) => isDateAvailable(date)
+                available: (date: Date) => isDateAvailable(date)
               }}
               modifiersStyles={{
-                available: { 
+                available: {
                   fontWeight: 'bold',
                   color: '#145DB8'
                 }
@@ -172,11 +172,10 @@ const AppointmentBooking: React.FC<AppointmentBookingProps> = ({
                   <button
                     key={slot.id}
                     onClick={() => handleTimeSelect(slot.formattedTime, slot.id)}
-                    className={`p-2 rounded-lg text-sm transition-all ${
-                      slot.formattedTime === selectedTime
-                        ? 'bg-blue-600 text-white shadow-md'
-                        : 'bg-gray-50 text-gray-700 hover:bg-gray-100'
-                    }`}
+                    className={`p-2 rounded-lg text-sm transition-all ${slot.formattedTime === selectedTime
+                      ? 'bg-blue-600 text-white shadow-md'
+                      : 'bg-gray-50 text-gray-700 hover:bg-gray-100'
+                      }`}
                   >
                     {slot.formattedTime}
                   </button>
@@ -196,11 +195,10 @@ const AppointmentBooking: React.FC<AppointmentBookingProps> = ({
                   <button
                     key={slot.id}
                     onClick={() => handleTimeSelect(slot.formattedTime, slot.id)}
-                    className={`p-2 rounded-lg text-sm transition-all ${
-                      slot.formattedTime === selectedTime
-                        ? 'bg-blue-600 text-white shadow-md'
-                        : 'bg-gray-50 text-gray-700 hover:bg-gray-100'
-                    }`}
+                    className={`p-2 rounded-lg text-sm transition-all ${slot.formattedTime === selectedTime
+                      ? 'bg-blue-600 text-white shadow-md'
+                      : 'bg-gray-50 text-gray-700 hover:bg-gray-100'
+                      }`}
                   >
                     {slot.formattedTime}
                   </button>
@@ -215,8 +213,8 @@ const AppointmentBooking: React.FC<AppointmentBookingProps> = ({
               <CalendarIcon />
               <span>{formatSelectedDateTime()}</span>
             </div>
-            <button 
-              onClick={() => setIsPaymentOpen(true)} 
+            <button
+              onClick={() => setIsPaymentOpen(true)}
               disabled={!selectedTime}
               className="px-6 py-2 w-[123px] h-12 border border-[#145DB8] text-[#145DB8] hover:text-white hover:bg-[#145DB8] rounded-lg text-sm duration-300 cursor-pointer active:bg-[#0d2849] disabled:opacity-50 disabled:cursor-not-allowed"
             >
@@ -228,15 +226,15 @@ const AppointmentBooking: React.FC<AppointmentBookingProps> = ({
 
       {/* Payment Popup */}
       {isPaymentOpen && (
-        <div 
+        <div
           className="fixed inset-0 bg-[#00000068] bg-opacity-10 flex items-center justify-center z-50"
           onClick={handleClose}
         >
-          <div 
-            onClick={(e) => e.stopPropagation()} 
+          <div
+            onClick={(e) => e.stopPropagation()}
             className="bg-white rounded-lg shadow-xl max-w-lg w-full p-6 relative my-auto overflow-y-auto max-h-[90vh]"
           >
-            <PayPopup 
+            <PayPopup
               onClose={handleClose}
               selectedDate={selectedDate}
               selectedTime={selectedTime}
