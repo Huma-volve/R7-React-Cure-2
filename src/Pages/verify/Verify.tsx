@@ -69,6 +69,8 @@ const Verify = () => {
         }
     }, [counter, otpError]);
 
+
+
     return (
         <section
             className="w-full p-8! px-12! h-screen flex flex-col items-start md:bg-[url('/image/background.jpg')] md:bg-no-repeat md:bg-right"
@@ -105,7 +107,7 @@ const Verify = () => {
                                     onChange={(val) => field.onChange(val)}
                                 >
                                     <InputOTPGroup className="flex gap-4 ">
-                                        <InputOTPSlot index={0} />
+                                        <InputOTPSlot autoFocus index={0} />
                                         <InputOTPSlot index={1} />
                                         <InputOTPSlot index={2} />
                                         <InputOTPSlot index={3} />
