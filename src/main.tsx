@@ -6,6 +6,15 @@ import './index.css';
 import router from './routes.tsx';
 
 import { store } from './store/Store';
+import { FavoriteProvider } from './context/FavoriteContext';
+
+createRoot(document.getElementById('root')!).render(
+    <Provider store={store}>
+        <FavoriteProvider>
+            <Suspense fallback={<div>Loading...</div>}>
+                <RouterProvider router={router} />
+            </Suspense>
+        </FavoriteProvider>
 import { GoogleOAuthProvider } from '@react-oauth/google';
 const ClintID = "https://60136975563-f3l7uhdpim7ciikh8rkt0qafdim77pcj.apps.googleusercontent.com"
 

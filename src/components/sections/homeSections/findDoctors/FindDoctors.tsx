@@ -19,9 +19,13 @@ const FindDoctors: React.FC = () => {
                         </p>
                         <Link
                             to="/map"
-                            className="flex items-center gap-2 w-fit text-(--bg-main) border hover:border-black  border-(--bg-main) hover:text-black font-medium duration-300 py-3 px-4 rounded-[10px]"
+                            className="group flex items-center gap-2 w-fit text-(--bg-main) border border-(--bg-main) hover:text-white hover:bg-(--bg-main) font-medium duration-300 py-3 px-4 rounded-[10px]"
                         >
-                            <img src="/icons/Search-location.svg" alt="Search Icon" />
+                            <img
+                                src="/icons/Search-location.svg"
+                                alt="Search Icon"
+                                className="transition duration-300 group-hover:invert group-hover:brightness-0 group-hover:contrast-200"
+                            />
                             <span>Search by location</span>
                         </Link>
                     </div>
