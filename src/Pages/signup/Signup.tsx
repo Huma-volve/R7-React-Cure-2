@@ -31,7 +31,7 @@ const Signup: React.FC = () => {
     }, []);
 
     const onSubmit = async (data: any) => {
-        const fullNumber = `+20${data.phoneNumber.replace(/^0+/, "")}`;
+        const fullNumber = `${data.phoneNumber.replace(/^0+/, "")}`;
         const phoneNumber = parsePhoneNumberFromString(fullNumber);
 
         if (!phoneNumber || !phoneNumber.isValid()) {

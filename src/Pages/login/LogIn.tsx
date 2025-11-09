@@ -30,7 +30,7 @@ const LogIn: React.FC = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch<AppDispatch>();
     const [loading, setLoading] = React.useState(false);
-    const phoneRef = useRef<HTMLInputElement>(null);
+    const phoneRef = useRef<any>(null);
 
     const {
         control,
@@ -41,7 +41,6 @@ const LogIn: React.FC = () => {
         defaultValues: { phoneNumber: "" },
     });
 
-    // ✅ focus تلقائي عند تحميل الصفحة
     useEffect(() => {
         phoneRef.current?.focus();
     }, []);
