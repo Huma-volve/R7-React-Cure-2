@@ -10,6 +10,7 @@ import type { AppDispatch } from "@/store/Store";
 import { login } from "@/services/auth/Auth";
 import { Spinner } from "@/components/ui/spinner";
 import toast from "react-hot-toast";
+import Google from "@/components/googleAuth/Google";
 
 interface LoginForm {
     phoneNumber: string;
@@ -143,15 +144,7 @@ const LogIn: React.FC = () => {
                         <span className="mx-2! text-gray-500 text-sm">or</span>
                         <hr className="flex-1 border-gray-300" />
                     </div>
-
-                    <button
-                        type="button"
-                        className="border border-gray-300 py-2! w-full rounded-md flex items-center justify-center gap-2 hover:bg-gray-50 transition"
-                    >
-                        <img src="/icon/flat-color-icons_google.svg" alt="Google" loading="lazy" />
-                        Sign in with Google
-                    </button>
-
+                    <Google />
                     <nav className="flex items-center justify-center gap-2 mt-2">
                         <p className="text-[#99A2AB] text-sm">Don't have an account</p>
                         <Link
