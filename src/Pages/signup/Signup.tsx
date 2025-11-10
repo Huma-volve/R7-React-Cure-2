@@ -79,7 +79,7 @@ const Signup: React.FC = () => {
                 <div className="md:w-[420px] w-full p-4! flex flex-col gap-6">
                     <div className="flex flex-col gap-6 md:gap-2">
                         <h2 className="text-2xl font-serif mb-2!">Sign Up</h2>
-                        <p className="font-normal text-start md:text-center font-serif md:font-sans md:text-[.8rem] md:text-[#6D7379] md:!mb-2">
+                        <p className="font-normal text-start md:text-center font-serif md:font-sans md:text-[.8rem] md:text-[#6D7379] md:mb-2!">
                             Please provide all information required to create your account
                         </p>
                     </div>
@@ -93,7 +93,7 @@ const Signup: React.FC = () => {
 
                                 type="text"
                                 placeholder="Full name"
-                                className="border-2 border-gray-300 rounded-md !p-2 w-full"
+                                className="border-2 border-gray-300 rounded-md p-2 w-full"
                                 {...register("fullName", {
                                     required: "Full name is required",
                                     pattern: {
@@ -124,7 +124,7 @@ const Signup: React.FC = () => {
                             <input
                                 type="text"
                                 placeholder="Email"
-                                className="border-2 border-gray-300 rounded-md !p-2 w-full"
+                                className="border-2 border-gray-300 rounded-md p-2! w-full"
                                 {...register("Email", { required: "Email is required" })}
                             />
                             {errors.Email && (
@@ -171,7 +171,7 @@ const Signup: React.FC = () => {
                         <button
                             disabled={loading}
                             type="submit"
-                            className="bg-[#145DB8] hover:bg-[#173d6c80] text-white !py-2 rounded-md transition"
+                            className="bg-[#145DB8] hover:bg-[#173d6c80] text-white py-2 rounded-md transition"
                         >
                             {loading ? <Spinner /> : "Sign Up"}
                         </button>

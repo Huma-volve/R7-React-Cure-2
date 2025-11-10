@@ -2,7 +2,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import userReducer from "./UserSlice"
 import doctorReducer from "./doctorSlice"
 import authReducer from './UserSlice';
-import reviewReducer from './reviewSlice'; 
+import reviewReducer from './reviewSlice';
 import locationReducer from './locationSlice';
 import notificationsReducer from './notificationsSlice';
 
@@ -17,8 +17,6 @@ export const store = configureStore({
         review: reviewReducer,
         location: locationReducer,
         notifications: notificationsReducer,
-
-
         profile: profileReducer,
         methods: MethodsReducer
     },
