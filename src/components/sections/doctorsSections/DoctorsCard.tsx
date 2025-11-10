@@ -31,14 +31,14 @@ const DoctorCard: React.FC<DoctorCardProps> = (props) => {
 
     // Create doctor data object to pass to BtnFavorite using all props
     const doctorData: DoctorsType = {
-        id,
-        name,
-        image,
-        specialty,
-        hospital,
-        rate,
-        availability,
-        price,
+        // id,
+        // name,
+        // image,
+        // specialty,
+        // hospital,
+        // rate,
+        // availability,
+        // price,
         gender: props.gender || 'All',
         isFavorite: props.isFavorite || false,
         isFavourite: props.isFavourite || false,

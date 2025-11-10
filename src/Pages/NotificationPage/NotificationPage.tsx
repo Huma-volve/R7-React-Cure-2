@@ -5,12 +5,11 @@ import { ChevronLeft } from 'lucide-react';
 import { CancelledNotification, CompletedNotification, EmptyNotification, UpcomingNotification } from '@/components/Doctor/icons';
 import { fetchNotifications, markAsRead } from '@/store/notificationsSlice';
 import type { RootState, AppDispatch } from '@/store/Store';
-import SuccessBookingPopup from '@/components/Doctor/SuccessBookingPopup';
 
 const NotificationsPage: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate(); // إضافة navigate
-  const { notifications, loading, error } = useSelector((state: RootState) => state.notifications);
+  const { notifications, loading } = useSelector((state: RootState) => state.notifications);
 
   useEffect(() => {
     dispatch(fetchNotifications());
@@ -54,7 +53,7 @@ const NotificationsPage: React.FC = () => {
     const now = new Date();
     const created = new Date(createdAt);
     const diffInHours = Math.floor((now.getTime() - created.getTime()) / (1000 * 60 * 60));
-    
+
     if (diffInHours < 1) return 'Just now';
     if (diffInHours < 24) return `${diffInHours}h`;
     const diffInDays = Math.floor(diffInHours / 24);
@@ -66,7 +65,7 @@ const NotificationsPage: React.FC = () => {
       {/* Header */}
       <div className="sticky top-0 z-10 bg-white shadow-sm">
         <div className="max-w-2xl mx-auto px-4 py-4 flex items-center">
-          <button 
+          <button
             onClick={() => window.history.back()}
             className="mr-4 p-1 hover:bg-gray-100 rounded-full transition-colors"
           >
@@ -88,29 +87,27 @@ const NotificationsPage: React.FC = () => {
           <>
             {/* Today Section */}
             <h2 className="text-sm font-semibold text-blue-600 mb-4 ml-3">Today</h2>
-            
+
             {/* Notifications List */}
             <div className="space-y-3">
               {notifications.map((notification) => (
                 <div
                   key={notification.Id}
                   onClick={() => handleNotificationClick(notification.Id, notification.IsRead)}
-                  className={`rounded-xl px-6 py-2 cursor-pointer my-0 hover:bg-[#F5F6F7] transition-colors ${
-                    !notification.IsRead ? 'bg-blue-50' : ''
-                  }`}
+                  className={`rounded-xl px-6 py-2 cursor-pointer my-0 hover:bg-[#F5F6F7] transition-colors ${!notification.IsRead ? 'bg-blue-50' : ''
+                    }`}
                 >
                   <div className="flex items-start gap-3">
                     {/* Icon */}
                     <div className={`${getNotificationBgColor(notification.Types)} rounded-full p-[18px] shrink-0`}>
                       {getNotificationIcon(notification.Types)}
                     </div>
-                    
+
                     {/* Content */}
                     <div className="flex-1 min-w-0">
                       <div className="flex items-start justify-between gap-2">
-                        <h3 className={`font-semibold text-gray-900 text-sm sm:text-base ${
-                          !notification.IsRead ? 'font-bold' : ''
-                        }`}>
+                        <h3 className={`font-semibold text-gray-900 text-sm sm:text-base ${!notification.IsRead ? 'font-bold' : ''
+                          }`}>
                           {notification.Types}
                         </h3>
                         <span className="text-xs text-gray-400 shrink-0">
@@ -154,7 +151,7 @@ const NotificationsPage: React.FC = () => {
 
 
 
-      
+
 
 
 
