@@ -14,7 +14,6 @@ const Google: React.FC = () => {
             dispatch(googleLogin({ idToken }));
             navigate("/");
         }
-        console.log("11111111", credentialResponse);
     };
 
     const onError = () => {
