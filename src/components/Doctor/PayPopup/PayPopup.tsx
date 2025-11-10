@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Plus, Check, X, Loader2 } from "lucide-react";
 import { useAppSelector, useAppDispatch } from "@/store/hooks";
 import { createBooking, resetBookingState } from "@/store/doctorSlice";
-import {  BsCashCoin } from "react-icons/bs";
+import { BsCashCoin } from "react-icons/bs";
 import { Link } from "react-router";
 import SuccessBookingPopup from "../SuccessBookingPopup";
 
@@ -19,28 +19,28 @@ interface PayPopupProps {
 const PayPopup = ({ onClose, selectedDate, selectedTime, selectedSlotId }: PayPopupProps) => {
   const dispatch = useAppDispatch();
   const [selectedMethod, setSelectedMethod] = useState("credit-cart");
-  
+
   // Get doctor data and booking state from Redux
-  const { currentDoctor, bookingLoading, bookingError, bookingSuccess } = useAppSelector((state) => state.doctor);
+  const { currentDoctor, bookingLoading, bookingError } = useAppSelector((state) => state.doctor);
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
   const paymentOptions = [
-    { id: "credit-cart", label: "Credit Card", icon: <Visa/> },
-    { id: "paypal", label: "PayPal", icon: <Paypal/> },
-    { id: "apple-pay", label: "Apple Pay", icon: <ApplePay/> },
-    { id: "cash", label: "Cash", icon: <BsCashCoin size={30}/>},
+    { id: "credit-cart", label: "Credit Card", icon: <Visa /> },
+    { id: "paypal", label: "PayPal", icon: <Paypal /> },
+    { id: "apple-pay", label: "Apple Pay", icon: <ApplePay /> },
+    { id: "cash", label: "Cash", icon: <BsCashCoin size={30} /> },
   ];
 
   const formatAppointmentDate = () => {
     if (!selectedDate) return "Monday, 20th Aug 2024 | 10:00 AM";
-    
+
     const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    
+
     const dayName = days[selectedDate.getDay()];
     const monthName = months[selectedDate.getMonth()];
     const date = selectedDate.getDate();
     const year = selectedDate.getFullYear();
-    
+
     return `${dayName}, ${date}${getOrdinalSuffix(date)} ${monthName} ${year} | ${selectedTime || '10:00 AM'}`;
   };
 
@@ -56,25 +56,25 @@ const PayPopup = ({ onClose, selectedDate, selectedTime, selectedSlotId }: PayPo
 
   const formatDateTimeForAPI = () => {
     if (!selectedDate || !selectedTime) return new Date().toISOString();
-    
+
     // تحويل الوقت من 12 ساعة إلى 24 ساعة
     const timeParts = selectedTime.match(/(\d+):(\d+)\s*(AM|PM)/i);
     if (!timeParts) return new Date().toISOString();
-    
+
     let hours = parseInt(timeParts[1]);
     const minutes = timeParts[2];
     const period = timeParts[3].toUpperCase();
-    
+
     if (period === 'PM' && hours !== 12) hours += 12;
     if (period === 'AM' && hours === 12) hours = 0;
-    
+
     const formattedHours = hours.toString().padStart(2, '0');
-    
+
     // إنشاء التاريخ والوقت بصيغة ISO
     const year = selectedDate.getFullYear();
     const month = (selectedDate.getMonth() + 1).toString().padStart(2, '0');
     const day = selectedDate.getDate().toString().padStart(2, '0');
-    
+
     return `${year}-${month}-${day}T${formattedHours}:${minutes}:00`;
   };
 
@@ -93,63 +93,63 @@ const PayPopup = ({ onClose, selectedDate, selectedTime, selectedSlotId }: PayPo
   //   }
   // };
 
-const handlePayment = async () => {
-  if (!currentDoctor || !selectedSlotId) {
-    alert("Doctor or Slot information is missing.");
-    return;
-  }
+  const handlePayment = async () => {
+    if (!currentDoctor || !selectedSlotId) {
+      alert("Doctor or Slot information is missing.");
+      return;
+    }
 
-  console.log("🔍 Current Doctor:", currentDoctor);
-  console.log("🔍 Doctor ID:", currentDoctor.id);
-  console.log("🔍 Selected Slot ID:", selectedSlotId);
+    console.log("🔍 Current Doctor:", currentDoctor);
+    console.log("🔍 Doctor ID:", currentDoctor.id);
+    console.log("🔍 Selected Slot ID:", selectedSlotId);
 
-  // 🕒 صيغة التاريخ والوقت بالـ ISO
-  const appointmentAt = formatDateTimeForAPI();
+    // 🕒 صيغة التاريخ والوقت بالـ ISO
+    const appointmentAt = formatDateTimeForAPI();
 
-  // ⚙️ تحديد قيمة Payment و Status بالأرقام المطلوبة للـ API
-  const getPaymentCode = () => {
-    switch (selectedMethod) {
-      case "credit-cart":
-        return 2; // 2 = CreditCard
-      case "paypal":
-        return 1; // 1 = PayPal
-      case "cash":
-        return 0; // 0 = Cash
-      default:
-        return 0;
+    // ⚙️ تحديد قيمة Payment و Status بالأرقام المطلوبة للـ API
+    const getPaymentCode = () => {
+      switch (selectedMethod) {
+        case "credit-cart":
+          return 2; // 2 = CreditCard
+        case "paypal":
+          return 1; // 1 = PayPal
+        case "cash":
+          return 0; // 0 = Cash
+        default:
+          return 0;
+      }
+    };
+
+    // 💵 تحضير البيانات بالشكل المتوقع من الـ API
+    const bookingData = {
+      DoctorId: Number(currentDoctor.id),
+      SlotId: Number(selectedSlotId),
+      Amount: Number(currentDoctor?.pricePerHour || currentDoctor?.price || 300.0),
+      Payment: getPaymentCode(),
+      Status: 0,
+      AppointmentAt: appointmentAt,
+    };
+
+
+    console.log("📤 Booking data being sent:", bookingData);
+    console.log("📤 Data types:", {
+      DoctorId: typeof bookingData.DoctorId,
+      SlotId: typeof bookingData.SlotId,
+      Amount: typeof bookingData.Amount,
+    });
+
+    try {
+      const result = await dispatch(createBooking(bookingData)).unwrap();
+
+      console.log("✅ Booking Success:", result);
+      setShowSuccessPopup(true);
+      dispatch(resetBookingState());
+      if (onClose) onClose();
+    } catch (error: any) {
+      console.error("❌ Booking Error:", error);
+      alert(`❌ Booking failed: ${error || "Unknown error"}`);
     }
   };
-
-  // 💵 تحضير البيانات بالشكل المتوقع من الـ API
-const bookingData = {
-  DoctorId: Number(currentDoctor.id),
-  SlotId: Number(selectedSlotId),
-  Amount: Number(currentDoctor?.pricePerHour || currentDoctor?.price || 300.0),
-  Payment: getPaymentCode(),
-  Status: 0,
-  AppointmentAt: appointmentAt,
-};
-
-
-  console.log("📤 Booking data being sent:", bookingData);
-  console.log("📤 Data types:", {
-    DoctorId: typeof bookingData.DoctorId,
-    SlotId: typeof bookingData.SlotId,
-    Amount: typeof bookingData.Amount,
-  });
-
-  try {
-    const result = await dispatch(createBooking(bookingData)).unwrap();
-
-    console.log("✅ Booking Success:", result);
-    setShowSuccessPopup(true);
-    dispatch(resetBookingState());
-    if (onClose) onClose();
-  } catch (error: any) {
-    console.error("❌ Booking Error:", error);
-    alert(`❌ Booking failed: ${error || "Unknown error"}`);
-  }
-};
 
   return (
     <div
@@ -188,10 +188,10 @@ const bookingData = {
             </span>
           </div>
           <Link to={"/bookappointment"}>
-          <button 
-          className="text-[#145DB8] font-medium hover:underline">
-            Reschedule
-          </button>
+            <button
+              className="text-[#145DB8] font-medium hover:underline">
+              Reschedule
+            </button>
           </Link>
         </div>
 
@@ -206,30 +206,27 @@ const bookingData = {
               <div
                 key={option.id}
                 onClick={() => setSelectedMethod(option.id)}
-                className={`flex items-center justify-between py-4 px-8 lg:py-4 lg:px-6 rounded-lg cursor-pointer transition-colors  ${
-                  selectedMethod === option.id
+                className={`flex items-center justify-between py-4 px-8 lg:py-4 lg:px-6 rounded-lg cursor-pointer transition-colors  ${selectedMethod === option.id
                     ? "bg-[#EDF7EE]"
                     : "border-2 border-transparent hover:border-gray-200"
-                }`}
+                  }`}
               >
                 <div className="flex items-center gap-3">
                   <div
-                    className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
-                      selectedMethod === option.id
+                    className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${selectedMethod === option.id
                         ? "bg-[#4CAF50] border-[#4CAF50]"
                         : "bg-white border-gray-300"
-                    }`}
+                      }`}
                   >
                     {selectedMethod === option.id && (
                       <Check size={16} className="text-white" />
                     )}
                   </div>
                   <span
-                    className={`text-base ${
-                      selectedMethod === option.id
+                    className={`text-base ${selectedMethod === option.id
                         ? "text-[#4CAF50] font-medium"
                         : "text-gray-700"
-                    }`}
+                      }`}
                   >
                     {option.label}
                   </span>
@@ -239,7 +236,7 @@ const bookingData = {
                 >
                   {option.icon}
                 </div>
-                
+
               </div>
             ))}
 
@@ -263,22 +260,22 @@ const bookingData = {
         )}
 
         {/* Success Message */}
- <SuccessBookingPopup
-      isOpen={showSuccessPopup}
-      onClose={() => {
-        setShowSuccessPopup(false);
-        if (onClose) onClose();
-      }}
-      doctorName={`Dr. ${currentDoctor?.fullName || "Unknown"}`}
-      appointmentDate={selectedDate ? formatAppointmentDate().split("|")[0].trim() : ""}
-      appointmentTime={selectedTime || "10:00 AM"}
-    />
+        <SuccessBookingPopup
+          isOpen={showSuccessPopup}
+          onClose={() => {
+            setShowSuccessPopup(false);
+            if (onClose) onClose();
+          }}
+          doctorName={`Dr. ${currentDoctor?.fullName || "Unknown"}`}
+          appointmentDate={selectedDate ? formatAppointmentDate().split("|")[0].trim() : ""}
+          appointmentTime={selectedTime || "10:00 AM"}
+        />
 
         {/* Total and Pay Button */}
         <div className="flex flex-col md:flex-col md:items-center md:justify-between gap-4 mt-10">
           <div className="text-lg text-gray-700 flex items-center gap-2 justify-between w-full">
             <div className="flex items-end">
-              <h1 className="font-medium text-3xl">Price</h1>  
+              <h1 className="font-medium text-3xl">Price</h1>
               <span className="text-md text-gray-400">/hour</span>
             </div>
 

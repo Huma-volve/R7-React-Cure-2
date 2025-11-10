@@ -1,4 +1,3 @@
-import { BsHeartPulse } from 'react-icons/bs';
 import { Link } from 'react-router';
 import { HamburgerMenu, Notifications, ProfileList } from '../common/navbar';
 import SearchBar from '../common/SearchBar';
