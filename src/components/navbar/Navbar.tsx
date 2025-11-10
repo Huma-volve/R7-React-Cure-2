@@ -7,22 +7,6 @@ import { Container } from '../ui/Container';
 export default function Navbar() {
     return (
         <nav className="lg:py-10 py-6 mb-3 z-999 bg-white relative">
-            {/* Logo */}
-            <div className="logo">
-                <BsHeartPulse className="text-(--color-primary) text-3xl" />
-            </div>
-            {/* Search Bar */}
-            <SearchBar />
-            <div className="right-content flex align-center gap-4">
-                {/* Menu List */}
-                <HamburgerMenu />
-
-                {/* Notification */}
-                <Notifications />
-
-                {/* Profile */}
-                <ProfileList />
-            </div>
             <Container className="flex flex-col sm:flex-row sm:items-center sm:justify-between sm:gap-4 gap-2">
                 <div className="flex items-center justify-between w-full sm:w-auto sm:flex-none mb-2 sm:mb-0">
                     {/* Logo */}
@@ -34,9 +18,9 @@ export default function Navbar() {
 
                     {/* Right Content for Small Screen*/}
                     <div className="sm:hidden flex items-center gap-4">
-                        {/* <HamburgerMenu />
+                        <HamburgerMenu />
                         <Notifications />
-                        <ProfileList /> */}
+                        <ProfileList />
                     </div>
                 </div>
 
@@ -47,9 +31,9 @@ export default function Navbar() {
 
                 {/* Right Content for large screen*/}
                 <div className="hidden sm:flex items-center gap-4">
-                    {/* <HamburgerMenu />
+                    <HamburgerMenu />
                     <Notifications />
-                    <ProfileList /> */}
+                    <ProfileList />
                 </div>
             </Container>
         </nav>

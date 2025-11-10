@@ -1,9 +1,13 @@
 import DoctorCardInfo from "@/components/Doctor/DoctorCardInfo/DoctorCardInfo";
-import { CalendarIcon } from "@/components/Doctor/icons";
+import { ApplePay, CalendarIcon, Paypal, Visa } from "@/components/Doctor/icons";
 import { useState } from "react";
 import { Plus, Check, X, Loader2 } from "lucide-react";
 import { useAppSelector, useAppDispatch } from "@/store/hooks";
 import { createBooking, resetBookingState } from "@/store/doctorSlice";
+import {  BsCashCoin } from "react-icons/bs";
+import { Link } from "react-router";
+import SuccessBookingPopup from "../SuccessBookingPopup";
+
 
 interface PayPopupProps {
   onClose?: () => void;
@@ -18,12 +22,12 @@ const PayPopup = ({ onClose, selectedDate, selectedTime, selectedSlotId }: PayPo
   
   // Get doctor data and booking state from Redux
   const { currentDoctor, bookingLoading, bookingError, bookingSuccess } = useAppSelector((state) => state.doctor);
-
+  const [showSuccessPopup, setShowSuccessPopup] = useState(false);
   const paymentOptions = [
-    { id: "credit-cart", label: "Credit Card", icon: "VISA" },
-    { id: "paypal", label: "PayPal", icon: "PP" },
-    { id: "apple-pay", label: "Apple Pay", icon: "AP" },
-    { id: "cash", label: "Cash", icon: "💵" },
+    { id: "credit-cart", label: "Credit Card", icon: <Visa/> },
+    { id: "paypal", label: "PayPal", icon: <Paypal/> },
+    { id: "apple-pay", label: "Apple Pay", icon: <ApplePay/> },
+    { id: "cash", label: "Cash", icon: <BsCashCoin size={30}/>},
   ];
 
   const formatAppointmentDate = () => {
@@ -119,7 +123,6 @@ const handlePayment = async () => {
   // 💵 تحضير البيانات بالشكل المتوقع من الـ API
 const bookingData = {
   DoctorId: Number(currentDoctor.id),
-  PatientId: 1,
   SlotId: Number(selectedSlotId),
   Amount: Number(currentDoctor?.pricePerHour || currentDoctor?.price || 300.0),
   Payment: getPaymentCode(),
@@ -131,7 +134,6 @@ const bookingData = {
   console.log("📤 Booking data being sent:", bookingData);
   console.log("📤 Data types:", {
     DoctorId: typeof bookingData.DoctorId,
-    PatientId: typeof bookingData.PatientId,
     SlotId: typeof bookingData.SlotId,
     Amount: typeof bookingData.Amount,
   });
@@ -140,8 +142,7 @@ const bookingData = {
     const result = await dispatch(createBooking(bookingData)).unwrap();
 
     console.log("✅ Booking Success:", result);
-    alert("✅ Booking successful! Your appointment has been confirmed.");
-
+    setShowSuccessPopup(true);
     dispatch(resetBookingState());
     if (onClose) onClose();
   } catch (error: any) {
@@ -155,7 +156,7 @@ const bookingData = {
       className="
         w-full
         lg:fixed lg:inset-0 lg:bg-black/50 lg:flex lg:items-center lg:justify-center
-        z-50
+        z-10000
       "
     >
       <div
@@ -186,9 +187,12 @@ const bookingData = {
               {formatAppointmentDate()}
             </span>
           </div>
-          <button className="text-[#145DB8] font-medium hover:underline">
+          <Link to={"/bookappointment"}>
+          <button 
+          className="text-[#145DB8] font-medium hover:underline">
             Reschedule
           </button>
+          </Link>
         </div>
 
         {/* Payment Method Section */}
@@ -197,7 +201,7 @@ const bookingData = {
             Payment Method
           </h2>
 
-          <div className="space-y-2">
+          <div className="space-y-2 max-h-[300px] overflow-y-auto pr-2">
             {paymentOptions.map((option) => (
               <div
                 key={option.id}
@@ -232,18 +236,10 @@ const bookingData = {
                 </div>
 
                 <div
-                  className={`px-3 py-1 rounded text-sm font-bold ${
-                    option.id === "credit-cart"
-                      ? "bg-blue-600 text-white"
-                      : option.id === "paypal"
-                      ? "bg-blue-700 text-white"
-                      : option.id === "apple-pay"
-                      ? "bg-black text-white"
-                      : "bg-green-600 text-white"
-                  }`}
                 >
                   {option.icon}
                 </div>
+                
               </div>
             ))}
 
@@ -267,11 +263,16 @@ const bookingData = {
         )}
 
         {/* Success Message */}
-        {bookingSuccess && (
-          <div className="mt-4 p-3 bg-green-50 border border-green-200 rounded-lg">
-            <p className="text-green-600 text-sm">✅ Booking successful!</p>
-          </div>
-        )}
+ <SuccessBookingPopup
+      isOpen={showSuccessPopup}
+      onClose={() => {
+        setShowSuccessPopup(false);
+        if (onClose) onClose();
+      }}
+      doctorName={`Dr. ${currentDoctor?.fullName || "Unknown"}`}
+      appointmentDate={selectedDate ? formatAppointmentDate().split("|")[0].trim() : ""}
+      appointmentTime={selectedTime || "10:00 AM"}
+    />
 
         {/* Total and Pay Button */}
         <div className="flex flex-col md:flex-col md:items-center md:justify-between gap-4 mt-10">

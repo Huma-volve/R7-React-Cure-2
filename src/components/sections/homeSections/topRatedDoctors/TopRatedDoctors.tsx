@@ -1,11 +1,35 @@
-import { DoctorsList } from '@/api/doctors/Doctors';
+import { useEffect, useState } from 'react';
 import { Container } from '@/components/ui/Container';
-import React from 'react';
 import { Link } from 'react-router';
 import DoctorsCard from '../../doctorsSections/DoctorsCard';
 import { Carousel, CarouselContent } from '@/components/ui/carousel';
+import { getTopRatedDoctors } from '@/api/services/doctorsService';
+import type { DoctorsType } from '@/api/doctors/Doctors';
 
 const TopRatedDoctors: React.FC = () => {
+    const [doctors, setDoctors] = useState<DoctorsType[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+
+    useEffect(() => {
+        const loadTopRated = async () => {
+            setLoading(true);
+            setError(null);
+            try {
+                const response = await getTopRatedDoctors();
+                console.log('[TopRatedDoctors] getTopRatedDoctors raw response:', response.raw);
+                setDoctors(response.doctors);
+            } catch (err) {
+                console.error('[TopRatedDoctors] error:', err);
+                setError(err instanceof Error ? err.message : 'Failed to load top rated doctors');
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        void loadTopRated();
+    }, []);
+
     return (
         <section className="relative py-15 sm:py-20 overflow-hidden">
             <Container>
@@ -35,13 +59,25 @@ const TopRatedDoctors: React.FC = () => {
             {/* Cards Full Width Start */}
             <div className="relative w-screen max-w-none -mr-[calc((100vw-theme('spacing.container'))/2)] right-1/2 translate-x-1/2 pr-0 sm:pr-[unset]">
                 <div className="cardsContent">
-                    <Carousel className="w-full overflow-visible">
-                        <CarouselContent className="py-5 lg:ps-30 ps-10 pe-8 sm:pe-0 gap-5">
-                            {DoctorsList.map((doctor) => (
-                                <DoctorsCard key={doctor.id} {...doctor} />
-                            ))}
-                        </CarouselContent>
-                    </Carousel>
+                    {loading ? (
+                        <p className="px-10 py-6 text-center text-gray-600">
+                            Loading top rated doctors...
+                        </p>
+                    ) : error ? (
+                        <p className="px-10 py-6 text-center text-red-500">{error}</p>
+                    ) : doctors.length === 0 ? (
+                        <p className="px-10 py-6 text-center text-gray-600">
+                            No top rated doctors found.
+                        </p>
+                    ) : (
+                        <Carousel className="w-full overflow-visible">
+                            <CarouselContent className="py-5 lg:ps-30 ps-10 pe-8 sm:pe-0 gap-5">
+                                {doctors.map((doctor) => (
+                                    <DoctorsCard key={doctor.id} {...doctor} />
+                                ))}
+                            </CarouselContent>
+                        </Carousel>
+                    )}
                 </div>
             </div>
         </section>

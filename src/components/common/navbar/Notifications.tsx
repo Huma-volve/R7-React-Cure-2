@@ -75,7 +75,7 @@ const Notifications = () => {
                 {existNotification ? (
                     <>
                         <DropdownMenuLabel className="bg-[#F5F6F7] font-medium text-center p-4">
-                            <Link to="/notifications">Your Notification</Link>
+                            <Link to="/notificationpage">Your Notification</Link>
                         </DropdownMenuLabel>
                         <DropdownMenuGroup>
                             {NotificationsList.map((notification) => (
@@ -131,3 +131,8 @@ const Notifications = () => {
 };
 
 export default Notifications;
+
+
+
+
+
