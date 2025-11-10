@@ -1,6 +1,8 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+import Cookies from "js-cookie";
 const base_url = `https://cure-doctor-booking.runasp.net/`;
+declare const google: any;
 interface UserState {
     loading: boolean;
     user: any;
@@ -124,26 +126,25 @@ export const resendVerifyOTP = createAsyncThunk(
         }
     }
 )
+
 interface GoogleLogin {
-    idToken: string
+    idToken: string;
 }
+
 export const googleLogin = createAsyncThunk(
     "user/googleLogin",
     async (data: GoogleLogin, { rejectWithValue }) => {
         try {
-            const response = await axios.post(`${base_url}api/Identity/Accounts/google-login`, data, {
-                headers: {
-                    "Content-Type": "application/json",
-                },
-            });
-
+            const response = await axios.post(
+                `${base_url}api/Identity/Accounts/google-login`,
+                data
+            );
             return response.data;
         } catch (error) {
             return rejectWithValue((error as Error).message);
         }
     }
 );
-
 export const refreshToken = createAsyncThunk(
     "user/refreshToken",
     async (_, { rejectWithValue }) => {
@@ -210,8 +211,6 @@ const userSlice = createSlice({
                 state.loading = false;
                 state.data.acssessToken = action.payload.data.accessToken;
                 state.data.refreshToken = action.payload.data.refreshToken;
-                localStorage.setItem("accessToken", action.payload.data.accessToken);
-                localStorage.setItem("refreshToken", action.payload.data.refreshToken);
             })
             .addCase(verifyOTPRegister.rejected, (state, action) => {
                 state.loading = false;
@@ -237,8 +236,7 @@ const userSlice = createSlice({
                 state.loading = false;
                 state.user = action.payload.user;
                 state.error = null;
-                localStorage.setItem("accessToken", action.payload.data.accessToken);
-                localStorage.setItem("refreshToken", action.payload.data.refreshToken);
+
             })
             .addCase(verifyOTP.rejected, (state, action) => {
                 state.loading = false;
@@ -251,8 +249,8 @@ const userSlice = createSlice({
             .addCase(googleLogin.fulfilled, (state, action) => {
                 state.loading = false;
                 state.user = action.payload.user;
-
                 state.error = null;
+                Cookies.set("idToken", action.payload.idToken);
             })
             .addCase(googleLogin.rejected, (state, action) => {
                 state.loading = false;
