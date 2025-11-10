@@ -14,7 +14,6 @@ const Google: React.FC = () => {
             dispatch(googleLogin({ idToken }));
             navigate("/");
         }
-        console.log("11111111", credentialResponse);
     };
 
     const onError = () => {
@@ -24,6 +23,7 @@ const Google: React.FC = () => {
     return (
         <div className="flex justify-center w-full">
             <GoogleLogin
+                width={1000}
                 onSuccess={onSuccess}
                 onError={onError}
             />
