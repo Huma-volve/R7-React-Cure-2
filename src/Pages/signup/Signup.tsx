@@ -171,7 +171,7 @@ const Signup: React.FC = () => {
                         <button
                             disabled={loading}
                             type="submit"
-                            className="bg-[#145DB8] hover:bg-blue-700 text-white !py-2 rounded-md transition"
+                            className="bg-[#145DB8] hover:bg-[#173d6c80] text-white !py-2 rounded-md transition"
                         >
                             {loading ? <Spinner /> : "Sign Up"}
                         </button>
