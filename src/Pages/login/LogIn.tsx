@@ -112,9 +112,10 @@ const LogIn: React.FC = () => {
                                     isValidPhoneNumber(value || "") || "Invalid phone number",
                             }}
                             render={({ field }) => (
-                                <div>
+                                <div className="w-full">
                                     <PhoneInput
                                         {...field}
+                                        className="w-full!"
                                         international
                                         defaultCountry="EG"
                                         placeholder="Enter your phone number"
