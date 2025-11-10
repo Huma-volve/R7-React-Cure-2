@@ -7,10 +7,8 @@ import router from './routes.tsx';
 
 import { store } from './store/Store';
 import { FavoriteProvider } from './context/FavoriteContext.tsx';
-
 import { GoogleOAuthProvider } from '@react-oauth/google'
 const GOOGLE_CLIENT_ID = "60136975563-f3l7uhdpim7ciikh8rkt0qafdim77pcj.apps.googleusercontent.com";
-console.log("Client8888888 ID:", GOOGLE_CLIENT_ID);
 
 createRoot(document.getElementById('root')!).render(
     <Provider store={store}>
