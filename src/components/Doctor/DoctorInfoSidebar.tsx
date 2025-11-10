@@ -51,9 +51,9 @@ const DoctorInfoSidebar: React.FC<DoctorInfoSidebarProps> = ({ doctor, text, sho
         <ChatIcon />
       </div>
 
-      <div className="flex items-start justify-center mb-4">
+      <div className="flex items-center justify-center mb-4">
         <div className="flex gap-3 flex-col">
-          <div className="relative">
+          <div className="relative flex justify-center items-center">
             <div className="p-[3px] rounded-full bg-linear-to-tl from-blue-900 to-transparent w-30 h-30 flex items-center justify-center">
               <img
                 src={doctor.imgUrl || '/public/images/magdyYacob.jpg'}
@@ -61,7 +61,7 @@ const DoctorInfoSidebar: React.FC<DoctorInfoSidebarProps> = ({ doctor, text, sho
                 className="w-28 h-28 rounded-full object-cover"
               />
             </div>
-            <div className="absolute bottom-0 -right-0.5 bg-white/40 rounded-full p-1">
+            <div className="absolute bottom-0 right-[2%] bg-white/40 rounded-full p-1 ">
               <VerifiedBadgeIcon />
             </div>
           </div>
