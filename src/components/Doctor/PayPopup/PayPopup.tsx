@@ -1,5 +1,5 @@
 import DoctorCardInfo from "@/components/Doctor/DoctorCardInfo/DoctorCardInfo";
-import { ApplePay, CalendarIcon, Paypal, Visa } from "@/components/Doctor/icons";
+import {  CalendarIcon, Paypal, Visa } from "@/components/Doctor/icons";
 import { useState } from "react";
 import { Plus, Check, X, Loader2 } from "lucide-react";
 import { useAppSelector, useAppDispatch } from "@/store/hooks";
@@ -7,7 +7,7 @@ import { createBooking, resetBookingState } from "@/store/doctorSlice";
 import { BsCashCoin } from "react-icons/bs";
 import { Link } from "react-router";
 import SuccessBookingPopup from "../SuccessBookingPopup";
-
+import { FaCcStripe } from "react-icons/fa";
 
 interface PayPopupProps {
   onClose?: () => void;
@@ -18,16 +18,15 @@ interface PayPopupProps {
 
 const PayPopup = ({ onClose, selectedDate, selectedTime, selectedSlotId }: PayPopupProps) => {
   const dispatch = useAppDispatch();
-  const [selectedMethod, setSelectedMethod] = useState("credit-cart");
-
-  // Get doctor data and booking state from Redux
+  const [selectedMethod, setSelectedMethod] = useState("cash");
+  
   const { currentDoctor, bookingLoading, bookingError } = useAppSelector((state) => state.doctor);
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
+
   const paymentOptions = [
-    { id: "credit-cart", label: "Credit Card", icon: <Visa /> },
-    { id: "paypal", label: "PayPal", icon: <Paypal /> },
-    { id: "apple-pay", label: "Apple Pay", icon: <ApplePay /> },
-    { id: "cash", label: "Cash", icon: <BsCashCoin size={30} /> },
+    { id: "cash", label: "Cash", icon: <BsCashCoin size={30}/> },
+    { id: "paypal", label: "PayPal", icon: <Paypal/> },
+    { id: "stripe", label: "Credit Card (Stripe)", icon: <FaCcStripe size={30} /> },
   ];
 
   const formatAppointmentDate = () => {
@@ -56,8 +55,7 @@ const PayPopup = ({ onClose, selectedDate, selectedTime, selectedSlotId }: PayPo
 
   const formatDateTimeForAPI = () => {
     if (!selectedDate || !selectedTime) return new Date().toISOString();
-
-    // تحويل الوقت من 12 ساعة إلى 24 ساعة
+    
     const timeParts = selectedTime.match(/(\d+):(\d+)\s*(AM|PM)/i);
     if (!timeParts) return new Date().toISOString();
 
@@ -78,20 +76,24 @@ const PayPopup = ({ onClose, selectedDate, selectedTime, selectedSlotId }: PayPo
     return `${year}-${month}-${day}T${formattedHours}:${minutes}:00`;
   };
 
-  // const getPaymentMethodName = () => {
-  //   switch (selectedMethod) {
-  //     case "credit-cart":
-  //       return "CreditCard";
-  //     case "paypal":
-  //       return "PayPal";
-  //     case "apple-pay":
-  //       return "ApplePay";
-  //     case "cash":
-  //       return "Cash";
-  //     default:
-  //       return "Cash";
-  //   }
-  // };
+  // تحديد Payment Code حسب الطريقة المختارة
+  const getPaymentCode = () => {
+    switch (selectedMethod) {
+      case "paypal":
+        return 0; // PayPal
+      case "stripe":
+        return 1; // Stripe
+      case "cash":
+        return 2; // Cash
+      default:
+        return 2;
+    }
+
+  // تحديد Status حسب طريقة الدفع
+  const getBookingStatus = () => {
+    // إذا Cash يكون pending، وإلا يكون 0
+    return selectedMethod === "cash" ? "pending" : 0;
+  };
 
   const handlePayment = async () => {
     if (!currentDoctor || !selectedSlotId) {
@@ -99,74 +101,55 @@ const PayPopup = ({ onClose, selectedDate, selectedTime, selectedSlotId }: PayPo
       return;
     }
 
-    console.log("🔍 Current Doctor:", currentDoctor);
-    console.log("🔍 Doctor ID:", currentDoctor.id);
-    console.log("🔍 Selected Slot ID:", selectedSlotId);
+    console.log("Current Doctor:", currentDoctor);
+    console.log("Selected Payment Method:", selectedMethod);
 
-    // 🕒 صيغة التاريخ والوقت بالـ ISO
     const appointmentAt = formatDateTimeForAPI();
 
-    // ⚙️ تحديد قيمة Payment و Status بالأرقام المطلوبة للـ API
-    const getPaymentCode = () => {
-      switch (selectedMethod) {
-        case "credit-cart":
-          return 2; // 2 = CreditCard
-        case "paypal":
-          return 1; // 1 = PayPal
-        case "cash":
-          return 0; // 0 = Cash
-        default:
-          return 0;
-      }
-    };
-
-    // 💵 تحضير البيانات بالشكل المتوقع من الـ API
     const bookingData = {
       DoctorId: Number(currentDoctor.id),
       SlotId: Number(selectedSlotId),
       Amount: Number(currentDoctor?.pricePerHour || currentDoctor?.price || 300.0),
-      Payment: getPaymentCode(),
-      Status: 0,
-      AppointmentAt: appointmentAt,
+      Payment: Number(getPaymentCode()),
+      Status: Number(getBookingStatus()),
+      AppointmentAt: String(appointmentAt),
     };
 
-
-    console.log("📤 Booking data being sent:", bookingData);
-    console.log("📤 Data types:", {
-      DoctorId: typeof bookingData.DoctorId,
-      SlotId: typeof bookingData.SlotId,
-      Amount: typeof bookingData.Amount,
-    });
+    console.log("Booking data being sent:", bookingData);
 
     try {
       const result = await dispatch(createBooking(bookingData)).unwrap();
 
       console.log("✅ Booking Success:", result);
-      setShowSuccessPopup(true);
-      dispatch(resetBookingState());
-      if (onClose) onClose();
+
+      //success popup if it was cash
+      if (selectedMethod === "cash") {
+        setShowSuccessPopup(true);
+        setTimeout(() => {
+          dispatch(resetBookingState());
+          if (onClose) onClose();
+        }, 2000);
+      } 
+      
+      // Redireact if it's paypal or stripe
+      else if (result?.paymentUrl) {
+        console.log(" Redirecting to payment URL:", result.paymentUrl);
+        window.location.href = result.paymentUrl; // Redirect للدفع
+      } else {
+        console.warn(" No payment URL received from API");
+        alert("Payment URL not available. Please try again.");
+      }
+
     } catch (error: any) {
-      console.error("❌ Booking Error:", error);
-      alert(`❌ Booking failed: ${error || "Unknown error"}`);
+      console.error(" Booking Error:", error);
+      alert(` Booking failed: ${error || "Unknown error"}`);
     }
   };
 
   return (
-    <div
-      className="
-        w-full
-        lg:fixed lg:inset-0 lg:bg-black/50 lg:flex lg:items-center lg:justify-center
-        z-10000
-      "
-    >
-      <div
-        className="
-          w-full px-4 py-6 lg:px-8 
-          lg:w-[600px] lg:rounded-2xl lg:shadow-2xl lg:bg-white lg:my-0
-          lg:max-h-screen lg:overflow-y-auto relative
-        "
-      >
-        {/* زر الإغلاق للـ Popup */}
+    <div className="w-full lg:fixed lg:inset-0 lg:bg-black/50 lg:flex lg:items-center lg:justify-center z-10000">
+      <div className="w-full px-4 py-6 lg:px-8 lg:w-[600px] lg:rounded-2xl lg:shadow-2xl lg:bg-white lg:my-0 lg:max-h-screen lg:overflow-y-auto relative">
+        
         <button
           onClick={() => onClose && onClose()}
           className="hidden lg:block absolute top-4 right-4 text-gray-500 hover:text-gray-700 transition"
@@ -174,12 +157,10 @@ const PayPopup = ({ onClose, selectedDate, selectedTime, selectedSlotId }: PayPo
           <X size={22} />
         </button>
 
-        {/* Doctor Info */}
         <div className="mb-8">
           {currentDoctor ? <DoctorCardInfo doctor={currentDoctor} /> : null}
         </div>
 
-        {/* Appointment Info */}
         <div className="flex justify-between items-center mb-4">
           <div className="flex gap-2 items-center">
             <CalendarIcon />
@@ -188,14 +169,12 @@ const PayPopup = ({ onClose, selectedDate, selectedTime, selectedSlotId }: PayPo
             </span>
           </div>
           <Link to={"/bookappointment"}>
-            <button
-              className="text-[#145DB8] font-medium hover:underline">
+            <button className="text-[#145DB8] font-medium hover:underline">
               Reschedule
             </button>
           </Link>
         </div>
 
-        {/* Payment Method Section */}
         <div className="p-2 bg-white rounded-lg">
           <h2 className="text-2xl font-semibold mb-6 text-gray-900">
             Payment Method
@@ -206,7 +185,8 @@ const PayPopup = ({ onClose, selectedDate, selectedTime, selectedSlotId }: PayPo
               <div
                 key={option.id}
                 onClick={() => setSelectedMethod(option.id)}
-                className={`flex items-center justify-between py-4 px-8 lg:py-4 lg:px-6 rounded-lg cursor-pointer transition-colors  ${selectedMethod === option.id
+                className={`flex items-center justify-between py-4 px-8 lg:py-4 lg:px-6 rounded-lg cursor-pointer transition-colors ${
+                  selectedMethod === option.id
                     ? "bg-[#EDF7EE]"
                     : "border-2 border-transparent hover:border-gray-200"
                   }`}
@@ -232,19 +212,12 @@ const PayPopup = ({ onClose, selectedDate, selectedTime, selectedSlotId }: PayPo
                   </span>
                 </div>
 
-                <div
-                >
-                  {option.icon}
-                </div>
-
+                <div>{option.icon}</div>
               </div>
             ))}
 
-            {/* Add Card Button - إخفاءه عند اختيار Cash */}
             {selectedMethod !== "cash" && (
-              <button
-                className="w-full py-4 px-8 lg:py-2 lg:px-4 border-2 border-dashed border-[#145DB8] rounded-lg text-[#145DB8] hover:border-blue-400 hover:bg-blue-50 transition-colors flex items-center justify-center gap-2 font-medium"
-              >
+              <button className="w-full py-4 px-8 lg:py-2 lg:px-4 border-2 border-dashed border-[#145DB8] rounded-lg text-[#145DB8] hover:border-blue-400 hover:bg-blue-50 transition-colors flex items-center justify-center gap-2 font-medium">
                 <Plus size={20} />
                 Add new card
               </button>
@@ -252,14 +225,12 @@ const PayPopup = ({ onClose, selectedDate, selectedTime, selectedSlotId }: PayPo
           </div>
         </div>
 
-        {/* Error Message */}
         {bookingError && (
           <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg">
-            <p className="text-red-600 text-sm">❌ {bookingError}</p>
+            <p className="text-red-600 text-sm">:( {bookingError}</p>
           </div>
         )}
 
-        {/* Success Message */}
         <SuccessBookingPopup
           isOpen={showSuccessPopup}
           onClose={() => {
@@ -271,7 +242,6 @@ const PayPopup = ({ onClose, selectedDate, selectedTime, selectedSlotId }: PayPo
           appointmentTime={selectedTime || "10:00 AM"}
         />
 
-        {/* Total and Pay Button */}
         <div className="flex flex-col md:flex-col md:items-center md:justify-between gap-4 mt-10">
           <div className="text-lg text-gray-700 flex items-center gap-2 justify-between w-full">
             <div className="flex items-end">
@@ -295,8 +265,10 @@ const PayPopup = ({ onClose, selectedDate, selectedTime, selectedSlotId }: PayPo
                 <Loader2 className="animate-spin" size={20} />
                 Processing...
               </>
+            ) : selectedMethod === "cash" ? (
+              "Confirm Booking"
             ) : (
-              "Pay Now"
+              "Proceed to Payment"
             )}
           </button>
         </div>
