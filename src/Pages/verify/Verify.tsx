@@ -49,7 +49,7 @@ const Verify = () => {
                 ? await dispatch(verifyOTPRegister(payload))
                 : await dispatch(verifyOTP(payload));
 
-            toast.success("تم التحقق من الـ OTP بنجاح!");
+            toast.success("OTP verified successfully!");
 
             dispatch(setToken({
                 accessToken: res.payload.data.accessToken,
@@ -60,14 +60,13 @@ const Verify = () => {
 
         } catch (error) {
             setOtpError(true);
-            toast.error("فشل التحقق من الـ OTP! يرجى المحاولة مرة أخرى.");
+            toast.error("OTP verification failed!");
             reset({ otpNumber: "" });
         } finally {
             setLoading(false);
         }
     };
 
-    // دالة إعادة إرسال الكود
     const handleResend = async () => {
         setResending(true);
         setOtpError(false);
@@ -121,7 +120,6 @@ const Verify = () => {
                                 maxLength: { value: 4, message: "يجب أن يكون الكود 4 أرقام" },
                             }}
                             render={({ field }) => (
-                                // تأكد من أن مكون InputOTP يسمح بالإدخال
                                 <InputOTP
                                     maxLength={4}
                                     value={field.value}

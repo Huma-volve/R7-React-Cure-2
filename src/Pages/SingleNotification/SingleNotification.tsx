@@ -1,9 +1,9 @@
 import React from 'react'
 
-const SingleNotification = () => {
+const SingleNotification: React.FC = () => {
   return (
     <div>
-      
+
     </div>
   )
 }

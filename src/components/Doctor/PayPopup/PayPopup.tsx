@@ -31,15 +31,15 @@ const PayPopup = ({ onClose, selectedDate, selectedTime, selectedSlotId }: PayPo
 
   const formatAppointmentDate = () => {
     if (!selectedDate) return "Monday, 20th Aug 2024 | 10:00 AM";
-    
+
     const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    
+
     const dayName = days[selectedDate.getDay()];
     const monthName = months[selectedDate.getMonth()];
     const date = selectedDate.getDate();
     const year = selectedDate.getFullYear();
-    
+
     return `${dayName}, ${date}${getOrdinalSuffix(date)} ${monthName} ${year} | ${selectedTime || '10:00 AM'}`;
   };
 
@@ -58,20 +58,21 @@ const PayPopup = ({ onClose, selectedDate, selectedTime, selectedSlotId }: PayPo
     
     const timeParts = selectedTime.match(/(\d+):(\d+)\s*(AM|PM)/i);
     if (!timeParts) return new Date().toISOString();
-    
+
     let hours = parseInt(timeParts[1]);
     const minutes = timeParts[2];
     const period = timeParts[3].toUpperCase();
-    
+
     if (period === 'PM' && hours !== 12) hours += 12;
     if (period === 'AM' && hours === 12) hours = 0;
-    
+
     const formattedHours = hours.toString().padStart(2, '0');
-    
+
+    // إنشاء التاريخ والوقت بصيغة ISO
     const year = selectedDate.getFullYear();
     const month = (selectedDate.getMonth() + 1).toString().padStart(2, '0');
     const day = selectedDate.getDate().toString().padStart(2, '0');
-    
+
     return `${year}-${month}-${day}T${formattedHours}:${minutes}:00`;
   };
 
@@ -87,7 +88,6 @@ const PayPopup = ({ onClose, selectedDate, selectedTime, selectedSlotId }: PayPo
       default:
         return 2;
     }
-  };
 
   // تحديد Status حسب طريقة الدفع
   const getBookingStatus = () => {
@@ -189,26 +189,24 @@ const PayPopup = ({ onClose, selectedDate, selectedTime, selectedSlotId }: PayPo
                   selectedMethod === option.id
                     ? "bg-[#EDF7EE]"
                     : "border-2 border-transparent hover:border-gray-200"
-                }`}
+                  }`}
               >
                 <div className="flex items-center gap-3">
                   <div
-                    className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
-                      selectedMethod === option.id
+                    className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${selectedMethod === option.id
                         ? "bg-[#4CAF50] border-[#4CAF50]"
                         : "bg-white border-gray-300"
-                    }`}
+                      }`}
                   >
                     {selectedMethod === option.id && (
                       <Check size={16} className="text-white" />
                     )}
                   </div>
                   <span
-                    className={`text-base ${
-                      selectedMethod === option.id
+                    className={`text-base ${selectedMethod === option.id
                         ? "text-[#4CAF50] font-medium"
                         : "text-gray-700"
-                    }`}
+                      }`}
                   >
                     {option.label}
                   </span>
@@ -247,7 +245,7 @@ const PayPopup = ({ onClose, selectedDate, selectedTime, selectedSlotId }: PayPo
         <div className="flex flex-col md:flex-col md:items-center md:justify-between gap-4 mt-10">
           <div className="text-lg text-gray-700 flex items-center gap-2 justify-between w-full">
             <div className="flex items-end">
-              <h1 className="font-medium text-3xl">Price</h1>  
+              <h1 className="font-medium text-3xl">Price</h1>
               <span className="text-md text-gray-400">/hour</span>
             </div>
 
