@@ -5,7 +5,6 @@ import { Link } from 'react-router-dom';
 import BtnFavorite from '@/components/ui/doctors/favorite/BtnFavorite';
 import { type DoctorsType } from '@/api/doctors/Doctors';
 
-// Use DoctorsType directly but make some fields optional for backward compatibility
 interface DoctorCardProps extends Partial<DoctorsType> {
     id: number;
     name: string;
@@ -31,19 +30,18 @@ const DoctorCard: React.FC<DoctorCardProps> = (props) => {
 
     // Create doctor data object to pass to BtnFavorite using all props
     const doctorData: DoctorsType = {
-        // id,
-        // name,
-        // image,
-        // specialty,
-        // hospital,
-        // rate,
-        // availability,
-        // price,
+        ...props,
+        id,
+        image,
+        specialty,
+        hospital,
+        rate,
+        availability,
+        price,
+
         gender: props.gender || 'All',
         isFavorite: props.isFavorite || false,
         isFavourite: props.isFavourite || false,
-        // Include any other optional fields that might be passed
-        ...props
     };
 
     return (
