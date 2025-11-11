@@ -5,12 +5,12 @@ import { ChevronLeft } from 'lucide-react';
 import { CancelledNotification, CompletedNotification, EmptyNotification, UpcomingNotification } from '@/components/Doctor/icons';
 import { fetchNotifications, markAsRead } from '@/store/notificationsSlice';
 import type { RootState, AppDispatch } from '@/store/Store';
-import SuccessBookingPopup from '@/components/Doctor/SuccessBookingPopup';
+// import SuccessBookingPopup from '@/components/Doctor/SuccessBookingPopup';
 
 const NotificationsPage: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate(); // إضافة navigate
-  const { notifications, loading, error } = useSelector((state: RootState) => state.notifications);
+  const { notifications, loading } = useSelector((state: RootState) => state.notifications);
 
   useEffect(() => {
     dispatch(fetchNotifications());

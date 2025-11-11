@@ -1,5 +1,5 @@
 import DoctorCardInfo from "@/components/Doctor/DoctorCardInfo/DoctorCardInfo";
-import {  CalendarIcon, Paypal, Visa } from "@/components/Doctor/icons";
+import {  CalendarIcon, Paypal } from "@/components/Doctor/icons";
 import { useState } from "react";
 import { Plus, Check, X, Loader2 } from "lucide-react";
 import { useAppSelector, useAppDispatch } from "@/store/hooks";
@@ -92,7 +92,7 @@ const PayPopup = ({ onClose, selectedDate, selectedTime, selectedSlotId }: PayPo
   // تحديد Status حسب طريقة الدفع
   const getBookingStatus = () => {
     // إذا Cash يكون pending، وإلا يكون 0
-    return selectedMethod === "cash" ? "pending" : 0;
+  return selectedMethod === "cash" ? 0 : 1;
   };
 
   const handlePayment = async () => {

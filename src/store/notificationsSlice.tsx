@@ -120,13 +120,13 @@ export const initNotificationHub = createAsyncThunk<
       console.log('✅ Connected to SignalR Hub');
 
       connection.on('ReceiveNotification', (newNotification: Notification) => {
-        console.log('📩 New Notification:', newNotification);
+        console.log('New Notification:', newNotification);
         dispatch(addNotification(newNotification));
       });
 
       return true;
     } catch (error: any) {
-      console.error('❌ SignalR Connection Error:', error);
+      console.error('SignalR Connection Error:', error);
       return rejectWithValue(error.message || 'Failed to connect to SignalR');
     }
   }
