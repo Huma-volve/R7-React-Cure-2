@@ -120,7 +120,6 @@ const PayPopup = ({ onClose, selectedDate, selectedTime, selectedSlotId }: PayPo
       }
     };
 
-    // 💵 تحضير البيانات بالشكل المتوقع من الـ API
     const bookingData = {
       DoctorId: Number(currentDoctor.id),
       SlotId: Number(selectedSlotId),
@@ -207,15 +206,15 @@ const PayPopup = ({ onClose, selectedDate, selectedTime, selectedSlotId }: PayPo
                 key={option.id}
                 onClick={() => setSelectedMethod(option.id)}
                 className={`flex items-center justify-between py-4 px-8 lg:py-4 lg:px-6 rounded-lg cursor-pointer transition-colors  ${selectedMethod === option.id
-                    ? "bg-[#EDF7EE]"
-                    : "border-2 border-transparent hover:border-gray-200"
+                  ? "bg-[#EDF7EE]"
+                  : "border-2 border-transparent hover:border-gray-200"
                   }`}
               >
                 <div className="flex items-center gap-3">
                   <div
                     className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${selectedMethod === option.id
-                        ? "bg-[#4CAF50] border-[#4CAF50]"
-                        : "bg-white border-gray-300"
+                      ? "bg-[#4CAF50] border-[#4CAF50]"
+                      : "bg-white border-gray-300"
                       }`}
                   >
                     {selectedMethod === option.id && (
@@ -224,8 +223,8 @@ const PayPopup = ({ onClose, selectedDate, selectedTime, selectedSlotId }: PayPo
                   </div>
                   <span
                     className={`text-base ${selectedMethod === option.id
-                        ? "text-[#4CAF50] font-medium"
-                        : "text-gray-700"
+                      ? "text-[#4CAF50] font-medium"
+                      : "text-gray-700"
                       }`}
                   >
                     {option.label}
@@ -271,7 +270,6 @@ const PayPopup = ({ onClose, selectedDate, selectedTime, selectedSlotId }: PayPo
           appointmentTime={selectedTime || "10:00 AM"}
         />
 
-        {/* Total and Pay Button */}
         <div className="flex flex-col md:flex-col md:items-center md:justify-between gap-4 mt-10">
           <div className="text-lg text-gray-700 flex items-center gap-2 justify-between w-full">
             <div className="flex items-end">
