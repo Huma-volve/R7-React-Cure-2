@@ -5,7 +5,6 @@ import { Link } from 'react-router-dom';
 import BtnFavorite from '@/components/ui/doctors/favorite/BtnFavorite';
 import { type DoctorsType } from '@/api/doctors/Doctors';
 
-// Use DoctorsType directly but make some fields optional for backward compatibility
 interface DoctorCardProps extends Partial<DoctorsType> {
     id: number;
     name: string;

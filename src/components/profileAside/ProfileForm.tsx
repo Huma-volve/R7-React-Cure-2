@@ -4,18 +4,17 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { toast } from 'react-hot-toast';
+import ProfileFormSkeleton from '../loading/Loading';
 
 interface FormData {
-    FullName: string;  // غير إلى FullName ليطابق register
+    FullName: string;
     Email: string;
     PhoneNumber: string;
     Address: string;
-    // birthDate غير مطلوب هنا لأنه يتم بناؤه يدويًا
+    BirthDate?: string | null;
 }
 
 const ProfileForm: React.FC = () => {
-    // أضف formState: { errors } واستخدم FormData
     const { register, handleSubmit, formState: { errors } } = useForm<FormData>();
     const [day, setDay] = React.useState("");
     const [month, setMonth] = React.useState("");
@@ -44,14 +43,13 @@ const ProfileForm: React.FC = () => {
             });
     }, [dispatch, navigate]);
 
-    const onSubmit = async (formData: FormData) => {  // غير المعامل إلى formData للوضوح
-        // استخدم data من Redux لـ birthDate الأصلي
+    const onSubmit = async (formData: FormData) => {
         const birthDate = year && month && day
             ? `${year}-${month}-${day}T00:00:00`
             : data?.birthDate || null;
 
         const payload = {
-            FullName: formData.FullName,  // استخدم formData.FullName
+            FullName: formData.FullName,
             Email: formData.Email,
             PhoneNumber: formData.PhoneNumber,
             Address: formData.Address,
@@ -60,19 +58,18 @@ const ProfileForm: React.FC = () => {
 
         try {
             await dispatch(updateProfile(payload)).unwrap();
-            toast.success("Profile updated successfully!");
+            window.location.reload();
         } catch (error: any) {
             if (error?.status === 404) {
                 console.error("Update failed: Profile not found");
                 navigate('/login');
             } else {
                 console.error("Update failed:", error);
-                toast.error("Update failed. Please try again.");
             }
         }
     };
 
-    if (loading) return <p>Loading...</p>;
+    if (loading) return <ProfileFormSkeleton />;
     if (apiError) {
         if (apiError.status === 404) {
             return <p>Profile not found. Please log in again.</p>;
