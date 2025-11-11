@@ -31,8 +31,8 @@ const DoctorCard: React.FC<DoctorCardProps> = (props) => {
 
     // Create doctor data object to pass to BtnFavorite using all props
     const doctorData: DoctorsType = {
+        ...props,
         id,
-        name,
         image,
         specialty,
         hospital,
@@ -42,8 +42,6 @@ const DoctorCard: React.FC<DoctorCardProps> = (props) => {
         gender: props.gender || 'All',
         isFavorite: props.isFavorite || false,
         isFavourite: props.isFavourite || false,
-        // Include any other optional fields that might be passed
-        ...props
     };
 
     return (
