@@ -7,45 +7,36 @@ interface Question {
 
 const questions: Question[] = [
     {
-        question: "What are the school hours at Little Learners Academy?",
+        question: "What is this app used for?",
         answer:
-            "Our school hours are from 8:00 AM to 3:00 PM, Monday to Friday. We also offer extended care options for parents who need early drop-off or late pick-up.",
+            "This app allows you to search for doctors, book appointments, and consult in person easily from your phone.",
     },
     {
-        question: "How do you handle food allergies and dietary restrictions?",
+        question: "Is the app free to use?",
         answer:
-            "We accommodate allergies and provide dietary options. Please inform us during enrollment.",
+            "Is the app free to use?",
     },
     {
-        question: "Is there a uniform policy for students?",
+        question: "How can I find a doctor?",
         answer:
-            "Yes, we have a comfortable and practical uniform policy to promote equality among students.",
+            "How can I find a doctor?",
     },
     {
-        question: "What is the teacher-to-student ratio at Little Learners Academy?",
+        question: "Can I cancel my appointment?",
         answer:
-            "We maintain a low student-to-teacher ratio of 10:1 to ensure personalized attention and support for each child.",
+            "Can I cancel my appointment?",
     },
     {
-        question: "What extracurricular activities are available for students?",
+        question: "What payment are supported",
         answer:
-            "We offer art, music, and physical education programs to help children explore their interests.",
+            "What payment are supported",
     },
     {
-        question: "How do you handle discipline and behavior management?",
+        question: "How do I edit my profile?",
         answer:
-            "We use positive reinforcement and communication-based approaches for behavior management.",
+            "How do I edit my profile?",
     },
-    {
-        question: "What safety measures are in place at the school?",
-        answer:
-            "Our facility has secure entry systems, CCTV monitoring, and trained staff for emergency situations.",
-    },
-    {
-        question: "How can I get involved in the school community?",
-        answer:
-            "We encourage parent participation through regular meetings and school events.",
-    },
+
 ];
 
 const Faq: React.FC = () => {

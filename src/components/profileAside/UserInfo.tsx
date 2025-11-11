@@ -42,7 +42,7 @@ const UserInfo: React.FC = () => {
                     />
 
                 </picture>
-                <nav onClick={handleImageClick} role="button" className="flex flex-col gap-2 items-center bg-[#ffffffce] rounded-full absolute z-50 bottom-0 right-8 p-2 cursor-pointer">
+                <nav onClick={handleImageClick} role="button" className="flex flex-col gap-2 items-center bg-[#ffffffce] rounded-full absolute z-50 bottom-0 right-[5rem] p-2 cursor-pointer">
                     <img src="/icons/profile/addImage.svg" alt="icon" loading="lazy" />
                     <input
                         type="file"

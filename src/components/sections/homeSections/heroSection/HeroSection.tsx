@@ -1,11 +1,11 @@
 import { Avatar, AvatarImage } from '@/components/ui/avatar';
-// import { Container } from '@/components/ui/Container';
+import { Container } from '@/components/ui/Container';
 import { Link } from 'react-router';
 
 const HeroSection = () => {
     return (
         <div className="relative w-full sm:h-[80vh] h-screen overflow-hidden lg:p-20 p-10">
-            {/* <Container className="flex items-center justify-center"> */}
+            <Container className="flex items-center justify-center">
                 <div className="content text-center relative">
                     <div className="flex items-center m-auto rounded-4xl py-2 px-4 mb-2 bg-[#E8EFF8] w-fit">
                         <img
@@ -43,7 +43,7 @@ const HeroSection = () => {
                     <div className="flex items-center justify-center sm:flex-row flex-col gap-3 text-[14px]">
                         <Link
                             to="/doctors"
-                            className="py-3.5 px-15 bg-(--bg-main) text-white hover:text-(--bg-main) duration-300 font-medium hover:bg-white border rounded-[10px] border-(--bg-main)"
+                            className="py-3.5 px-15 bg-[#145DB8]   text-white duration-300 font-medium hover:bg-[#145eb87e] border rounded-[10px] border-(--bg-main)"
                         >
                             Get started
                         </Link>
@@ -82,7 +82,7 @@ const HeroSection = () => {
                         </span>
                     </div>
                 </div>
-            {/* </Container> */}
+            </Container>
         </div>
     );
 };

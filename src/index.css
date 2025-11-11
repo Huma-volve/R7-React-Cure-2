@@ -5,6 +5,7 @@
 @import "tw-animate-css";
 @custom-variant dark (&:is(.dark *));
 
+<<<<<<< HEAD
 
 
 
@@ -16,6 +17,8 @@
     --bg-main: #145db8;
 }
 /* 
+=======
+>>>>>>> 66fba782a7a57737730a4c5b96eae1d48272119a
 *
 {
   cursor: url('/icons/cursor.svg'), auto !important;
@@ -81,6 +84,15 @@
   --sidebar-ring: oklch(0.707 0.022 261.325);
 
   --font-Noto: "Noto Serif", serif;
+}
+
+:root
+{
+  --color-main: #145db8;
+  --color-text: #6d7379;
+  --font-primary: 'Montserrat', sans-serif;
+  --font-secondary: 'georgia', serif;
+  --bg-main: #145db8;
 }
 
 input::placeholder
@@ -162,17 +174,3 @@ input::placeholder
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.551 0.027 264.364);
 }
-
-@layer base
-{
-  *
-  {
-    @apply border-border outline-ring/50;
-  }
-
-  body
-  {
-    @apply bg-background text-foreground;
-  }
-} */
-

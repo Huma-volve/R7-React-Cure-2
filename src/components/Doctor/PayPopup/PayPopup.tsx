@@ -1,5 +1,9 @@
 import DoctorCardInfo from "@/components/Doctor/DoctorCardInfo/DoctorCardInfo";
+<<<<<<< HEAD
 import {  CalendarIcon, Paypal } from "@/components/Doctor/icons";
+=======
+import { CalendarIcon, Paypal } from "@/components/Doctor/icons";
+>>>>>>> 66fba782a7a57737730a4c5b96eae1d48272119a
 import { useState } from "react";
 import { Plus, Check, X, Loader2 } from "lucide-react";
 import { useAppSelector, useAppDispatch } from "@/store/hooks";
@@ -19,27 +23,27 @@ interface PayPopupProps {
 const PayPopup = ({ onClose, selectedDate, selectedTime, selectedSlotId }: PayPopupProps) => {
   const dispatch = useAppDispatch();
   const [selectedMethod, setSelectedMethod] = useState("cash");
-  
+
   const { currentDoctor, bookingLoading, bookingError } = useAppSelector((state) => state.doctor);
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
 
   const paymentOptions = [
-    { id: "cash", label: "Cash", icon: <BsCashCoin size={30}/> },
-    { id: "paypal", label: "PayPal", icon: <Paypal/> },
+    { id: "cash", label: "Cash", icon: <BsCashCoin size={30} /> },
+    { id: "paypal", label: "PayPal", icon: <Paypal /> },
     { id: "stripe", label: "Credit Card (Stripe)", icon: <FaCcStripe size={30} /> },
   ];
 
   const formatAppointmentDate = () => {
     if (!selectedDate) return "Monday, 20th Aug 2024 | 10:00 AM";
-    
+
     const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    
+
     const dayName = days[selectedDate.getDay()];
     const monthName = months[selectedDate.getMonth()];
     const date = selectedDate.getDate();
     const year = selectedDate.getFullYear();
-    
+
     return `${dayName}, ${date}${getOrdinalSuffix(date)} ${monthName} ${year} | ${selectedTime || '10:00 AM'}`;
   };
 
@@ -55,23 +59,23 @@ const PayPopup = ({ onClose, selectedDate, selectedTime, selectedSlotId }: PayPo
 
   const formatDateTimeForAPI = () => {
     if (!selectedDate || !selectedTime) return new Date().toISOString();
-    
+
     const timeParts = selectedTime.match(/(\d+):(\d+)\s*(AM|PM)/i);
     if (!timeParts) return new Date().toISOString();
-    
+
     let hours = parseInt(timeParts[1]);
     const minutes = timeParts[2];
     const period = timeParts[3].toUpperCase();
-    
+
     if (period === 'PM' && hours !== 12) hours += 12;
     if (period === 'AM' && hours === 12) hours = 0;
-    
+
     const formattedHours = hours.toString().padStart(2, '0');
-    
+
     const year = selectedDate.getFullYear();
     const month = (selectedDate.getMonth() + 1).toString().padStart(2, '0');
     const day = selectedDate.getDate().toString().padStart(2, '0');
-    
+
     return `${year}-${month}-${day}T${formattedHours}:${minutes}:00`;
   };
 
@@ -129,8 +133,8 @@ const PayPopup = ({ onClose, selectedDate, selectedTime, selectedSlotId }: PayPo
           dispatch(resetBookingState());
           if (onClose) onClose();
         }, 2000);
-      } 
-      
+      }
+
       // Redireact if it's paypal or stripe
       else if (result?.paymentUrl) {
         console.log(" Redirecting to payment URL:", result.paymentUrl);
@@ -149,7 +153,7 @@ const PayPopup = ({ onClose, selectedDate, selectedTime, selectedSlotId }: PayPo
   return (
     <div className="w-full lg:fixed lg:inset-0 lg:bg-black/50 lg:flex lg:items-center lg:justify-center z-10000">
       <div className="w-full px-4 py-6 lg:px-8 lg:w-[600px] lg:rounded-2xl lg:shadow-2xl lg:bg-white lg:my-0 lg:max-h-screen lg:overflow-y-auto relative">
-        
+
         <button
           onClick={() => onClose && onClose()}
           className="hidden lg:block absolute top-4 right-4 text-gray-500 hover:text-gray-700 transition"
@@ -185,30 +189,27 @@ const PayPopup = ({ onClose, selectedDate, selectedTime, selectedSlotId }: PayPo
               <div
                 key={option.id}
                 onClick={() => setSelectedMethod(option.id)}
-                className={`flex items-center justify-between py-4 px-8 lg:py-4 lg:px-6 rounded-lg cursor-pointer transition-colors ${
-                  selectedMethod === option.id
+                className={`flex items-center justify-between py-4 px-8 lg:py-4 lg:px-6 rounded-lg cursor-pointer transition-colors ${selectedMethod === option.id
                     ? "bg-[#EDF7EE]"
                     : "border-2 border-transparent hover:border-gray-200"
-                }`}
+                  }`}
               >
                 <div className="flex items-center gap-3">
                   <div
-                    className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
-                      selectedMethod === option.id
+                    className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${selectedMethod === option.id
                         ? "bg-[#4CAF50] border-[#4CAF50]"
                         : "bg-white border-gray-300"
-                    }`}
+                      }`}
                   >
                     {selectedMethod === option.id && (
                       <Check size={16} className="text-white" />
                     )}
                   </div>
                   <span
-                    className={`text-base ${
-                      selectedMethod === option.id
+                    className={`text-base ${selectedMethod === option.id
                         ? "text-[#4CAF50] font-medium"
                         : "text-gray-700"
-                    }`}
+                      }`}
                   >
                     {option.label}
                   </span>
@@ -247,7 +248,7 @@ const PayPopup = ({ onClose, selectedDate, selectedTime, selectedSlotId }: PayPo
         <div className="flex flex-col md:flex-col md:items-center md:justify-between gap-4 mt-10">
           <div className="text-lg text-gray-700 flex items-center gap-2 justify-between w-full">
             <div className="flex items-end">
-              <h1 className="font-medium text-3xl">Price</h1>  
+              <h1 className="font-medium text-3xl">Price</h1>
               <span className="text-md text-gray-400">/hour</span>
             </div>
 

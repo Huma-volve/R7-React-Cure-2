@@ -44,7 +44,7 @@ const steps: CardProps[] = [
 
 const HowItWorks: React.FC = () => {
     return (
-        <section className="lg:py-10 py-5 bg-white relative">
+        <section className="lg:py-10! py-5! bg-white relative">
             <Container>
                 {/* Section Title */}
                 <h2

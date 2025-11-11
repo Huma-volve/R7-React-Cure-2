@@ -1,5 +1,5 @@
 import { Link } from "react-router"
-import './Error.css'
+import './error.css'
 const Error: React.FC = () => {
   return (
     <section className="w-full h-screen flex items-center justify-center">

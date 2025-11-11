@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk, type PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
@@ -14,7 +14,7 @@ interface AddReviewData {
   doctorId: number;
   rating: number;
   comment: string;
-  createAt: string; 
+  createAt: string;
 }
 
 interface ReviewState {
@@ -41,7 +41,7 @@ export const addReview = createAsyncThunk(
   async (reviewData: AddReviewData, { rejectWithValue }) => {
     try {
       const token = Cookies.get("accessToken") || TOKEN;
-      
+
       console.log("📤 Sending review data:", reviewData);
 
       const res = await axios.post(
