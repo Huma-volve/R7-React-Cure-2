@@ -106,6 +106,20 @@ const PayPopup = ({ onClose, selectedDate, selectedTime, selectedSlotId }: PayPo
 
     const appointmentAt = formatDateTimeForAPI();
 
+    // ⚙️ تحديد قيمة Payment و Status بالأرقام المطلوبة للـ API
+    const getPaymentCode = () => {
+      switch (selectedMethod) {
+        case "credit-cart":
+          return 2; // 2 = CreditCard
+        case "paypal":
+          return 1; // 1 = PayPal
+        case "cash":
+          return 0; // 0 = Cash
+        default:
+          return 0;
+      }
+    };
+
     const bookingData = {
       DoctorId: Number(currentDoctor.id),
       SlotId: Number(selectedSlotId),
@@ -185,17 +199,16 @@ const PayPopup = ({ onClose, selectedDate, selectedTime, selectedSlotId }: PayPo
               <div
                 key={option.id}
                 onClick={() => setSelectedMethod(option.id)}
-                className={`flex items-center justify-between py-4 px-8 lg:py-4 lg:px-6 rounded-lg cursor-pointer transition-colors ${
-                  selectedMethod === option.id
-                    ? "bg-[#EDF7EE]"
-                    : "border-2 border-transparent hover:border-gray-200"
+                className={`flex items-center justify-between py-4 px-8 lg:py-4 lg:px-6 rounded-lg cursor-pointer transition-colors  ${selectedMethod === option.id
+                  ? "bg-[#EDF7EE]"
+                  : "border-2 border-transparent hover:border-gray-200"
                   }`}
               >
                 <div className="flex items-center gap-3">
                   <div
                     className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${selectedMethod === option.id
-                        ? "bg-[#4CAF50] border-[#4CAF50]"
-                        : "bg-white border-gray-300"
+                      ? "bg-[#4CAF50] border-[#4CAF50]"
+                      : "bg-white border-gray-300"
                       }`}
                   >
                     {selectedMethod === option.id && (
@@ -204,8 +217,8 @@ const PayPopup = ({ onClose, selectedDate, selectedTime, selectedSlotId }: PayPo
                   </div>
                   <span
                     className={`text-base ${selectedMethod === option.id
-                        ? "text-[#4CAF50] font-medium"
-                        : "text-gray-700"
+                      ? "text-[#4CAF50] font-medium"
+                      : "text-gray-700"
                       }`}
                   >
                     {option.label}
