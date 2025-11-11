@@ -18,7 +18,6 @@ const UserInfo: React.FC = () => {
         const file = e.target.files?.[0];
         if (file) {
             console.log("Selected Image:", file);
-            // هنا بعدين تحط API رفع الصورة
         }
     };
 
