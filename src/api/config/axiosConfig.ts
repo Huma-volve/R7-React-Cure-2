@@ -16,8 +16,8 @@ const readToken = (): string | undefined => {
     const localStorageToken =
         typeof window !== 'undefined'
             ? localStorage.getItem('accessToken') ||
-              localStorage.getItem('token') ||
-              localStorage.getItem('authToken')
+                localStorage.getItem('token') ||
+                localStorage.getItem('authToken')
             : null;
 
     const cookieToken = Cookies.get('accessToken') || Cookies.get('token');
