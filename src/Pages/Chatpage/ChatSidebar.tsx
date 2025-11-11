@@ -1,49 +1,22 @@
-import React, { useState, useEffect, ChangeEvent } from "react";
+import React, { useState, ChangeEvent } from "react";
 import { FiSearch } from "react-icons/fi";
-import { getChats, searchDoctors, getUnreadChats, searchUnreadChats } from "../../api/Chat/chatService";
-
-interface Chat {
-    id: number;
-    doctorId: string;
-    doctorName: string;
-    img: string;
-    lastMessageContent: string;
-    unReadMessages: number;
-}
 
 interface ChatSidebarProps {
-    onSelectChat: (chat: Chat) => void;
+    onSelectChat: (chat: any) => void;
+    chats: any[];
 }
 
-const ChatSidebar: React.FC<ChatSidebarProps> = ({ onSelectChat }) => {
+const ChatSidebar: React.FC<ChatSidebarProps> = ({ onSelectChat, chats }) => {
     const [searchValue, setSearchValue] = useState("");
-    const [chats, setChats] = useState<Chat[]>([]);
-    const [selectedTab, setSelectedTab] = useState<"All" | "Unread">("All");
+    const [selectedTab, setSelectedTab] = useState<"All" | "Unread" | "Favourite">("All");
 
-    const tabs = ["All", "Unread"];
+    const tabs = ["All", "Unread", "Favourite"];
 
-    const fetchChats = async () => {
-        try {
-            let data;
-            if (selectedTab === "All" && searchValue === "") {
-                data = await getChats();
-            } else if (selectedTab === "All") {
-                data = (await searchDoctors(searchValue)).chatListDTOs;
-            } else if (selectedTab === "Unread" && searchValue === "") {
-                data = (await getUnreadChats()).chatListDTOs;
-            } else {
-                data = (await searchUnreadChats(searchValue)).chatListDTOs;
-            }
-            setChats(data);
-        } catch (error) {
-            console.error("Error fetching chats:", error);
-            setChats([]);
-        }
-    };
-
-    useEffect(() => {
-        fetchChats();
-    }, [selectedTab, searchValue]);
+    const filteredChats = chats.filter((chat) => {
+        if (selectedTab === "Unread" && chat.unReadMessages === 0) return false;
+        if (selectedTab === "Favourite" && !chat.isFavourite) return false;
+        return chat.doctorName.toLowerCase().includes(searchValue.toLowerCase());
+    });
 
     return (
         <div className="w-1/3 min-w-[280px] h-full bg-white border-r flex flex-col p-4">
@@ -75,8 +48,8 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({ onSelectChat }) => {
 
             {/* Chat List */}
             <div className="flex-1 overflow-y-auto">
-                {chats.length > 0 ? (
-                    chats.map((chat) => (
+                {filteredChats.length > 0 ? (
+                    filteredChats.map((chat) => (
                         <div
                             key={chat.id}
                             onClick={() => onSelectChat(chat)}

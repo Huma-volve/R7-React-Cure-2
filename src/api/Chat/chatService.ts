@@ -2,7 +2,7 @@ import axios from "axios";
 
 // ضع هنا التوكن الصحيح
 const TOKEN =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjMjZiMWVhMC0xZDE0LTQwNDQtYTNiMS0yYTlkMDU3YzAwNzYiLCJ1bmlxdWVfbmFtZSI6IisyMDEwOTMxMzA0ODg4IiwiZmlyc3ROYW1lIjoiQWhtZWQiLCJsYXN0TmFtZSI6Ik91ZiIsImFkZHJlc3MiOiIiLCJpbWdVcmwiOiIiLCJiaXJ0aERhdGUiOiIwMDAxLTAxLTAxIiwiZ2VuZGVyIjoiTWFsZSIsImxvY2F0aW9uIjoiIiwiaXNOb3RpZmljYXRpb25zRW5hYmxlZCI6IlRydWUiLCJleHAiOjE3NjI0MjU4ODEsImlzcyI6Imh0dHBzOi8vY3VyZS1kb2N0b3ItYm9va2luZy5ydW5hc3AubmV0LyIsImF1ZCI6Imh0dHBzOi8vbG9jYWxob3N0OjUwMDAsaHR0cHM6Ly9sb2NhbGhvc3Q6NTUwMCxodHRwczovL2xvY2FsaG9zdDo0MjAwICxodHRwczovL2N1cmUtZG9jdG9yLWJvb2tpbmcucnVuYXNwLm5ldC8ifQ.per0eYN8GogPWMxD7ChU53nfsFTuSaMDlRC-9djqbxY";
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI5NjliYTMxMy1mYzM3LTQzZTQtYjU5Ni00YTgwZjY1OWFkMzgiLCJ1bmlxdWVfbmFtZSI6IisyMDEwOTMxMzA0ODg2IiwiZmlyc3ROYW1lIjoiQWhtZWQiLCJsYXN0TmFtZSI6Ik91ZiIsImFkZHJlc3MiOiIiLCJpbWdVcmwiOiIiLCJiaXJ0aERhdGUiOiIwMDAxLTAxLTAxIiwiZ2VuZGVyIjoiTWFsZSIsImxvY2F0aW9uIjoiIiwiaXNOb3RpZmljYXRpb25zRW5hYmxlZCI6IlRydWUiLCJleHAiOjE3NjI4NjAyMzcsImlzcyI6Imh0dHBzOi8vY3VyZS1kb2N0b3ItYm9va2luZy5ydW5hc3AubmV0LyIsImF1ZCI6Imh0dHBzOi8vbG9jYWxob3N0OjUwMDAsaHR0cHM6Ly9sb2NhbGhvc3Q6NTUwMCxodHRwczovL2xvY2FsaG9zdDo0MjAwICxodHRwczovL2N1cmUtZG9jdG9yLWJvb2tpbmcucnVuYXNwLm5ldC8ifQ.thp3yrmgX8Kfnh3F4nD89WdELKw6ogZNPJ7A1flxQRY";
 
 // رابط السيرفر الأساسي
 const BASE_URL = "https://cure-doctor-booking.runasp.net/";
@@ -56,19 +56,29 @@ export const searchUnreadChats = async (query: string) => {
     }
 };
 
-// ------------------ START CHAT ------------------
-export const startChat = async (receiverId: string , chatId:number) => {
+// ------------------ GET FAVOURITE CHATS ------------------
+export const getFavouriteChats = async () => {
     try {
-       const response = await axiosInstance.post("api/chat/chat/startChat", null, {
-           params: { chatId, receiverId },
-       });
+        const response = await axiosInstance.get("api/chat/chat/send");
+        return response.data.data;
+    } catch (error) {
+        console.error("Error fetching favourite chats:", error);
+        return { chatListDTOs: [], doctorsListDTO: [] };
+    }
+};
 
+// ------------------ START CHAT ------------------
+export const startChat = async (receiverId: string) => {
+    try {
+        const response = await axiosInstance.post(`api/chat/chat/startChat?receiverId=${receiverId}`);
         return response.data.data;
     } catch (error) {
         console.error("Error starting chat:", error);
         return null;
     }
 };
+
+
 
 // ------------------ SEND MESSAGE ------------------
 export const sendMessage = async (senderId: string, receiverId: string, chatId: number, message: string) => {
