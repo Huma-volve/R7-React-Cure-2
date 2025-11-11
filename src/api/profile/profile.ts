@@ -30,25 +30,39 @@ interface updateProfileData {
     PhoneNumber: string;
     Address: string;
     BirthDate: string;
+    ImgFile?: string | null;
+    Latitude?: number | null;
+    Longitude?: number | null;
 }
 
 export const updateProfile = createAsyncThunk(
     "user/updateProfile",
     async (data: updateProfileData, { rejectWithValue }) => {
         try {
+            const formData = new FormData();
+            formData.append("FullName", data.FullName);
+            formData.append("Email", data.Email);
+            formData.append("PhoneNumber", data.PhoneNumber);
+            formData.append("Address", data.Address);
+            formData.append("BirthDate", data.BirthDate);
+            if (data.ImgFile) formData.append("ImgFile", data.ImgFile as any);
+            if (data.Latitude) formData.append("Latitude", data.Latitude.toString());
+            if (data.Longitude) formData.append("Longitude", data.Longitude.toString());
+
             const response = await axios.put(
                 `${Api_url}api/profile/editprofile/updateprofile`,
-                data,
+                formData,
                 {
                     headers: {
-                        "Content-Type": "application/json",
                         Authorization: `Bearer ${Cookies.get("accessToken")}`,
+                        "Content-Type": "multipart/form-data",
                     },
                 }
             );
             return response.data;
-        } catch (error) {
-            return rejectWithValue((error as Error).message);
+        } catch (error: any) {
+            console.error("❌ Server error:", error.response?.data || error.message);
+            return rejectWithValue(error.response?.data || error.message);
         }
     }
 );

@@ -15,7 +15,7 @@ const Home = () => {
                     alt="large circle"
                     className="absolute top-0 left-[50%] md:block hidden -translate-x-1/2"
                 />
-                =                <img
+                <img
                     src="/icons/md-circle.svg"
                     alt="medium circle"
                     className="absolute top-[-140px] md:block hidden left-[50%] -translate-x-1/2"
