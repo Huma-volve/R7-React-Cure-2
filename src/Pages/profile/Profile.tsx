@@ -5,8 +5,8 @@ import React from 'react'
 
 const Profile: React.FC = () => {
     return (
-        <section className='h-screen'>
-            <Container className="flex flex-col items-center md:flex-row  h-full gap-8 w-full">
+        <section className=' min-h-screen pt-8 pb-16'>
+            <Container className="flex flex-col items-center h-full md:flex-row gap-8 w-full">
                 <Aside />
                 <ProfileForm />
             </Container>
