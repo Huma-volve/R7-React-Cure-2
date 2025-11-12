@@ -3,6 +3,7 @@ import DoctorDetails from './Pages/DoctorDetails/DoctorDetails';
 import BookAppointment from './Pages/BookAppointment/BookAppointment';
 import { lazy } from "react";
 import NotificationDetailsPage from './Pages/NotificationPage/NotificationDetailsPage';
+import NotificationsPage from './Pages/NotificationPage/NotificationPage';
 
 
 const BookingPage = lazy(() => import('./Pages/BookingPage/BookingPage'));
@@ -45,13 +46,13 @@ const router = createBrowserRouter([
             { path: "methods", element: <Methods /> },
             { path: "methodform", element: <MethodForm /> },
             { path: "map", element: <Map /> },
-            { path: "notificationpage", element: <NotificationPage /> },
+            // { path: "notificationpage", element: <NotificationPage /> },
             { path: 'booking', element: <BookingPage /> },
             { path: 'chatpage', element: <ChatPage /> },
             { path: 'privacy', element: <Privacy /> },
-                  { path: 'notificationpage', element: <NotificationPage /> },
+                  { path: 'notificationpage', element: <NotificationsPage /> },
       { path: 'addreviewpage', element: <AddReviewPage /> }, 
-      { path: '/notifications/:id', element: <NotificationDetailsPage /> }
+      { path: '/notificationdetails/:id', element: <NotificationDetailsPage /> }
         ],
     },
 

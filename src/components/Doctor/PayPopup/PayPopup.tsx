@@ -1,9 +1,5 @@
 import DoctorCardInfo from "@/components/Doctor/DoctorCardInfo/DoctorCardInfo";
-<<<<<<< HEAD
 import {  CalendarIcon, Paypal } from "@/components/Doctor/icons";
-=======
-import { CalendarIcon, Paypal } from "@/components/Doctor/icons";
->>>>>>> 66fba782a7a57737730a4c5b96eae1d48272119a
 import { useState } from "react";
 import { Plus, Check, X, Loader2 } from "lucide-react";
 import { useAppSelector, useAppDispatch } from "@/store/hooks";
