@@ -7,12 +7,13 @@ const API_BASE_URL = 'https://cure-doctor-booking.runasp.net';
 
 // Types
 export interface Notification {
+  createdAt: string;
+  types: string;
+  id: number;
+  content: string;
   AppointmentId: any;
-  Id: number;
-  Content: string;
   Types: string;
-  IsRead: boolean;
-  CreatedAt: string;
+  isRead: boolean;
 }
 
 interface NotificationsState {
@@ -33,9 +34,9 @@ let connection: signalR.HubConnection | null = null;
 
 // Async Thunks
 export const fetchNotifications = createAsyncThunk<
-  Notification[], // return type
-  void,           // arg type
-  { rejectValue: string } // thunkAPI types
+  Notification[], 
+  void,          
+  { rejectValue: string } 
 >(
   'notifications/fetchNotifications',
   async (_, { rejectWithValue }) => {
@@ -57,6 +58,8 @@ export const fetchNotifications = createAsyncThunk<
       }
 
       const data = await response.json();
+
+      console.log(data.data)
       // Ensure the returned value is an array
       return Array.isArray(data) ? (data as Notification[]) : (data.data ?? []) as Notification[];
     } catch (error: any) {
@@ -76,12 +79,13 @@ export const markAsRead = createAsyncThunk<
       const token = Cookies.get('accessToken');
       if (!token) throw new Error('No access token found');
 
-      const response = await fetch(`${API_BASE_URL}/MarkAsRead/${notificationId}`, {
+      const response = await fetch(`${API_BASE_URL}/api/Customer/Notifications/MarkAsRead/${notificationId}`, {
         method: 'PUT',
         headers: {
           Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
+        body: JSON.stringify({ isRead: true }), // اختياري حسب الـ API
       });
 
       if (!response.ok) {
@@ -117,16 +121,16 @@ export const initNotificationHub = createAsyncThunk<
         .build();
 
       await connection.start();
-      console.log('✅ Connected to SignalR Hub');
+      console.log(' Connected to SignalR Hub');
 
       connection.on('ReceiveNotification', (newNotification: Notification) => {
-        console.log('📩 New Notification:', newNotification);
+        console.log('New Notification:', newNotification);
         dispatch(addNotification(newNotification));
       });
 
       return true;
     } catch (error: any) {
-      console.error('❌ SignalR Connection Error:', error);
+      console.error('SignalR Connection Error:', error);
       return rejectWithValue(error.message || 'Failed to connect to SignalR');
     }
   }
@@ -169,9 +173,9 @@ const notificationsSlice = createSlice({
     // markAsRead
     builder
       .addCase(markAsRead.fulfilled, (state, action: PayloadAction<number>) => {
-        const notification = state.notifications.find(n => n.Id === action.payload);
+        const notification = state.notifications.find(n => n.id === action.payload);
         if (notification) {
-          notification.IsRead = true;
+          notification.isRead = true;
         }
       })
       .addCase(markAsRead.rejected, (state, action) => {

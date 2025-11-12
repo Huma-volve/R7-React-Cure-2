@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom'; // إضافة useNavigate
+import { useNavigate } from 'react-router-dom';
 import { ChevronLeft } from 'lucide-react';
 import { CancelledNotification, CompletedNotification, EmptyNotification, UpcomingNotification } from '@/components/Doctor/icons';
 import { fetchNotifications, markAsRead } from '@/store/notificationsSlice';
@@ -8,44 +8,74 @@ import type { RootState, AppDispatch } from '@/store/Store';
 
 const NotificationsPage: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const navigate = useNavigate(); // إضافة navigate
+  const navigate = useNavigate();
   const { notifications, loading } = useSelector((state: RootState) => state.notifications);
 
   useEffect(() => {
     dispatch(fetchNotifications());
   }, [dispatch]);
 
-  const handleNotificationClick = (notificationId: number, isRead: boolean) => {
+  const handleNotificationClick = (id: number, isRead: boolean) => {
     if (!isRead) {
-      dispatch(markAsRead(notificationId));
+      dispatch(markAsRead(id));
     }
-    // الانتقال لصفحة التفاصيل
-    navigate(`/notifications/${notificationId}`);
+    navigate(`/notificationdetails/${id}`);
   };
 
-  const getNotificationIcon = (type: string) => {
-    switch (type.toLowerCase()) {
-      case 'upcoming':
+  const getNotificationIcon = (types?: string | number) => {
+    const normalizedType = String(types ?? "").toLowerCase();
+
+    switch (normalizedType) {
+      case "0":
+      case "upcoming":
+      case "upcoming appointment":
         return <UpcomingNotification className='text-[#145DB8]' />;
-      case 'completed':
+      case "1":
+      case "completed":
+      case "appointment completed":
         return <CompletedNotification className="w-5 h-5 text-[#4CAF50]" />;
-      case 'cancelled':
+      case "2":
+      case "cancelled":
+      case "appointment cancelled":
         return <CancelledNotification className="w-5 h-5 text-[#B33537]" />;
       default:
         return <UpcomingNotification className='text-[#145DB8]' />;
     }
   };
 
-  const getNotificationBgColor = (type: string) => {
-    switch (type.toLowerCase()) {
-      case 'upcoming':
-        return 'bg-[#E8EFF8]';
-      case 'completed':
-        return 'bg-[#EDF7EE]';
-      case 'cancelled':
-        return 'bg-[#FFEDED]';
+  const getNotificationBgColor = (types?: string | number) => {
+    const normalizedType = String(types ?? "").toLowerCase();
+
+    switch (normalizedType) {
+      case "0":
+      case "upcoming":
+      case "upcoming appointment":
+        return "bg-[#E8EFF8]";
+      case "1":
+      case "completed":
+      case "appointment completed":
+        return "bg-[#EDF7EE]";
+      case "2":
+      case "cancelled":
+      case "appointment cancelled":
+        return "bg-[#FFEDED]";
       default:
-        return 'bg-[#E8EFF8]';
+        return "bg-[#E8EFF8]";
+    }
+  };
+
+  const getNotificationTitle = (types?: string | number) => {
+    const normalizedType = String(types ?? "").toLowerCase();
+
+    switch (normalizedType) {
+      case "0":
+        return "Upcoming Appointment";
+      case "1":
+        return "Appointment Completed";
+      case "2":
+        return "Appointment Cancelled";
+      default:
+        return String(types ?? "Notification");
     }
   };
 
@@ -92,32 +122,34 @@ const NotificationsPage: React.FC = () => {
             <div className="space-y-3">
               {notifications.map((notification) => (
                 <div
-                  key={notification.Id}
-                  onClick={() => handleNotificationClick(notification.Id, notification.IsRead)}
-                  className={`rounded-xl px-6 py-2 cursor-pointer my-0 hover:bg-[#F5F6F7] transition-colors ${!notification.IsRead ? 'bg-blue-50' : ''
-                    }`}
+                  key={notification.id}
+                  onClick={() => handleNotificationClick(notification.id, notification.isRead)}
+                  className={`rounded-xl px-6 py-2 cursor-pointer my-0 hover:bg-[#F5F6F7] transition-colors ${
+                    !notification.isRead ? 'bg-blue-50' : ''
+                  }`}
                 >
                   <div className="flex items-start gap-3">
                     {/* Icon */}
-                    <div className={`${getNotificationBgColor(notification.Types)} rounded-full p-[18px] shrink-0`}>
-                      {getNotificationIcon(notification.Types)}
+                    <div className={`${getNotificationBgColor(notification.types)} rounded-full p-[18px] shrink-0`}>
+                      {getNotificationIcon(notification.types)}
                     </div>
 
                     {/* Content */}
                     <div className="flex-1 min-w-0">
                       <div className="flex items-start justify-between gap-2">
-                        <h3 className={`font-semibold text-gray-900 text-sm sm:text-base ${!notification.IsRead ? 'font-bold' : ''
-                          }`}>
-                          {notification.Types}
+                        <h3 className={`font-semibold text-gray-900 text-sm sm:text-base ${
+                          !notification.isRead ? 'font-bold' : ''
+                        }`}>
+                          {getNotificationTitle(notification.types)}
                         </h3>
                         <span className="text-xs text-gray-400 shrink-0">
-                          {getTimeAgo(notification.CreatedAt)}
+                          {getTimeAgo(notification.createdAt)}
                         </span>
                       </div>
                       <p className="text-sm text-gray-500 mt-1 line-clamp-2">
-                        {notification.Content}
+                        {notification.content}
                       </p>
-                      {!notification.IsRead && (
+                      {!notification.isRead && (
                         <span className="inline-block mt-2 w-2 h-2 bg-blue-600 rounded-full"></span>
                       )}
                     </div>
@@ -147,23 +179,6 @@ const NotificationsPage: React.FC = () => {
       <div className="fixed bottom-4 left-1/2 -translate-x-1/2">
         <div className="w-32 h-1 bg-gray-800 rounded-full"></div>
       </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     </div>
   );
 };
