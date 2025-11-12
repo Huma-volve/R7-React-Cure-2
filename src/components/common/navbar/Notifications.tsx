@@ -28,37 +28,48 @@ const Notifications = () => {
         }
     };
 
-    const getNotificationIcon = (type: string) => {
-        switch (type.toLowerCase()) {
-            case 'upcoming':
-            case 'upcoming appointment':
-                return <UpcomingNotification className='text-[#145DB8]' />;
-            case 'completed':
-            case 'appointment completed':
-                return <CompletedNotification className="w-5 h-5 text-[#4CAF50]" />;
-            case 'cancelled':
-            case 'appointment cancelled':
-                return <CancelledNotification className="w-5 h-5 text-[#B33537]" />;
-            default:
-                return <UpcomingNotification className='text-[#145DB8]' />;
-        }
-    };
+const getNotificationIcon = (types?: string | number) => {
+  const normalizedType = String(types ?? "").toLowerCase();
 
-    const getNotificationBgColor = (type: string) => {
-        switch (type.toLowerCase()) {
-            case 'upcoming':
-            case 'upcoming appointment':
-                return 'bg-[#E8EFF8]';
-            case 'completed':
-            case 'appointment completed':
-                return 'bg-[#EDF7EE]';
-            case 'cancelled':
-            case 'appointment cancelled':
-                return 'bg-[#FFEDED]';
-            default:
-                return 'bg-[#E8EFF8]';
-        }
-    };
+  switch (normalizedType) {
+    case "0":
+    case "upcoming":
+    case "upcoming appointment":
+      return <UpcomingNotification className="text-[#145DB8]" />;
+    case "1":
+    case "completed":
+    case "appointment completed":
+      return <CompletedNotification className="w-5 h-5 text-[#4CAF50]" />;
+    case "2":
+    case "cancelled":
+    case "appointment cancelled":
+      return <CancelledNotification className="w-5 h-5 text-[#B33537]" />;
+    default:
+      return <UpcomingNotification className="text-[#145DB8]" />;
+  }
+};
+
+const getNotificationBgColor = (types?: string | number) => {
+  const normalizedType = String(types ?? "").toLowerCase();
+
+  switch (normalizedType) {
+    case "0":
+    case "upcoming":
+    case "upcoming appointment":
+      return "bg-[#E8EFF8]";
+    case "1":
+    case "completed":
+    case "appointment completed":
+      return "bg-[#EDF7EE]";
+    case "2":
+    case "cancelled":
+    case "appointment cancelled":
+      return "bg-[#FFEDED]";
+    default:
+      return "bg-[#E8EFF8]";
+  }
+};
+
 
     const getTimeAgo = (createdAt: string) => {
         const now = new Date();
@@ -70,6 +81,8 @@ const Notifications = () => {
         const diffInDays = Math.floor(diffInHours / 24);
         return `${diffInDays}d`;
     };
+    console.log("🔔 Notifications data:", notifications);
+
 
     return (
         <DropdownMenu>
@@ -103,40 +116,39 @@ const Notifications = () => {
                         <DropdownMenuGroup>
                             {notifications.map((notification) => (
                                 <Link
-                                    to={`/notifications/${notification.Id}`}
-                                    key={notification.Id}
-                                    onClick={() => handleNotificationClick(notification.Id, notification.IsRead)}
+                                    to={`/notificationdetails/${notification.id}`}
+                                    key={notification.id}
+                                    onClick={() => handleNotificationClick(notification.id, notification.isRead)}
                                 >
                                     <DropdownMenuItem 
                                         className={`mb-2 p-3 cursor-pointer hover:bg-gray-100 transition-colors ${
-                                            !notification.IsRead ? 'bg-blue-50' : ''
+                                            !notification.isRead ? 'bg-blue-50' : ''
                                         }`}
                                     >
                                         <div className="flex items-start gap-3 w-full">
                                             {/* Icon */}
-                                            <div className={`${getNotificationBgColor(notification.Types)} rounded-full p-3 shrink-0`}>
-                                                {getNotificationIcon(notification.Types)}
+                                            <div className={`${getNotificationBgColor(notification.types)} rounded-full p-3 shrink-0`}>
+                                                {getNotificationIcon(notification.types)}
                                             </div>
                                             
                                             {/* Content */}
                                             <div className="flex-1 min-w-0">
+                                                
                                                 <div className="flex items-start justify-between gap-2">
-                                                    <p
-                                                        style={{ fontFamily: 'var(--font-secondary)' }}
-                                                        className={`sm:text-[16px] text-[14px] ${
-                                                            !notification.IsRead ? 'font-bold' : 'font-medium'
-                                                        }`}
-                                                    >
-                                                        {notification.Types}
-                                                    </p>
+<h3 className={`font-semibold text-gray-900 text-sm sm:text-base ${!notification.isRead ? 'font-bold' : ''}`}>
+{Number(notification.types) === 0 ? 'Upcoming Appointment' : 
+ Number(notification.types) === 1 ? 'Appointment Completed' : 
+ Number(notification.types) === 2 ? 'Appointment Cancelled' : 
+ notification.types}
+</h3>
                                                     <span className="text-xs text-gray-400 shrink-0">
-                                                        {getTimeAgo(notification.CreatedAt)}
+                                                        {getTimeAgo(notification.createdAt)}
                                                     </span>
                                                 </div>
                                                 <p className="text-[14px] text-gray-500 truncate max-w-[150px] sm:max-w-[250px] mt-1">
-                                                    {notification.Content}
+                                                    {notification.content}
                                                 </p>
-                                                {!notification.IsRead && (
+                                                {!notification.isRead && (
                                                     <span className="inline-block mt-2 w-2 h-2 bg-blue-600 rounded-full"></span>
                                                 )}
                                             </div>
