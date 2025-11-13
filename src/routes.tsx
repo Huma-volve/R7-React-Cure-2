@@ -3,7 +3,7 @@ import DoctorDetails from './Pages/DoctorDetails/DoctorDetails';
 import BookAppointment from './Pages/BookAppointment/BookAppointment';
 import { lazy } from "react";
 
-
+import NotificationsPage from './Pages/NotificationPage/NotificationPage';
 const BookingPage = lazy(() => import('./Pages/BookingPage/BookingPage'));
 const ChatPage = lazy(() => import('./Pages/Chatpage/ChatPage'));
 const Layout = lazy(() => import("./Layout/Layout"));
@@ -20,7 +20,6 @@ const AddReviewPage = lazy(() => import('./Pages/AddReviewPage/AddReviewPage'));
 const ProtectedRoute = lazy(() => import("./routes/ProtectedRoute"));
 const Verify = lazy(() => import('./Pages/verify/Verify'));
 const Methods = lazy(() => import('./Pages/paymethod/Methods'));
-const NotificationsPage = lazy(() => import('./Pages/NotificationPage/NotificationPage'));
 const NotificationDetailsPage = lazy(() => import('./Pages/NotificationPage/NotificationDetailsPage'));
 const PayMethod = lazy(() => import('./Pages/paymethod/PayMethod'));
 const MethodForm = lazy(() => import('./Pages/paymethod/MethodForm'));
