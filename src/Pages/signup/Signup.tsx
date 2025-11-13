@@ -124,21 +124,26 @@ const Signup: React.FC = () => {
                             <input
                                 type="text"
                                 placeholder="Email"
-                                className="border-2 border-gray-300 rounded-md p-2! w-full"
-                                {...register("Email", { required: "Email is required" })}
+                                className="border-2 border-gray-300 rounded-md p-2 w-full"
+                                {...register("Email", {
+                                    required: "Email is required",
+                                    pattern: {
+                                        value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                                        message: "Invalid email address",
+                                    },
+                                })}
                             />
                             {errors.Email && (
                                 <p className="text-red-500 text-sm">
                                     {(errors.Email as any).message}
                                 </p>
                             )}
-                        </nav>
 
+                        </nav>
                         <nav className="flex flex-col gap-2">
                             <label className="text-start w-full">
                                 <span className="label-text">Phone number</span>
                             </label>
-
                             <Controller
                                 name="phoneNumber"
                                 control={control}

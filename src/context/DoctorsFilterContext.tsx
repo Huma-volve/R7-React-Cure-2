@@ -53,12 +53,12 @@ export const DoctorsFilterProvider = ({ children, useTopRated = false }: Doctors
         // Also check specialities array if available
         const allSpecialties = doctors.flatMap((doc) => {
             const specialties: string[] = [];
-            
+
             // Add main specialty
             if (doc.specialty && doc.specialty.trim() !== '') {
                 specialties.push(doc.specialty);
             }
-            
+
             // Add specialities array if available
             if (doc.specialities) {
                 if (Array.isArray(doc.specialities)) {
@@ -71,7 +71,7 @@ export const DoctorsFilterProvider = ({ children, useTopRated = false }: Doctors
                     specialties.push(String(doc.specialities));
                 }
             }
-            
+
             return specialties;
         });
 
@@ -116,7 +116,7 @@ export const DoctorsFilterProvider = ({ children, useTopRated = false }: Doctors
                 const result = useTopRated
                     ? await getTopRatedDoctors()
                     : await getDoctors(paramsOverride);
-                
+
                 console.log(
                     `[DoctorsFilterContext] ${useTopRated ? 'getTopRatedDoctors' : 'getDoctors'} raw response:`,
                     result.raw
@@ -166,20 +166,17 @@ export const DoctorsFilterProvider = ({ children, useTopRated = false }: Doctors
         setSearchTerm(q);
     }, [params]);
 
-    // Sync favorite status from FavoriteContext to doctors list
     useEffect(() => {
         setDoctors((prevDoctors) =>
             prevDoctors.map((doc) => {
                 const favoriteDoc = favoriteDoctors.find((fav) => fav.id === doc.id);
                 if (favoriteDoc) {
-                    // Doctor is in favorites list, update status
                     return {
                         ...doc,
                         isFavorite: favoriteDoc.isFavorite ?? favoriteDoc.isFavourite ?? false,
                         isFavourite: favoriteDoc.isFavourite ?? favoriteDoc.isFavorite ?? false
                     };
                 } else {
-                    // Doctor is not in favorites list, set to false
                     return {
                         ...doc,
                         isFavorite: false,
@@ -202,11 +199,11 @@ export const DoctorsFilterProvider = ({ children, useTopRated = false }: Doctors
                 // Search in doctor name
                 const name = doc.name || '';
                 const nameMatch = name.toLowerCase().includes(searchLower);
-                
+
                 // Search in doctor specialty
                 const specialty = doc.specialty || '';
                 const specialtyMatch = specialty.toLowerCase().includes(searchLower);
-                
+
                 return nameMatch || specialtyMatch;
             });
             console.log(`[DoctorsFilterContext] Filtering by search term: "${searchTerm}"`, {
