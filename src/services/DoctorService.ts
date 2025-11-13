@@ -1,6 +1,13 @@
 import Cookies from "js-cookie";
 
 export interface Doctor {
+  distance: any;
+  price: any;
+  address: any;
+  specialistTitle: ReactNode;
+  imgUrl: string | undefined;
+  imgUrl: any;
+  fullName: any;
   img: string;
   id: string;
   name: string;
