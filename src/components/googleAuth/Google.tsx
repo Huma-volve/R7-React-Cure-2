@@ -22,11 +22,14 @@ const Google: React.FC = () => {
             const payload = resultAction.payload;
 
             const accessToken =
-                payload.data?.accessToken || payload.data?.token || payload.data?.idToken;
+                payload.data?.accessToken || payload.data?.idToken;
+            const refreshToken = payload.data?.refreshToken || "";
+            const idToken = payload.data?.idToken || "";
 
             dispatch(setToken({
                 accessToken,
-                refreshToken: payload.data?.refreshToken || "",
+                refreshToken,
+                idToken
             }));
 
             console.log("✅ Login successful, token saved:", accessToken);

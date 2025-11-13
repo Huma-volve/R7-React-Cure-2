@@ -58,7 +58,7 @@ const DoctorInfoSidebar: React.FC<DoctorInfoSidebarProps> = ({ doctor, text, sho
           <div className="relative flex justify-center items-center">
             <div className="p-[3px] rounded-full bg-linear-to-tl from-blue-900 to-transparent w-30 h-30 flex items-center justify-center">
               <img
-                src={doctor.imgUrl || '/public/images/magdyYacob.jpg'}
+                src={doctor.imgUrl }
                 alt={doctor.fullName || 'Doctor'}
                 className="w-28 h-28 rounded-full object-cover"
               />

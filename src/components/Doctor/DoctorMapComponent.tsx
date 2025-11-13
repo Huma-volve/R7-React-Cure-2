@@ -70,9 +70,38 @@ const DoctorMapComponent: React.FC = () => {
       if (data.display_name) {
         setLocationName(data.display_name);
       }
-      console.log(data)
     } catch (error) {
       console.error("Error reverse geocoding:", error);
+    }
+  };
+
+  // Calculate distance between two coordinates using Haversine formula
+  const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number): number => {
+    const R = 6371; // Earth's radius in km
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLon = (lon2 - lon1) * Math.PI / 180;
+    const a = 
+      Math.sin(dLat/2) * Math.sin(dLat/2) +
+      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+      Math.sin(dLon/2) * Math.sin(dLon/2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    return R * c; // Distance in km
+  };
+
+  // Geocode address to get coordinates
+  const geocodeAddress = async (address: string): Promise<[number, number] | null> => {
+    try {
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(address)}&format=json&limit=1`
+      );
+      const data = await response.json();
+      if (data && data.length > 0) {
+        return [parseFloat(data[0].lat), parseFloat(data[0].lon)];
+      }
+      return null;
+    } catch (error) {
+      console.error("Error geocoding address:", error);
+      return null;
     }
   };
 
@@ -133,9 +162,47 @@ const DoctorMapComponent: React.FC = () => {
       const data = await res.json();
       const doctorsList = Array.isArray(data) ? data : Array.isArray(data.data) ? data.data : [];
 
+      console.log("📍 All Doctors from API:", doctorsList);
 
-      console.log("📍 Nearby Doctors:", doctorsList);
-      setDoctors(doctorsList);
+      // Add coordinates to doctors who don't have them
+      const doctorsWithCoords = await Promise.all(
+        doctorsList.map(async (doc: any) => {
+          let docLat = doc.latitude || doc.Latitude;
+          let docLng = doc.longitude || doc.Longitude;
+          
+          // If no coordinates, try to geocode the address
+          if (!docLat || !docLng) {
+            const address = doc.address || doc.Address;
+            if (address) {
+              console.log(`🔍 Geocoding address for ${doc.fullName}: ${address}`);
+              const coords = await geocodeAddress(address);
+              if (coords) {
+                docLat = coords[0];
+                docLng = coords[1];
+                console.log(`✅ Coordinates found: [${docLat}, ${docLng}]`);
+              }
+            }
+          }
+          
+          return { ...doc, latitude: docLat, longitude: docLng };
+        })
+      );
+
+      // Filter doctors within 50km radius
+      const filteredDoctors = doctorsWithCoords.filter((doc: any) => {
+        if (!doc.latitude || !doc.longitude) {
+          console.log(`⚠️ Doctor ${doc.fullName || doc.FullName} has no coordinates`);
+          return false;
+        }
+        
+        const distance = calculateDistance(lat, lng, doc.latitude, doc.longitude);
+        console.log(`📏 Doctor: ${doc.fullName || doc.FullName}, Distance: ${distance.toFixed(2)}km`);
+        
+        return distance <= 50; // Only show doctors within 50km
+      });
+
+      console.log("✅ Filtered Doctors (within 50km):", filteredDoctors);
+      setDoctors(filteredDoctors);
     } catch (error) {
       console.error("Error fetching doctors:", error);
       setDoctors([]);
@@ -155,12 +222,11 @@ const DoctorMapComponent: React.FC = () => {
       {!isHomePage && (
         <div className="w-[400px] h-full bg-white shadow-xl overflow-y-auto z-10">
           {/* Header */}
-          <div className="sticky top-0  p-4 z-20">
+          <div className="sticky top-0 p-4 z-20">
             <div className="flex items-center justify-between mb-3">
               <h2 className="text-xl font-bold text-gray-800">
                 {doctors.length} Results
               </h2>
-
             </div>
           </div>
 
@@ -168,62 +234,12 @@ const DoctorMapComponent: React.FC = () => {
           <div className="p-4 space-y-3">
             {doctors.length === 0 ? (
               <>
-
-
-              
-              {/* statatic data if there is data for doctors */}
-              <div>statatic data if there is NO data for doctors</div>
-                <div
-                  className=" rounded-lg p-4 shadow-md cursor-pointer"
-                >
-                  <div className="flex gap-3">
-                    {/* Doctor Image */}
-                    <div className="shrink-0">
-                      <img
-                        src="/public/images/magdyYacob.jpg"
-                        alt=""
-                        className="w-20 h-20 rounded-lg object-cover"
-                      />
-                    </div>
-
-                    {/* Doctor Info */}
-                    <div className="flex-1 min-w-0">
-                      <h3 className="font-bold text-gray-900 text-base mb-1 truncate">
-                        Magdy yacoub
-                      </h3>
-
-                      <p className="text-gray-600 text-xs mb-2 flex items-center gap-1">
-                        <MapPin size={12} className="shrink-0" />
-                        <span className="truncate">Sergury | 357357</span>
-                      </p>
-                      
-                      {/* Rating & Working Hours */}
-                      <div className="flex items-center gap-3 text-xs text-gray-600">
-                        <div className="flex items-center gap-1">
-                          <Star size={14} className="text-yellow-500 fill-yellow-500" />
-                          <span className="font-semibold text-gray-900">4.8</span>
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <circle cx="12" cy="12" r="10" strokeWidth="2"/>
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6l4 2"/>
-                          </svg>
-                          <span>9:30am - 8:00pm</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                {/* Static data if there is NO data for doctors */}
+                <div className="text-center py-12 text-gray-500">
+                  <MapPin className="mx-auto mb-3 text-gray-400" size={48} />
+                  <p className="text-lg font-semibold">No doctors found nearby</p>
+                  <p className="text-sm mt-2">Try searching in a different area</p>
                 </div>
-
-
-              <div className="text-center py-12 text-gray-500">
-                <MapPin className="mx-auto mb-3 text-gray-400" size={48} />
-                <p className="text-lg font-semibold">No doctors found</p>
-                <p className="text-sm mt-2">Try searching in a different area</p>
-              </div>
-
-
-
               </>
             ) : (
               doctors.map((doc: any) => (
@@ -233,11 +249,11 @@ const DoctorMapComponent: React.FC = () => {
                 >
                   <div className="flex gap-3">
                     {/* Doctor Image */}
-                    <Link to={`doctordetails/${doc.Id}`}>
+                    <Link to={`/doctordetails/${doc.id}`}>
                       <div className="shrink-0">
                         <img
-                          src={doc.ImageUrl || "https://via.placeholder.com/80x80?text=Dr"}
-                          alt={doc.FullName}
+                          src={doc.imageUrl || doc.imgUrl || "https://via.placeholder.com/80x80?text=Dr"}
+                          alt={doc.fullName}
                           className="w-20 h-20 rounded-lg object-cover"
                         />
                       </div>
@@ -245,26 +261,26 @@ const DoctorMapComponent: React.FC = () => {
                     {/* Doctor Info */}
                     <div className="flex-1 min-w-0">
                       <h3 className="font-bold text-gray-900 text-base mb-1 truncate">
-                        {doc.FullName}
+                        {doc.fullName}
                       </h3>
 
                       <p className="text-gray-600 text-xs mb-2 flex items-center gap-1">
                         <MapPin size={12} className="shrink-0" />
-                        <span className="truncate">{ doc.SpecialistTitle || doc.Address|| "Location not specified"}</span>
+                        <span className="truncate">{doc.specialistTitle || doc.address || "Location not specified"}</span>
                       </p>
                       
                       {/* Rating & Working Hours */}
                       <div className="flex items-center gap-3 text-xs text-gray-600">
                         <div className="flex items-center gap-1">
                           <Star size={14} className="text-yellow-500 fill-yellow-500" />
-                          <span className="font-semibold text-gray-900">{doc.Rating || "4.8"}</span>
+                          <span className="font-semibold text-gray-900">{doc.rating || "N/A"}</span>
                         </div>
                         <div className="flex items-center gap-1">
                           <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <circle cx="12" cy="12" r="10" strokeWidth="2"/>
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6l4 2"/>
                           </svg>
-                          <span>{doc.StartDate | doc.EndDate}</span>
+                          <span>Price: {doc.price}</span>
                         </div>
                       </div>
                     </div>
@@ -347,33 +363,39 @@ const DoctorMapComponent: React.FC = () => {
           </Marker>
 
           {/* Doctor Markers */}
-          {doctors.map((doc: any) => (
-            <Marker
-              key={doc.Id}
-              position={[doc.latitude, doc.longitude]}
-              icon={doctorIcon}
-            >
-              <Popup>
-                <div className="p-3 min-w-[200px]">
-                  <div className="font-bold text-gray-800 mb-2 text-base">{doc.FullName}</div>
-                  <div className="text-blue-600 font-semibold text-sm mb-2">
-                    {doc.Specialisttitle}
-                  </div>
-                  <div className="text-gray-600 text-xs mb-2 flex items-center gap-1">
-                    <MapPin size={12} /> {doc.hospital || "Not Specified"}
-                  </div>
-                  <div className="flex items-center gap-1 text-xs text-gray-700">
-                    <Star size={14} className="text-yellow-500 fill-yellow-500" />
-                    <span className="font-semibold">{doc.Rating || "N/A"}</span>
-                    <span className="text-gray-500">Rating</span>
-                  </div>
-                  <button className="mt-3 w-full bg-blue-600 text-white py-2 rounded-lg text-xs hover:bg-blue-700 transition">
-                   Book Now
-                  </button>
-                </div>
-              </Popup>
-            </Marker>
-          ))}
+          {doctors
+            .filter((doc: any) => doc.latitude || doc.Latitude)
+            .map((doc: any) => {
+              const lat = doc.latitude || doc.Latitude;
+              const lng = doc.longitude || doc.Longitude;
+
+              return (
+                <Marker key={doc.id || doc.Id} position={[lat, lng]} icon={doctorIcon}>
+                  <Popup>
+                    <div className="p-3 min-w-[200px]">
+                      <div className="font-bold text-gray-800 mb-2 text-base">
+                        {doc.fullName || doc.FullName}
+                      </div>
+                      <div className="text-blue-600 font-semibold text-sm mb-2">
+                        {doc.specialistTitle || doc.SpecialistTitle || doc.Specialisttitle}
+                      </div>
+                      <div className="text-gray-600 text-xs mb-2 flex items-center gap-1">
+                        <MapPin size={12} /> {doc.address || doc.hospital || "Not Specified"}
+                      </div>
+                      <div className="flex items-center gap-1 text-xs text-gray-700">
+                        <Star size={14} className="text-yellow-500 fill-yellow-500" />
+                        <span className="font-semibold">{doc.rating || doc.Rating || "N/A"}</span>
+                      </div>
+                      <Link to={`/doctordetails/${doc.id}`}>
+                      <button className="mt-3 w-full bg-blue-600 text-white py-2 rounded-lg text-xs hover:bg-blue-700 transition">
+                        Book Now
+                      </button>
+                      </Link>
+                    </div>
+                  </Popup>
+                </Marker>
+              );
+            })}
         </MapContainer>
       </div>
     </div>

@@ -1,6 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-import Cookies from "js-cookie";
 const base_url = `https://cure-doctor-booking.runasp.net/`;
 declare const google: any;
 interface UserState {
@@ -10,6 +9,7 @@ interface UserState {
     data: {
         acssessToken: string | null;
         refreshToken: string | null;
+        idToken: string | null;
     }
 }
 
@@ -20,6 +20,7 @@ const initialState: UserState = {
     data: {
         acssessToken: "",
         refreshToken: "",
+        idToken: ""
     }
 };
 interface User {
@@ -250,7 +251,6 @@ const userSlice = createSlice({
                 state.loading = false;
                 state.user = action.payload.user;
                 state.error = null;
-                Cookies.set("idToken", action.payload.idToken);
             })
             .addCase(googleLogin.rejected, (state, action) => {
                 state.loading = false;

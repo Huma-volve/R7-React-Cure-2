@@ -142,11 +142,11 @@ const Signup: React.FC = () => {
 
                         </nav>
 
+                        </nav>
                         <nav className="flex flex-col gap-2">
                             <label className="text-start w-full">
                                 <span className="label-text">Phone number</span>
                             </label>
-
                             <Controller
                                 name="phoneNumber"
                                 control={control}

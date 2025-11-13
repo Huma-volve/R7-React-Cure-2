@@ -10,6 +10,7 @@ interface Appointment {
     specialization: string;
     doctorImage?: string;
     location: string;
+    doctorId: number;
 }
 
 interface AppointmentsListProps {
@@ -22,7 +23,8 @@ const AppointmentsList: React.FC<AppointmentsListProps> = ({ tab, date }) => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
-    const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjMjZiMWVhMC0xZDE0LTQwNDQtYTNiMS0yYTlkMDU3YzAwNzYiLCJ1bmlxdWVfbmFtZSI6IisyMDEwOTMxMzA0ODg4IiwiZmlyc3ROYW1lIjoiQWhtZWQiLCJsYXN0TmFtZSI6Ik91ZiIsImFkZHJlc3MiOiIiLCJpbWdVcmwiOiIiLCJiaXJ0aERhdGUiOiIwMDAxLTAxLTAxIiwiZ2VuZGVyIjoiTWFsZSIsImxvY2F0aW9uIjoiIiwiaXNOb3RpZmljYXRpb25zRW5hYmxlZCI6IlRydWUiLCJleHAiOjE3NjI2MTg5NzUsImlzcyI6Imh0dHBzOi8vY3VyZS1kb2N0b3ItYm9va2luZy5ydW5hc3AubmV0LyIsImF1ZCI6Imh0dHBzOi8vbG9jYWxob3N0OjUwMDAsaHR0cHM6Ly9sb2NhbGhvc3Q6NTUwMCxodHRwczovL2xvY2FsaG9zdDo0MjAwICxodHRwczovL2N1cmUtZG9jdG9yLWJvb2tpbmcucnVuYXNwLm5ldC8ifQ.jlcMAdUwmaoX_h6-DX61ViWc-ttmlhOw6_ukr0_aML0"; // ضع التوكن هنا
+    const token =
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIzNmY1NGU1NC1lY2RmLTQ0N2UtOGM1ZC00YTdmMDQxYTYxNDUiLCJ1bmlxdWVfbmFtZSI6IjA3NzUwMDAiLCJmaXJzdE5hbWUiOiJBaG1lZCIsImxhc3ROYW1lIjoiQWhtZWQiLCJhZGRyZXNzIjoiIiwiaW1nVXJsIjoiIiwiYmlydGhEYXRlIjoiMDAwMS0wMS0wMSIsImdlbmRlciI6Ik1hbGUiLCJsb2NhdGlvbiI6IiIsImlzTm90aWZpY2F0aW9uc0VuYWJsZWQiOiJUcnVlIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZWlkZW50aWZpZXIiOiIzNmY1NGU1NC1lY2RmLTQ0N2UtOGM1ZC00YTdmMDQxYTYxNDUiLCJleHAiOjE3NjMwNjUxMzEsImlzcyI6Imh0dHBzOi8vY3VyZS1kb2N0b3ItYm9va2luZy5ydW5hc3AubmV0LyIsImF1ZCI6Imh0dHBzOi8vbG9jYWxob3N0OjUwMDAsaHR0cHM6Ly9sb2NhbGhvc3Q6NTUwMCxodHRwczovL2xvY2FsaG9zdDo0MjAwICxodHRwczovL2N1cmUtZG9jdG9yLWJvb2tpbmcucnVuYXNwLm5ldC8ifQ.4vR90H_CpQkKpRyGHLlADoEMVogiOl5NCfrDuYotMR4";
 
     useEffect(() => {
         const fetchAppointments = async () => {
@@ -38,8 +40,22 @@ const AppointmentsList: React.FC<AppointmentsListProps> = ({ tab, date }) => {
                     }
                 );
 
-                if (response.data?.data) {
-                    setAppointments(response.data.data);
+                const rawData = response.data?.data?.data;
+
+                if (Array.isArray(rawData)) {
+                    const mappedAppointments: Appointment[] = rawData.map((item: any) => ({
+                        id: item.id, // ده الـ booking id
+                        doctorId: item.doctorId, // ده اللي محتاجه الكارت
+                        date: item.appointmentAt,
+                        status: item.status.toLowerCase(),
+                        doctorName: item.doctorName,
+                        specialization: item.doctorSpeciality,
+                        doctorImage: `https://cure-doctor-booking.runasp.net/${item.doctorImg}`,
+                        location: "Cairo Medical Center",
+                    }));
+
+
+                    setAppointments(mappedAppointments);
                 } else {
                     setAppointments([]);
                 }
@@ -65,15 +81,13 @@ const AppointmentsList: React.FC<AppointmentsListProps> = ({ tab, date }) => {
     // فلترة حسب التاريخ
     const finalAppointments = date
         ? filteredAppointments.filter(
-            (a) =>
-                new Date(a.date).toDateString() === date.toDateString()
+            (a) => new Date(a.date).toDateString() === date.toDateString()
         )
         : filteredAppointments;
 
     if (loading)
         return <p className="text-center text-gray-500">Loading appointments...</p>;
-    if (error)
-        return <p className="text-center text-red-500">{error}</p>;
+    if (error) return <p className="text-center text-red-500">{error}</p>;
 
     return (
         <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 justify-items-center">
@@ -91,3 +105,4 @@ const AppointmentsList: React.FC<AppointmentsListProps> = ({ tab, date }) => {
 };
 
 export default AppointmentsList;
+// ززززززززززززززززززززز

@@ -7,11 +7,13 @@ const cookies = Cookies;
 interface UserState {
     accessToken: string | null;
     refreshToken: string | null;
+    idToken: string | null;
 }
 
 const initialState: UserState = {
     accessToken: cookies.get("accessToken") as string | null,
-    refreshToken: cookies.get("refreshToken") as string | null
+    refreshToken: cookies.get("refreshToken") as string | null,
+    idToken: cookies.get("idToken") as string | null
 };
 
 const authSlice = createSlice({
@@ -31,10 +33,13 @@ const authSlice = createSlice({
             if (refreshToken) {
                 cookies.set("refreshToken", refreshToken);
             }
+
         },
         logout: (state) => {
             state.accessToken = null;
             state.refreshToken = null;
+            state.idToken = null;
+            Cookies.remove("idToken");
             Cookies.remove("accessToken");
             Cookies.remove("refreshToken");
         },
