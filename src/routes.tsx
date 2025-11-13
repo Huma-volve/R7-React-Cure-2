@@ -2,7 +2,6 @@ import { createBrowserRouter } from 'react-router-dom';
 import DoctorDetails from './Pages/DoctorDetails/DoctorDetails';
 import BookAppointment from './Pages/BookAppointment/BookAppointment';
 import { lazy } from "react";
-import NotificationDetailsPage from './Pages/NotificationPage/NotificationDetailsPage';
 import NotificationsPage from './Pages/NotificationPage/NotificationPage';
 
 
@@ -52,7 +51,7 @@ const router = createBrowserRouter([
             { path: 'privacy', element: <Privacy /> },
                   { path: 'notificationpage', element: <NotificationsPage /> },
       { path: 'addreviewpage', element: <AddReviewPage /> }, 
-      { path: '/notificationdetails/:id', element: <NotificationDetailsPage /> }
+      { path: '/notificationdetails/:id', element: <NotificationPage /> }
         ],
     },
 
