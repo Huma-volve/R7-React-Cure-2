@@ -8,10 +8,11 @@ import { VITE_GOOGLE_CLIENT_ID } from './Google_ID.ts';
 import { store } from './store/Store';
 import { FavoriteProvider } from './context/FavoriteContext.tsx';
 import { GoogleOAuthProvider } from '@react-oauth/google';
+import LodaingPage from './components/loading/LodaingPage.tsx';
 
 createRoot(document.getElementById('root')!).render(
     <Provider store={store}>
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense fallback={<LodaingPage />}>
             <GoogleOAuthProvider clientId={VITE_GOOGLE_CLIENT_ID}>
                 <FavoriteProvider>
                     <RouterProvider router={router} />

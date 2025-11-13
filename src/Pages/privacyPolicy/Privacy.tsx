@@ -1,8 +1,9 @@
+import { Container } from '@/components/ui/Container'
 import React from 'react'
 
 const Privacy: React.FC = () => {
     return (
-        <section className="md:!py-8 !py-6 !px-8 md:!px-12 w-full h-screen flex items-center gap-4 flex-col">
+        <Container className="md:!py-8 !py-6 !px-8 md:!px-12 w-full h-screen flex items-center gap-4 flex-col">
             <h1 className='text-2xl noto-serif'>Privacy Policy</h1>
             <div className="flex flex-col w-full gap-2 items-start">
                 <div className="flex flex-col  gap-3">
@@ -31,7 +32,7 @@ const Privacy: React.FC = () => {
                     <p className="text-[#6D7379] text-sm">Your data is handled in accordance with our [Privacy Policy]. You are responsible for keeping your login credentials secure.</p>
                 </div>
             </div>
-        </section>
+        </Container>
     )
 }
 

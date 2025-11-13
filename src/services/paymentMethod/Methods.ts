@@ -34,7 +34,7 @@ export const addMethods = createAsyncThunk(
     "user/addMethods",
     async (data: PaymentMethod, { rejectWithValue }) => {
         try {
-            const response = await axios.post(`${base_url}api / profile / paymentmethods / add`, data, {
+            const response = await axios.post(`${base_url}api/Profile/PaymentMethods/add`, data, {
                 headers: {
                     "Content-Type": "application/json",
                     Authorization: `Bearer ${Cookies.get("accessToken")}`,
