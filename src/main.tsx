@@ -11,14 +11,13 @@ import { GoogleOAuthProvider } from '@react-oauth/google';
 import LodaingPage from './components/loading/LodaingPage.tsx';
 
 createRoot(document.getElementById('root')!).render(
-    <GoogleOAuthProvider clientId={VITE_GOOGLE_CLIENT_ID}>
-        <Provider store={store}>
-            <Suspense fallback={<LodaingPage />}>
-
+    <Provider store={store}>
+        <Suspense fallback={<LodaingPage />}>
+            <GoogleOAuthProvider clientId={VITE_GOOGLE_CLIENT_ID}>
                 <FavoriteProvider>
                     <RouterProvider router={router} />
                 </FavoriteProvider>
-            </Suspense>
-        </Provider>
-    </GoogleOAuthProvider>
+            </GoogleOAuthProvider>
+        </Suspense>
+    </Provider>
 );
