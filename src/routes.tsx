@@ -43,7 +43,6 @@ const router = createBrowserRouter([
             { path: "methods", element: <Methods /> },
             { path: "methodform", element: <MethodForm /> },
             { path: "map", element: <Map /> },
-            // { path: "notificationpage", element: <NotificationPage /> },
             { path: 'booking', element: <BookingPage /> },
             { path: 'chatpage', element: <ChatPage /> },
             { path: 'privacy', element: <Privacy /> },
