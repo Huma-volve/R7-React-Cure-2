@@ -7,13 +7,14 @@ import router from './routes.tsx';
 
 import { store } from './store/Store';
 import { FavoriteProvider } from './context/FavoriteContext.tsx';
-import { GoogleOAuthProvider } from '@react-oauth/google'
-const GOOGLE_CLIENT_ID = "60136975563-f3l7uhdpim7ciikh8rkt0qafdim77pcj.apps.googleusercontent.com";
+import { GoogleOAuthProvider } from '@react-oauth/google';
+import LodaingPage from './components/loading/LodaingPage.tsx';
+import { VITE_GOOGLE_CLIENT_ID } from './Google_ID.ts';
 
 createRoot(document.getElementById('root')!).render(
     <Provider store={store}>
-        <Suspense fallback={<div>Loading...</div>}>
-            <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
+        <Suspense fallback={<LodaingPage />}>
+            <GoogleOAuthProvider clientId={VITE_GOOGLE_CLIENT_ID}>
                 <FavoriteProvider>
                     <RouterProvider router={router} />
                 </FavoriteProvider>

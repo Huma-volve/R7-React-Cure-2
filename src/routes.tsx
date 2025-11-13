@@ -2,8 +2,6 @@ import { createBrowserRouter } from 'react-router-dom';
 import DoctorDetails from './Pages/DoctorDetails/DoctorDetails';
 import BookAppointment from './Pages/BookAppointment/BookAppointment';
 import { lazy } from "react";
-import NotificationDetailsPage from './Pages/NotificationPage/NotificationDetailsPage';
-import NotificationsPage from './Pages/NotificationPage/NotificationPage';
 
 
 const BookingPage = lazy(() => import('./Pages/BookingPage/BookingPage'));
@@ -19,11 +17,11 @@ const DoctorsPage = lazy(() => import('./Pages/Doctors/Doctors'));
 const FavoritePage = lazy(() => import('./Pages/Favorite/FavoritePage'));
 const TopDoctors = lazy(() => import('./Pages/topDoctors/TopDoctors'));
 const AddReviewPage = lazy(() => import('./Pages/AddReviewPage/AddReviewPage'));
-
 const ProtectedRoute = lazy(() => import("./routes/ProtectedRoute"));
 const Verify = lazy(() => import('./Pages/verify/Verify'));
 const Methods = lazy(() => import('./Pages/paymethod/Methods'));
-const NotificationPage = lazy(() => import('./Pages/NotificationPage/NotificationDetailsPage'));
+const NotificationsPage = lazy(() => import('./Pages/NotificationPage/NotificationPage'));
+const NotificationDetailsPage = lazy(() => import('./Pages/NotificationPage/NotificationDetailsPage'));
 const PayMethod = lazy(() => import('./Pages/paymethod/PayMethod'));
 const MethodForm = lazy(() => import('./Pages/paymethod/MethodForm'));
 const Privacy = lazy(() => import('./Pages/privacyPolicy/Privacy'));
@@ -46,13 +44,12 @@ const router = createBrowserRouter([
             { path: "methods", element: <Methods /> },
             { path: "methodform", element: <MethodForm /> },
             { path: "map", element: <Map /> },
-            // { path: "notificationpage", element: <NotificationPage /> },
             { path: 'booking', element: <BookingPage /> },
             { path: 'chatpage', element: <ChatPage /> },
             { path: 'privacy', element: <Privacy /> },
-                  { path: 'notificationpage', element: <NotificationsPage /> },
-      { path: 'addreviewpage', element: <AddReviewPage /> }, 
-      { path: '/notificationdetails/:id', element: <NotificationDetailsPage /> }
+            { path: 'notificationpage', element: <NotificationsPage /> },
+            { path: 'addreviewpage', element: <AddReviewPage /> },
+            { path: '/notificationdetails/:id', element: <NotificationDetailsPage /> }
         ],
     },
 
