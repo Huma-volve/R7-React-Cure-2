@@ -49,9 +49,9 @@ const router = createBrowserRouter([
             { path: 'booking', element: <BookingPage /> },
             { path: 'chatpage', element: <ChatPage /> },
             { path: 'privacy', element: <Privacy /> },
-                  { path: 'notificationpage', element: <NotificationsPage /> },
-      { path: 'addreviewpage', element: <AddReviewPage /> }, 
-      { path: '/notificationdetails/:id', element: <NotificationPage /> }
+            { path: 'notificationpage', element: <NotificationsPage /> },
+            { path: 'addreviewpage', element: <AddReviewPage /> },
+            { path: '/notificationdetails/:id', element: <NotificationPage /> }
         ],
     },
 
