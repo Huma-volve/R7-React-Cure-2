@@ -169,11 +169,11 @@ function DropdownMenuNotifications({
             <div className="py-2">
               {notifications.slice(0, 5).map((notification) => (
                 <div
-                  key={notification.Id}
-                  onClick={() => handleNotificationClick(notification.Id, notification.IsRead)}
+                  key={notification.id}
+                  onClick={() => handleNotificationClick(notification.id, notification.isRead)}
                   className={cn(
                     "px-4 py-3 cursor-pointer hover:bg-gray-50 transition-colors",
-                    !notification.IsRead && "bg-blue-50"
+                    !notification.isRead && "bg-blue-50"
                   )}
                 >
                   <div className="flex items-start gap-3">
@@ -188,18 +188,18 @@ function DropdownMenuNotifications({
                       <div className="flex items-start justify-between gap-2">
                         <h3 className={cn(
                           "text-sm text-gray-900",
-                          !notification.IsRead && "font-semibold"
+                          !notification.isRead && "font-semibold"
                         )}>
                           {notification.Types}
                         </h3>
                         <span className="text-xs text-gray-400 shrink-0">
-                          {getTimeAgo(notification.CreatedAt)}
+                          {getTimeAgo(notification.createdAt)}
                         </span>
                       </div>
                       <p className="text-xs text-gray-500 mt-1 line-clamp-2">
-                        {notification.Content}
+                        {notification.content}
                       </p>
-                      {!notification.IsRead && (
+                      {!notification.isRead && (
                         <span className="inline-block mt-2 w-2 h-2 bg-blue-600 rounded-full"></span>
                       )}
                     </div>

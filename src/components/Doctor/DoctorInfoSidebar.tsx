@@ -1,12 +1,14 @@
 // components/DoctorInfoSidebar.tsx
 import React from 'react';
-import { ChatIcon, FavoriteHeart, VerifiedBadgeIcon } from './icons';
+import { ChatIcon, VerifiedBadgeIcon } from './icons';
 import AboutSection from './AboutSection';
 import DoctorStats from './DoctorStats/DoctorStats';
 import DoctorDetailsMap from './DoctorDetailsMap';
+import BtnFavorite from '../ui/doctors/favorite/BtnFavorite';
 
 interface DoctorInfoSidebarProps {
   doctor: {
+    id: number;
     specialities: string | string[];
     specialistTitle?: string;
     address: string;
@@ -45,7 +47,7 @@ const DoctorInfoSidebar: React.FC<DoctorInfoSidebarProps> = ({ doctor, text, sho
     <div className="bg-[#F5F6F7] rounded-lg p-6 shadow-sm h-fit relative z-1">
 
       <div className='p-2 bg-white absolute top-4 left-4 rounded-full cursor-pointer hover:bg-[#fca5a6] transition duration-500'>
-        <FavoriteHeart />
+        <BtnFavorite id={doctor.id} />
       </div>      
       <div className='p-2 bg-white absolute top-4 right-4 rounded-full cursor-pointer hover:bg-[#b9d9ff] text-white transition duration-500'>
         <ChatIcon />

@@ -12,7 +12,7 @@ const NotificationDetailsPage: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { notifications, loading } = useSelector((state: RootState) => state.notifications);
 
-  const notification = notifications.find(n => n.Id === Number(id));
+  const notification = notifications.find(n => n.id === Number(id));
 
   useEffect(() => {
     if (!notifications.length) {
@@ -21,36 +21,58 @@ const NotificationDetailsPage: React.FC = () => {
   }, [dispatch, notifications.length]);
 
   useEffect(() => {
-    if (notification && !notification.IsRead) {
-      dispatch(markAsRead(notification.Id));
+    if (notification && !notification.isRead) {
+      dispatch(markAsRead(notification.id));
     }
   }, [notification, dispatch]);
 
-  const getNotificationIcon = (type: string) => {
-    switch (type.toLowerCase()) {
-      case 'upcoming':
-        return <UpcomingNotification className='text-[#145DB8] w-6 h-6' />;
-      case 'completed':
-        return <CompletedNotification className="w-6 h-6 text-[#4CAF50]" />;
-      case 'cancelled':
-        return <CancelledNotification className="w-6 h-6 text-[#B33537]" />;
-      default:
-        return <UpcomingNotification className='text-[#145DB8] w-6 h-6' />;
-    }
-  };
+const getNotificationIcon = (type: string | number | undefined) => {
+  const normalizedType =
+    typeof type === 'number'
+      ? type === 0
+        ? 'upcoming'
+        : type === 1
+        ? 'completed'
+        : type === 2
+        ? 'cancelled'
+        : 'upcoming'
+      : type?.toLowerCase() || 'upcoming';
 
-  const getNotificationBgColor = (type: string) => {
-    switch (type.toLowerCase()) {
-      case 'upcoming':
-        return 'bg-[#E8EFF8]';
-      case 'completed':
-        return 'bg-[#EDF7EE]';
-      case 'cancelled':
-        return 'bg-[#FFEDED]';
-      default:
-        return 'bg-[#E8EFF8]';
-    }
-  };
+  switch (normalizedType) {
+    case 'upcoming':
+      return <UpcomingNotification className='text-[#145DB8] w-6 h-6' />;
+    case 'completed':
+      return <CompletedNotification className="w-6 h-6 text-[#4CAF50]" />;
+    case 'cancelled':
+      return <CancelledNotification className="w-6 h-6 text-[#B33537]" />;
+    default:
+      return <UpcomingNotification className='text-[#145DB8] w-6 h-6' />;
+  }
+};
+
+const getNotificationBgColor = (type: string | number | undefined) => {
+  const normalizedType =
+    typeof type === 'number'
+      ? type === 0
+        ? 'upcoming'
+        : type === 1
+        ? 'completed'
+        : type === 2
+        ? 'cancelled'
+        : 'upcoming'
+      : type?.toLowerCase() || 'upcoming';
+
+  switch (normalizedType) {
+    case 'upcoming':
+      return 'bg-[#E8EFF8]';
+    case 'completed':
+      return 'bg-[#EDF7EE]';
+    case 'cancelled':
+      return 'bg-[#FFEDED]';
+    default:
+      return 'bg-[#E8EFF8]';
+  }
+};
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -84,7 +106,7 @@ const NotificationDetailsPage: React.FC = () => {
         <div className="sticky top-0 z-10 bg-white shadow-sm">
           <div className="max-w-2xl mx-auto px-4 py-4 flex items-center">
             <button 
-              onClick={() => navigate('/notifications')}
+              onClick={() => window.history.back()}
               className="mr-4 p-1 hover:bg-gray-100 rounded-full transition-colors"
             >
               <ChevronLeft className="w-6 h-6" />
@@ -105,7 +127,7 @@ const NotificationDetailsPage: React.FC = () => {
       <div className="sticky top-0 z-10 bg-white shadow-sm">
         <div className="max-w-2xl mx-auto px-4 py-4 flex items-center">
           <button 
-            onClick={() => navigate('/notifications')}
+            onClick={() => window.history.back()}
             className="mr-4 p-1 hover:bg-gray-100 rounded-full transition-colors"
           >
             <ChevronLeft className="w-6 h-6" />
@@ -119,19 +141,19 @@ const NotificationDetailsPage: React.FC = () => {
         {/* Icon and Type */}
         <div className="bg-white rounded-2xl p-6 shadow-sm mb-4">
           <div className="flex items-center gap-4 mb-6">
-            <div className={`${getNotificationBgColor(notification.Types)} rounded-full p-4`}>
-              {getNotificationIcon(notification.Types)}
+            <div className={`${getNotificationBgColor(notification.types)} rounded-full p-4`}>
+              {getNotificationIcon(notification.types)}
             </div>
             <div>
-              <h2 className="text-2xl font-bold text-gray-900">{notification.Types}</h2>
+
               <div className="flex items-center gap-4 mt-2 text-sm text-gray-500">
                 <div className="flex items-center gap-1">
                   <Calendar className="w-4 h-4" />
-                  <span>{formatDate(notification.CreatedAt)}</span>
+                  <span>{formatDate(notification.createdAt)}</span>
                 </div>
                 <div className="flex items-center gap-1">
                   <Clock className="w-4 h-4" />
-                  <span>{formatTime(notification.CreatedAt)}</span>
+                  <span>{formatTime(notification.createdAt)}</span>
                 </div>
               </div>
             </div>
@@ -144,7 +166,7 @@ const NotificationDetailsPage: React.FC = () => {
           <div>
             <h3 className="text-lg font-semibold text-gray-900 mb-3">Details</h3>
             <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">
-              {notification.Content}
+              {notification.content}
             </p>
           </div>
 
@@ -163,7 +185,7 @@ const NotificationDetailsPage: React.FC = () => {
         {/* Action Buttons (optional) */}
         <div className="flex gap-3">
           <button
-            onClick={() => navigate('/notifications')}
+            onClick={() => navigate('/notificationpage')}
             className="flex-1 py-3 px-4 bg-white border border-gray-300 text-gray-700 rounded-xl font-medium hover:bg-gray-50 transition-colors"
           >
             Back to Notifications
