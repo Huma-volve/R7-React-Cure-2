@@ -2,9 +2,8 @@ import { createBrowserRouter } from 'react-router-dom';
 import DoctorDetails from './Pages/DoctorDetails/DoctorDetails';
 import BookAppointment from './Pages/BookAppointment/BookAppointment';
 import { lazy } from "react";
+
 import NotificationsPage from './Pages/NotificationPage/NotificationPage';
-
-
 const BookingPage = lazy(() => import('./Pages/BookingPage/BookingPage'));
 const ChatPage = lazy(() => import('./Pages/Chatpage/ChatPage'));
 const Layout = lazy(() => import("./Layout/Layout"));
@@ -18,11 +17,10 @@ const DoctorsPage = lazy(() => import('./Pages/Doctors/Doctors'));
 const FavoritePage = lazy(() => import('./Pages/Favorite/FavoritePage'));
 const TopDoctors = lazy(() => import('./Pages/topDoctors/TopDoctors'));
 const AddReviewPage = lazy(() => import('./Pages/AddReviewPage/AddReviewPage'));
-
 const ProtectedRoute = lazy(() => import("./routes/ProtectedRoute"));
 const Verify = lazy(() => import('./Pages/verify/Verify'));
 const Methods = lazy(() => import('./Pages/paymethod/Methods'));
-const NotificationPage = lazy(() => import('./Pages/NotificationPage/NotificationDetailsPage'));
+const NotificationDetailsPage = lazy(() => import('./Pages/NotificationPage/NotificationDetailsPage'));
 const PayMethod = lazy(() => import('./Pages/paymethod/PayMethod'));
 const MethodForm = lazy(() => import('./Pages/paymethod/MethodForm'));
 const Privacy = lazy(() => import('./Pages/privacyPolicy/Privacy'));
@@ -51,7 +49,7 @@ const router = createBrowserRouter([
             { path: 'privacy', element: <Privacy /> },
             { path: 'notificationpage', element: <NotificationsPage /> },
             { path: 'addreviewpage', element: <AddReviewPage /> },
-            { path: '/notificationdetails/:id', element: <NotificationPage /> }
+            { path: '/notificationdetails/:id', element: <NotificationDetailsPage /> }
         ],
     },
 
