@@ -5,6 +5,7 @@ import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useForm } from 'react-hook-form'
 import { addMethods } from '@/services/paymentMethod/Methods'
+import { useNavigate } from 'react-router'
 
 interface methodForm {
     methodName: string,
@@ -24,6 +25,7 @@ const MethodForm: React.FC = () => {
     const dispatch = useDispatch<AppDispatch>()
 
     const { data, loading, error } = useSelector((state: RootState) => state.methods)
+    const navigate = useNavigate()
 
     const methodFromCookie = Cookies.get("methodName")
     const validMethods = ["Visa", "Mastercard", "Amex", "Discover"];
@@ -43,7 +45,10 @@ const MethodForm: React.FC = () => {
                 brand: method!,
                 expMonth: parseInt(expiryMonth.split("/")[0]),
                 expYear: parseInt(expiryYear.split("/")[1]),
+
             };
+            navigate('/methods')
+            window.location.reload();
             const result = await dispatch(addMethods(formData)).unwrap();
             console.log("✅ Add Method Success:", result);
         } catch (error: any) {
