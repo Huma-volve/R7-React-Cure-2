@@ -33,11 +33,14 @@ const DoctorMapMobile: React.FC = () => {
   useEffect(() => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
-        (pos) => {
+        async (pos) => {
           const coords: [number, number] = [pos.coords.latitude, pos.coords.longitude];
           setUserLocation(coords);
           setMapCenter(coords);
-          reverseGeocodeLocation(coords[0], coords[1]);
+          
+          // Get location name
+          const name = await reverseGeocode(coords[0], coords[1]);
+          if (name) setLocationName(name);
         },
         () => {
           console.log("Location access denied. Using default location.");
@@ -69,10 +72,24 @@ const DoctorMapMobile: React.FC = () => {
 
   const handleConfirmLocation = async () => {
     setStep("loading");
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-    const doctorsList = await searchDoctors(userLocation);
-    setAllDoctors(doctorsList);
-    setStep("results");
+    
+    try {
+      // البحث عن الأطباء بناءً على الموقع المحدد
+      console.log("🔍 Searching for doctors at:", userLocation);
+      const doctorsList = await searchDoctors(userLocation);
+      console.log("✅ Doctors found:", doctorsList);
+      
+      setAllDoctors(doctorsList);
+      
+      // انتظار قليلاً لعرض شاشة التحميل
+      await new Promise((resolve) => setTimeout(resolve, 1500));
+      
+      setStep("results");
+    } catch (error) {
+      console.error("❌ Error fetching doctors:", error);
+      alert("حدث خطأ أثناء البحث عن الأطباء");
+      setStep("confirm");
+    }
   };
 
   const getCurrentLocation = () => {

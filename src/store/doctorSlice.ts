@@ -135,7 +135,7 @@ export const createBooking = createAsyncThunk(
   'doctor/createBooking',
   async (bookingData: BookingData, { rejectWithValue }) => {
     try {
-      console.log("📤 Sending booking data:", bookingData);
+      console.log(" Sending booking data:", bookingData);
       const token = Cookies.get("accessToken");
 
       const res = await axios.post(
@@ -151,11 +151,11 @@ export const createBooking = createAsyncThunk(
         }
       );
 
-      console.log("✅ Booking Created:", res.data);
+      console.log(" Booking Created:", res.data);
       return res.data;
     } catch (error: any) {
-      console.error("❌ Full Error:", error);
-      console.error("❌ Response Data:", error?.response?.data);
+      console.error(" Full Error:", error);
+      console.error(" Response Data:", error?.response?.data);
       const message =
         error?.response?.data?.message || error?.message || "Failed to create booking";
       return rejectWithValue(message as string);

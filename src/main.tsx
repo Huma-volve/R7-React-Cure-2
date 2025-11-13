@@ -4,15 +4,16 @@ import { Provider } from 'react-redux';
 import { RouterProvider } from 'react-router-dom';
 import './index.css';
 import router from './routes.tsx';
-import { VITE_GOOGLE_CLIENT_ID } from './Google_ID.ts';
+
 import { store } from './store/Store';
 import { FavoriteProvider } from './context/FavoriteContext.tsx';
-import { GoogleOAuthProvider } from '@react-oauth/google';
+import { GoogleOAuthProvider } from '@react-oauth/google'
+const GOOGLE_CLIENT_ID = "60136975563-f3l7uhdpim7ciikh8rkt0qafdim77pcj.apps.googleusercontent.com";
 
 createRoot(document.getElementById('root')!).render(
     <Provider store={store}>
         <Suspense fallback={<div>Loading...</div>}>
-            <GoogleOAuthProvider clientId={VITE_GOOGLE_CLIENT_ID}>
+            <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
                 <FavoriteProvider>
                     <RouterProvider router={router} />
                 </FavoriteProvider>
