@@ -2,8 +2,10 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { CardContent } from '@/components/ui/card';
 import { Link } from 'react-router-dom';
+import BtnFavorite from '@/components/ui/doctors/favorite/BtnFavorite';
+import { type DoctorsType } from '@/api/doctors/Doctors';
 
-interface DoctorCardProps {
+interface DoctorCardProps extends Partial<DoctorsType> {
     id: number;
     name: string;
     image: string;
@@ -14,23 +16,45 @@ interface DoctorCardProps {
     price: number;
 }
 
-const DoctorCard: React.FC<DoctorCardProps> = ({
-    id,
-    name,
-    image,
-    specialty,
-    hospital,
-    rate,
-    availability,
-    price
-}) => {
+const DoctorCard: React.FC<DoctorCardProps> = (props) => {
+    const {
+        id,
+        name,
+        image,
+        specialty,
+        hospital,
+        rate,
+        availability,
+        price
+    } = props;
+
+    // Create doctor data object to pass to BtnFavorite using all props
+    const doctorData: DoctorsType = {
+        ...props,
+        id,
+        image,
+        specialty,
+        hospital,
+        rate,
+        availability,
+        price,
+
+        gender: props.gender || 'All',
+        isFavorite: props.isFavorite || false,
+        isFavourite: props.isFavourite || false,
+    };
+
     return (
-        <CardContent className="p-0 group transition-all duration-300 shadow-[0_0_12px_rgba(0,0,0,0.1)] hover:shadow-[0_0_16px_rgba(0,0,0,0.2)] rounded-xl">
+        <CardContent className="p-0 group transition-all duration-300 shadow-[0_0_12px_rgba(0,0,0,0.1)] hover:shadow-[0_0_16px_rgba(0,0,0,0.2)] rounded-xl relative">
+            {/* Favorite Button - Top Right */}
+            <div className="absolute top-3 right-3 z-10">
+                <BtnFavorite id={id} doctorData={doctorData} />
+            </div>
             <div className="p-4 flex flex-col h-full">
                 {/* ====== Doctor Info ====== */}
                 <div className="flex items-center gap-3 mb-3">
                     {/* Doctor Image */}
-                    <Link to={`/doctors/${id}`} className="shrink-0">
+                    <Link to={`/doctordetails/${id}`} className="shrink-0">
                         <Avatar className="w-[70px] h-[70px] sm:w-[85px] sm:h-20 md:w-[95px] md:h-[90px] rounded-[10px] overflow-hidden cursor-pointer hover:scale-[1.05] transition-transform duration-300">
                             <AvatarImage
                                 className="w-[97px] h-[88px] object-cover"
@@ -48,7 +72,7 @@ const DoctorCard: React.FC<DoctorCardProps> = ({
 
                     {/* Doctor Details */}
                     <div className="flex-1 min-w-0">
-                        <Link to={`/doctors/${id}`}>
+                        <Link to={`/doctordetails/${id}`}>
                             <h3
                                 className="text-[15px] sm:text-[16px] md:text-[17px] font-semibold truncate cursor-pointer transition-colors duration-300 group-hover:text-(--color-main)"
                                 style={{ fontFamily: 'var(--font-secondary)' }}

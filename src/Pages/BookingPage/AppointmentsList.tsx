@@ -10,6 +10,7 @@ interface Appointment {
     specialization: string;
     doctorImage?: string;
     location: string;
+    doctorId: number;
 }
 
 interface AppointmentsListProps {
@@ -23,7 +24,7 @@ const AppointmentsList: React.FC<AppointmentsListProps> = ({ tab, date }) => {
     const [error, setError] = useState<string | null>(null);
 
     const token =
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI0NWUxZTY1NC02ZDA5LTRjZDUtYjM4YS01MWQ0ODE3NTFjNTUiLCJ1bmlxdWVfbmFtZSI6IisyMDEwOTMxMzA0ODgzIiwiZmlyc3ROYW1lIjoiQWhtZWQiLCJsYXN0TmFtZSI6Ik91ZiIsImFkZHJlc3MiOiIiLCJpbWdVcmwiOiIiLCJiaXJ0aERhdGUiOiIwMDAxLTAxLTAxIiwiZ2VuZGVyIjoiTWFsZSIsImxvY2F0aW9uIjoiIiwiaXNOb3RpZmljYXRpb25zRW5hYmxlZCI6IlRydWUiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjQ1ZTFlNjU0LTZkMDktNGNkNS1iMzhhLTUxZDQ4MTc1MWM1NSIsImV4cCI6MTc2Mjk4MDA3MiwiaXNzIjoiaHR0cHM6Ly9jdXJlLWRvY3Rvci1ib29raW5nLnJ1bmFzcC5uZXQvIiwiYXVkIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NTAwMCxodHRwczovL2xvY2FsaG9zdDo1NTAwLGh0dHBzOi8vbG9jYWxob3N0OjQyMDAgLGh0dHBzOi8vY3VyZS1kb2N0b3ItYm9va2luZy5ydW5hc3AubmV0LyJ9.69YU7bX-xK-lnSYY5qB396BxvM0H3ILOQ73hkT15WY0";
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIzNmY1NGU1NC1lY2RmLTQ0N2UtOGM1ZC00YTdmMDQxYTYxNDUiLCJ1bmlxdWVfbmFtZSI6IjA3NzUwMDAiLCJmaXJzdE5hbWUiOiJBaG1lZCIsImxhc3ROYW1lIjoiQWhtZWQiLCJhZGRyZXNzIjoiIiwiaW1nVXJsIjoiIiwiYmlydGhEYXRlIjoiMDAwMS0wMS0wMSIsImdlbmRlciI6Ik1hbGUiLCJsb2NhdGlvbiI6IiIsImlzTm90aWZpY2F0aW9uc0VuYWJsZWQiOiJUcnVlIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZWlkZW50aWZpZXIiOiIzNmY1NGU1NC1lY2RmLTQ0N2UtOGM1ZC00YTdmMDQxYTYxNDUiLCJleHAiOjE3NjMwNjUxMzEsImlzcyI6Imh0dHBzOi8vY3VyZS1kb2N0b3ItYm9va2luZy5ydW5hc3AubmV0LyIsImF1ZCI6Imh0dHBzOi8vbG9jYWxob3N0OjUwMDAsaHR0cHM6Ly9sb2NhbGhvc3Q6NTUwMCxodHRwczovL2xvY2FsaG9zdDo0MjAwICxodHRwczovL2N1cmUtZG9jdG9yLWJvb2tpbmcucnVuYXNwLm5ldC8ifQ.4vR90H_CpQkKpRyGHLlADoEMVogiOl5NCfrDuYotMR4";
 
     useEffect(() => {
         const fetchAppointments = async () => {
@@ -43,14 +44,16 @@ const AppointmentsList: React.FC<AppointmentsListProps> = ({ tab, date }) => {
 
                 if (Array.isArray(rawData)) {
                     const mappedAppointments: Appointment[] = rawData.map((item: any) => ({
-                        id: item.doctorId,
+                        id: item.id, // ده الـ booking id
+                        doctorId: item.doctorId, // ده اللي محتاجه الكارت
                         date: item.appointmentAt,
-                        status: item.status.toLowerCase(), // "upcoming"
+                        status: item.status.toLowerCase(),
                         doctorName: item.doctorName,
                         specialization: item.doctorSpeciality,
                         doctorImage: `https://cure-doctor-booking.runasp.net/${item.doctorImg}`,
-                        location: "Cairo Medical Center", // مؤقت لحد ما يضيفوه في الـ API
+                        location: "Cairo Medical Center",
                     }));
+
 
                     setAppointments(mappedAppointments);
                 } else {
@@ -102,3 +105,4 @@ const AppointmentsList: React.FC<AppointmentsListProps> = ({ tab, date }) => {
 };
 
 export default AppointmentsList;
+// ززززززززززززززززززززز

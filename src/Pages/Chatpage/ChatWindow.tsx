@@ -6,7 +6,6 @@ import { sendMessage, startChat } from "../../api/Chat/chatService";
 interface ChatWindowProps {
     selectedUser?: any;
     onToggleFavourite?: (chat: any) => void;
-    onSendMessage?: (chatId: number, message: string) => void;
 }
 
 interface Message {
@@ -16,7 +15,7 @@ interface Message {
     time: string;
 }
 
-const ChatWindow: React.FC<ChatWindowProps> = ({ selectedUser, onToggleFavourite, onSendMessage }) => {
+const ChatWindow: React.FC<ChatWindowProps> = ({ selectedUser, onToggleFavourite }) => {
     const [messages, setMessages] = useState<Message[]>([]);
     const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
@@ -65,9 +64,6 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ selectedUser, onToggleFavourite
             };
 
             setMessages((prev) => [...prev, newMsg]);
-
-            // تحديث Sidebar
-            onSendMessage && onSendMessage(chatId, text);
         } catch (error) {
             console.error("Error sending message:", error);
         }
@@ -89,6 +85,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ selectedUser, onToggleFavourite
 
     return (
         <div className="flex flex-col w-2/3 h-full bg-gray-50">
+            {/* Header */}
             <div className="flex items-center gap-3 bg-white border-b px-4 py-3 shadow-sm justify-between">
                 <div className="flex items-center gap-3">
                     <img src={selectedUser.img} alt={selectedUser.doctorName} className="w-10 h-10 rounded-full object-cover" />
@@ -97,6 +94,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ selectedUser, onToggleFavourite
                         <p className="text-xs text-green-500">متصل الآن</p>
                     </div>
                 </div>
+                {/* أيقونة القلب */}
                 <div
                     className="cursor-pointer text-red-500 text-xl"
                     onClick={() => onToggleFavourite && onToggleFavourite(selectedUser)}
@@ -105,15 +103,19 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ selectedUser, onToggleFavourite
                 </div>
             </div>
 
+            {/* Messages */}
             <div className="flex-1 overflow-y-auto px-4 py-3 space-y-3">
                 {messages.length > 0 ? (
-                    messages.map((msg) => <MessageItem key={msg.id} sender={msg.sender} content={msg.content} time={msg.time} />)
+                    messages.map((msg) => (
+                        <MessageItem key={msg.id} sender={msg.sender} content={msg.content} time={msg.time} />
+                    ))
                 ) : (
                     <p className="text-center text-gray-400 text-sm mt-5">لا توجد رسائل بعد</p>
                 )}
                 <div ref={messagesEndRef} />
             </div>
 
+            {/* Input */}
             <MessageInput onSend={handleSendMessage} />
         </div>
     );

@@ -1,6 +1,11 @@
 import * as React from "react"
 import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu"
 import { CheckIcon, ChevronRightIcon, CircleIcon } from "lucide-react"
+import { useDispatch, useSelector } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
+import { CancelledNotification, CompletedNotification, EmptyNotification, UpcomingNotification } from '@/components/Doctor/icons'
+import { fetchNotifications, markAsRead } from '@/store/notificationsSlice'
+import type { RootState, AppDispatch } from '@/store/Store'
 
 import { cn } from "@/lib/utils"
 
@@ -77,6 +82,156 @@ function DropdownMenuItem({
       )}
       {...props}
     />
+  )
+}
+
+// Notifications Dropdown Component
+function DropdownMenuNotifications({
+  className,
+  ...props
+}: React.ComponentProps<typeof DropdownMenuPrimitive.Content>) {
+  const dispatch = useDispatch<AppDispatch>()
+  const navigate = useNavigate()
+  const { notifications, loading } = useSelector((state: RootState) => state.notifications)
+
+  React.useEffect(() => {
+    dispatch(fetchNotifications())
+  }, [dispatch])
+
+  const handleNotificationClick = (notificationId: number, isRead: boolean) => {
+    if (!isRead) {
+      dispatch(markAsRead(notificationId))
+    }
+    navigate(`/notifications/${notificationId}`)
+  }
+
+  const getNotificationIcon = (type: string) => {
+    switch (type.toLowerCase()) {
+      case 'upcoming':
+        return <UpcomingNotification className='text-[#145DB8]' />
+      case 'completed':
+        return <CompletedNotification className="w-5 h-5 text-[#4CAF50]" />
+      case 'cancelled':
+        return <CancelledNotification className="w-5 h-5 text-[#B33537]" />
+      default:
+        return <UpcomingNotification className='text-[#145DB8]' />
+    }
+  }
+
+  const getNotificationBgColor = (type: string) => {
+    switch (type.toLowerCase()) {
+      case 'upcoming':
+        return 'bg-[#E8EFF8]'
+      case 'completed':
+        return 'bg-[#EDF7EE]'
+      case 'cancelled':
+        return 'bg-[#FFEDED]'
+      default:
+        return 'bg-[#E8EFF8]'
+    }
+  }
+
+  const getTimeAgo = (createdAt: string) => {
+    const now = new Date()
+    const created = new Date(createdAt)
+    const diffInHours = Math.floor((now.getTime() - created.getTime()) / (1000 * 60 * 60))
+    
+    if (diffInHours < 1) return 'Just now'
+    if (diffInHours < 24) return `${diffInHours}h`
+    const diffInDays = Math.floor(diffInHours / 24)
+    return `${diffInDays}d`
+  }
+
+  return (
+    <DropdownMenuPrimitive.Portal>
+      <DropdownMenuPrimitive.Content
+        data-slot="dropdown-menu-notifications"
+        sideOffset={8}
+        className={cn(
+          "bg-white text-gray-900 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 z-50 w-[380px] max-h-[500px] origin-(--radix-dropdown-menu-content-transform-origin) overflow-hidden rounded-xl border shadow-lg",
+          className
+        )}
+        {...props}
+      >
+        {/* Header */}
+        <div className="px-4 py-3 border-b">
+          <h2 className="text-lg font-semibold">Notifications</h2>
+        </div>
+
+        {/* Content */}
+        <div className="overflow-y-auto max-h-[420px]">
+          {loading ? (
+            <div className="flex flex-col items-center justify-center py-12">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+              <p className="mt-3 text-sm text-gray-500">Loading...</p>
+            </div>
+          ) : notifications.length > 0 ? (
+            <div className="py-2">
+              {notifications.slice(0, 5).map((notification) => (
+                <div
+                  key={notification.Id}
+                  onClick={() => handleNotificationClick(notification.Id, notification.IsRead)}
+                  className={cn(
+                    "px-4 py-3 cursor-pointer hover:bg-gray-50 transition-colors",
+                    !notification.IsRead && "bg-blue-50"
+                  )}
+                >
+                  <div className="flex items-start gap-3">
+                    <div className={cn(
+                      "rounded-full p-2 shrink-0",
+                      getNotificationBgColor(notification.Types)
+                    )}>
+                      {getNotificationIcon(notification.Types)}
+                    </div>
+                    
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-start justify-between gap-2">
+                        <h3 className={cn(
+                          "text-sm text-gray-900",
+                          !notification.IsRead && "font-semibold"
+                        )}>
+                          {notification.Types}
+                        </h3>
+                        <span className="text-xs text-gray-400 shrink-0">
+                          {getTimeAgo(notification.CreatedAt)}
+                        </span>
+                      </div>
+                      <p className="text-xs text-gray-500 mt-1 line-clamp-2">
+                        {notification.Content}
+                      </p>
+                      {!notification.IsRead && (
+                        <span className="inline-block mt-2 w-2 h-2 bg-blue-600 rounded-full"></span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              ))}
+              
+              {notifications.length > 5 && (
+                <div className="px-4 py-3 border-t">
+                  <button
+                    onClick={() => navigate('/notifications')}
+                    className="w-full text-sm text-blue-600 hover:text-blue-700 font-medium"
+                  >
+                    View all notifications
+                  </button>
+                </div>
+              )}
+            </div>
+          ) : (
+            <div className="flex flex-col items-center justify-center py-12 px-6">
+              <EmptyNotification />
+              <h3 className="text-sm font-semibold text-gray-900 mt-4 mb-1">
+                Nothing to display here!
+              </h3>
+              <p className="text-xs text-gray-500 text-center">
+                We'll notify you once we have new notifications.
+              </p>
+            </div>
+          )}
+        </div>
+      </DropdownMenuPrimitive.Content>
+    </DropdownMenuPrimitive.Portal>
   )
 }
 
@@ -241,6 +396,7 @@ export {
   DropdownMenuPortal,
   DropdownMenuTrigger,
   DropdownMenuContent,
+  DropdownMenuNotifications,
   DropdownMenuGroup,
   DropdownMenuLabel,
   DropdownMenuItem,

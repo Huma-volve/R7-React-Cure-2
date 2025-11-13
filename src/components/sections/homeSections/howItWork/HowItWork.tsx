@@ -1,4 +1,5 @@
 import { Card, CardContent, CardDescription, CardTitle } from '@/components/ui/card';
+import { Container } from '@/components/ui/Container';
 import type React from 'react';
 import { Link } from 'react-router';
 
@@ -43,11 +44,11 @@ const steps: CardProps[] = [
 
 const HowItWorks: React.FC = () => {
     return (
-        <section className="lg:py-10 py-5 bg-white relative">
-            <div className="container mx-auto px-4 text-center">
+        <section className="lg:py-10! py-5! bg-white relative">
+            <Container>
                 {/* Section Title */}
                 <h2
-                    className="text-2xl md:text-[32px] font-semibold text-gray-900 lg:mb-12 mb-8"
+                    className="text-2xl text-center md:text-[32px] font-semibold text-gray-900 lg:mb-12 mb-8"
                     style={{ fontFamily: 'var(--font-secondary)' }}
                 >
                     How it works
@@ -89,7 +90,7 @@ const HowItWorks: React.FC = () => {
                         </Card>
                     ))}
                 </div>
-            </div>
+            </Container>
         </section>
     );
 };

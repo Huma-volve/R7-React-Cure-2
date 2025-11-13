@@ -56,8 +56,8 @@ const SpecialtiesCarousel: React.FC<SpecialtiesCarouselProps> = ({
                                     className={cn(
                                         'cursor-pointer border transition-all hover:shadow-md rounded-2xl p-0 relative w-fit',
                                         selectedSpecialty === spec.name
-                                            ? 'border-blue-600 bg-blue-50'
-                                            : 'border-gray-200'
+                                            ? 'border-(--bg-main) bg-(--bg-main)'
+                                            : 'border-gray-200 bg-white'
                                     )}
                                     onClick={() => onSelect(spec.name)}
                                 >
@@ -65,9 +65,20 @@ const SpecialtiesCarousel: React.FC<SpecialtiesCarouselProps> = ({
                                         <img
                                             src={spec.image}
                                             alt={spec.name}
-                                            className="w-5 h-5 object-contain opacity-70 shrink-0"
+                                            className={cn(
+                                                'w-5 h-5 object-contain opacity-80 shrink-0 transition duration-300',
+                                                selectedSpecialty === spec.name &&
+                                                    'invert brightness-0 contrast-200'
+                                            )}
                                         />
-                                        <p className="text-sm text-(--color-text) font-medium truncate max-w-[120px] md:max-w-[150px]">
+                                        <p
+                                            className={cn(
+                                                'text-sm font-medium truncate max-w-[120px] md:max-w-[150px] transition duration-300',
+                                                selectedSpecialty === spec.name
+                                                    ? 'text-white'
+                                                    : 'text-(--color-text)'
+                                            )}
+                                        >
                                             {spec.name}
                                         </p>
                                     </CardContent>

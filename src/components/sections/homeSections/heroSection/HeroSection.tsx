@@ -43,16 +43,20 @@ const HeroSection = () => {
                     <div className="flex items-center justify-center sm:flex-row flex-col gap-3 text-[14px]">
                         <Link
                             to="/doctors"
-                            className="py-3.5 px-15 bg-(--bg-main) text-white duration-300 font-medium hover:bg-[#083d7f] border rounded-[10px] border-(--bg-main)"
+                            className="py-3.5 px-15 bg-[#145DB8]   text-white duration-300 font-medium hover:bg-[#145eb87e] border rounded-[10px] border-(--bg-main)"
                         >
                             Get started
                         </Link>
                         <Link
                             to="/booking"
-                            className="text-(--bg-main) border border-(--bg-main) hover:text-black hover:border-black font-medium duration-300 py-3 px-4 rounded-[10px]"
+                            className="group text-(--bg-main) border border-(--bg-main) hover:text-white hover:bg-(--bg-main) font-medium duration-300 py-3 px-4 rounded-[10px]"
                         >
                             <div className="flex items-center gap-2">
-                                <img src="/icons/calender.svg" alt="" />
+                                <img
+                                    src="/icons/calender.svg"
+                                    alt=""
+                                    className="transition duration-300 group-hover:invert group-hover:brightness-0 group-hover:contrast-200"
+                                />
                                 <span>Book Appointment</span>
                             </div>
                         </Link>

@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk, type PayloadAction } from '@reduxjs/toolkit';
 import axios from 'axios';
+import Cookies from 'js-cookie';
 
 // Types
 interface AvailableSlot {
@@ -10,8 +11,20 @@ interface AvailableSlot {
   endTime: string;
   isBooked: boolean;
 }
+interface Review {
+  id?: number;
+  rating: number;
+  comment: string;
+  patientName?: string;
+  createdAt?: string;
+}
+
 
 interface Doctor {
+  experienceYears: number | undefined;
+  bookingCount: number | undefined;
+  reviewsCount: number | undefined;
+  reviews: Review[];
   id: number;
   fullName: string;
   about: string;
@@ -28,13 +41,10 @@ interface Doctor {
   endDate?: string | null;
   specialities: string | string[];
   availableSlots?: AvailableSlot[];
-  experienceYears?: number;
-  email?: string;
-}
+};
 
 interface BookingData {
   DoctorId: number;
-  PatientId: number;
   SlotId: number;
   Amount: number;
   Payment: number;
@@ -43,6 +53,7 @@ interface BookingData {
 }
 
 interface DoctorState {
+  allDoctors: any;
   doctors: Doctor[];
   currentDoctor: Doctor | null;
   loading: boolean;
@@ -61,21 +72,23 @@ const initialState: DoctorState = {
   bookingLoading: false,
   bookingError: null,
   bookingSuccess: false,
+  allDoctors: undefined
 };
 
 const API_BASE_URL = "https://cure-doctor-booking.runasp.net/api";
-const TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3MTE1Nzg4My01OTIyLTQ3YzQtOWM1My1mYzE1NDlkZTg4NDciLCJ1bmlxdWVfbmFtZSI6IisyMTQ1NjAwMTAwMyIsImZpcnN0TmFtZSI6ImFiZHVsbGFoIiwibGFzdE5hbWUiOiIiLCJhZGRyZXNzIjoiIiwiaW1nVXJsIjoiIiwiYmlydGhEYXRlIjoiMDAwMS0wMS0wMSIsImdlbmRlciI6Ik1hbGUiLCJsb2NhdGlvbiI6IiIsImlzTm90aWZpY2F0aW9uc0VuYWJsZWQiOiJUcnVlIiwiZXhwIjoxNzYyMzQ4OTAzLCJpc3MiOiJodHRwczovL2N1cmUtZG9jdG9yLWJvb2tpbmcucnVuYXNwLm5ldC8iLCJhdWQiOiJodHRwczovL2xvY2FsaG9zdDo1MDAwLGh0dHBzOi8vbG9jYWxob3N0OjU1MDAsaHR0cHM6Ly9sb2NhbGhvc3Q6NDIwMCAsaHR0cHM6Ly9jdXJlLWRvY3Rvci1ib29raW5nLnJ1bmFzcC5uZXQvIn0.zE7SaaokojUyqOp1rmVWAPD3ryp3RX8bDZ1hJ9vlPvc";
 
 // Async Thunks
 export const fetchDoctors = createAsyncThunk(
   'doctor/fetchDoctors',
   async (_, { rejectWithValue }) => {
     try {
+            const token = Cookies.get("accessToken"); 
+
       const res = await axios.get(
-        `${API_BASE_URL}/Profile/EditProfile/getprofile`,
+        `${API_BASE_URL}/Customer/Doctors/GetAllDoctors`,
         {
           headers: {
-            Authorization: `Bearer ${TOKEN}`,
+            Authorization: `Bearer ${token}`,
             Accept: "application/json",
           },
         }
@@ -83,10 +96,9 @@ export const fetchDoctors = createAsyncThunk(
       console.log("Fetched Doctors:", res.data.data);
       return res.data.data;
     } catch (error: any) {
-      if (error.response?.status === 401) {
-        return rejectWithValue("Unauthorized! Check your token.");
-      }
-      return rejectWithValue(error.message || "Failed to fetch doctors");
+      const message =
+        error?.response?.data?.message || error?.message || 'Failed to fetch doctors';
+      return rejectWithValue(message as string);
     }
   }
 );
@@ -95,11 +107,14 @@ export const fetchDoctorById = createAsyncThunk(
   'doctor/fetchDoctorById',
   async (doctorId: number, { rejectWithValue }) => {
     try {
+      
+      const token = Cookies.get("accessToken");
+
       const res = await axios.get(
         `${API_BASE_URL}/Customer/Doctors/DoctorDetails/${doctorId}`,
         {
           headers: {
-            Authorization: `Bearer ${TOKEN}`,
+            Authorization: `Bearer ${token}`,
             Accept: "application/json",
           },
         }
@@ -108,7 +123,9 @@ export const fetchDoctorById = createAsyncThunk(
       console.log("Available Slots:", res.data.data.availableSlots);
       return res.data.data;
     } catch (error: any) {
-      return rejectWithValue(error.message || "Failed to fetch doctor");
+      const message =
+        error?.response?.data?.message || error?.message || 'Failed to fetch doctor';
+      return rejectWithValue(message as string);
     }
   }
 );
@@ -119,13 +136,15 @@ export const createBooking = createAsyncThunk(
   async (bookingData: BookingData, { rejectWithValue }) => {
     try {
       console.log("📤 Sending booking data:", bookingData);
+      const token = Cookies.get("accessToken");
 
       const res = await axios.post(
+
         `${API_BASE_URL}/Customer/Booking/CreateBooking`,
         JSON.stringify(bookingData), // <── تأكد إنها JSON String
         {
           headers: {
-            Authorization: `Bearer ${TOKEN}`,
+            Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
             Accept: "application/json",
           },
@@ -136,10 +155,10 @@ export const createBooking = createAsyncThunk(
       return res.data;
     } catch (error: any) {
       console.error("❌ Full Error:", error);
-      console.error("❌ Response Data:", error.response?.data);
-      return rejectWithValue(
-        error.response?.data?.message || error.message || "Failed to create booking"
-      );
+      console.error("❌ Response Data:", error?.response?.data);
+      const message =
+        error?.response?.data?.message || error?.message || "Failed to create booking";
+      return rejectWithValue(message as string);
     }
   }
 );
@@ -185,7 +204,16 @@ const doctorSlice = createSlice({
       })
       .addCase(fetchDoctorById.fulfilled, (state, action) => {
         state.loading = false;
-        state.currentDoctor = action.payload;
+        const doctorData = action.payload || {};
+        state.currentDoctor = {
+          ...doctorData,
+          about: doctorData.about || "",
+          fullName: doctorData.fullName || doctorData.name || "Unknown Doctor",
+          imgUrl: doctorData.imgUrl || doctorData.image || "",
+          address: doctorData.address || "Unknown Location",
+          specialities: doctorData.specialities || doctorData.speciality || "General",
+          reviews: doctorData.reviews || [],
+        } as Doctor;
       })
       .addCase(fetchDoctorById.rejected, (state, action) => {
         state.loading = false;
@@ -214,3 +242,5 @@ const doctorSlice = createSlice({
 
 export const { setCurrentDoctor, clearCurrentDoctor, resetBookingState } = doctorSlice.actions;
 export default doctorSlice.reducer;
+
+

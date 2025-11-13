@@ -1,8 +1,7 @@
 import axios from "axios";
-
+import Cookies from "js-cookie";
 // ضع هنا التوكن الصحيح
-const TOKEN =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI5NjliYTMxMy1mYzM3LTQzZTQtYjU5Ni00YTgwZjY1OWFkMzgiLCJ1bmlxdWVfbmFtZSI6IisyMDEwOTMxMzA0ODg2IiwiZmlyc3ROYW1lIjoiQWhtZWQiLCJsYXN0TmFtZSI6Ik91ZiIsImFkZHJlc3MiOiIiLCJpbWdVcmwiOiIiLCJiaXJ0aERhdGUiOiIwMDAxLTAxLTAxIiwiZ2VuZGVyIjoiTWFsZSIsImxvY2F0aW9uIjoiIiwiaXNOb3RpZmljYXRpb25zRW5hYmxlZCI6IlRydWUiLCJleHAiOjE3NjI4NjAyMzcsImlzcyI6Imh0dHBzOi8vY3VyZS1kb2N0b3ItYm9va2luZy5ydW5hc3AubmV0LyIsImF1ZCI6Imh0dHBzOi8vbG9jYWxob3N0OjUwMDAsaHR0cHM6Ly9sb2NhbGhvc3Q6NTUwMCxodHRwczovL2xvY2FsaG9zdDo0MjAwICxodHRwczovL2N1cmUtZG9jdG9yLWJvb2tpbmcucnVuYXNwLm5ldC8ifQ.thp3yrmgX8Kfnh3F4nD89WdELKw6ogZNPJ7A1flxQRY";
+const TOKEN = ` ${Cookies.get("acssessToken")}`
 
 // رابط السيرفر الأساسي
 const BASE_URL = "https://cure-doctor-booking.runasp.net/";

@@ -62,8 +62,8 @@ const HamburgerMenu: React.FC = () => {
                                     key={item.id}
                                     asChild
                                     className={`hover:bg-[#F5F6F7] cursor-pointer p-3 block w-full text-center transition-colors duration-200 ${isActive
-                                            ? 'text-[var(--color-main)] font-semibold'
-                                            : 'text-black'
+                                        ? 'text-[var(--color-main)] font-semibold'
+                                        : 'text-black'
                                         }`}
                                 >
                                     <Link
