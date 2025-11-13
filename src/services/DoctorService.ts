@@ -4,9 +4,8 @@ export interface Doctor {
   distance: any;
   price: any;
   address: any;
-  specialistTitle: ReactNode;
+  specialistTitle: any;
   imgUrl: string | undefined;
-  imgUrl: any;
   fullName: any;
   img: string;
   id: string;
@@ -40,7 +39,7 @@ export const searchDoctors = async (location: [number, number]): Promise<Doctor[
 
     const data = await res.json();
     const doctorsList = Array.isArray(data) ? data : Array.isArray(data.data) ? data.data : [];
-    
+
     return doctorsList;
   } catch (error) {
     console.error("Error fetching doctors:", error);
