@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import AppointmentCard from "./AppointmentCard";
+import { Link } from "react-router-dom";
+import Cookies from "js-cookie";
 
 interface Appointment {
     id: number;
@@ -23,13 +25,13 @@ const AppointmentsList: React.FC<AppointmentsListProps> = ({ tab, date }) => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
-    const token =
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIzNmY1NGU1NC1lY2RmLTQ0N2UtOGM1ZC00YTdmMDQxYTYxNDUiLCJ1bmlxdWVfbmFtZSI6IjA3NzUwMDAiLCJmaXJzdE5hbWUiOiJBaG1lZCIsImxhc3ROYW1lIjoiQWhtZWQiLCJhZGRyZXNzIjoiIiwiaW1nVXJsIjoiIiwiYmlydGhEYXRlIjoiMDAwMS0wMS0wMSIsImdlbmRlciI6Ik1hbGUiLCJsb2NhdGlvbiI6IiIsImlzTm90aWZpY2F0aW9uc0VuYWJsZWQiOiJUcnVlIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZWlkZW50aWZpZXIiOiIzNmY1NGU1NC1lY2RmLTQ0N2UtOGM1ZC00YTdmMDQxYTYxNDUiLCJleHAiOjE3NjMwNjUxMzEsImlzcyI6Imh0dHBzOi8vY3VyZS1kb2N0b3ItYm9va2luZy5ydW5hc3AubmV0LyIsImF1ZCI6Imh0dHBzOi8vbG9jYWxob3N0OjUwMDAsaHR0cHM6Ly9sb2NhbGhvc3Q6NTUwMCxodHRwczovL2xvY2FsaG9zdDo0MjAwICxodHRwczovL2N1cmUtZG9jdG9yLWJvb2tpbmcucnVuYXNwLm5ldC8ifQ.4vR90H_CpQkKpRyGHLlADoEMVogiOl5NCfrDuYotMR4";
+    const token = Cookies.get("accessToken");
 
     useEffect(() => {
         const fetchAppointments = async () => {
             try {
                 setLoading(true);
+
                 const response = await axios.get(
                     "https://cure-doctor-booking.runasp.net/api/Customer/Booking/PatientBookings",
                     {
@@ -44,16 +46,17 @@ const AppointmentsList: React.FC<AppointmentsListProps> = ({ tab, date }) => {
 
                 if (Array.isArray(rawData)) {
                     const mappedAppointments: Appointment[] = rawData.map((item: any) => ({
-                        id: item.id, // ده الـ booking id
-                        doctorId: item.doctorId, // ده اللي محتاجه الكارت
+                        id: item.id,
+                        doctorId: item.doctorId,
                         date: item.appointmentAt,
-                        status: item.status.toLowerCase(),
+                        status: item.status?.toLowerCase(),
                         doctorName: item.doctorName,
                         specialization: item.doctorSpeciality,
-                        doctorImage: `https://cure-doctor-booking.runasp.net/${item.doctorImg}`,
+                        doctorImage: item.doctorImg
+                            ? `https://cure-doctor-booking.runasp.net/${item.doctorImg}`
+                            : undefined,
                         location: "Cairo Medical Center",
                     }));
-
 
                     setAppointments(mappedAppointments);
                 } else {
@@ -61,7 +64,8 @@ const AppointmentsList: React.FC<AppointmentsListProps> = ({ tab, date }) => {
                 }
             } catch (err) {
                 console.error("Fetch error:", err);
-                setError("No bookings found for this patient.");
+                setError("Failed to load appointments");
+                setAppointments([]);
             } finally {
                 setLoading(false);
             }
@@ -70,15 +74,11 @@ const AppointmentsList: React.FC<AppointmentsListProps> = ({ tab, date }) => {
         fetchAppointments();
     }, []);
 
-    // فلترة حسب التاب
     const filteredAppointments =
         tab === "All"
             ? appointments
-            : appointments.filter(
-                (a) => a.status?.toLowerCase() === tab.toLowerCase()
-            );
+            : appointments.filter((a) => a.status === tab.toLowerCase());
 
-    // فلترة حسب التاريخ
     const finalAppointments = date
         ? filteredAppointments.filter(
             (a) => new Date(a.date).toDateString() === date.toDateString()
@@ -87,7 +87,6 @@ const AppointmentsList: React.FC<AppointmentsListProps> = ({ tab, date }) => {
 
     if (loading)
         return <p className="text-center text-gray-500">Loading appointments...</p>;
-    if (error) return <p className="text-center text-red-500">{error}</p>;
 
     return (
         <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 justify-items-center">
@@ -96,13 +95,28 @@ const AppointmentsList: React.FC<AppointmentsListProps> = ({ tab, date }) => {
                     <AppointmentCard key={a.id} appointment={a} />
                 ))
             ) : (
-                <p className="text-gray-500 text-lg col-span-full text-center">
-                    No appointments found.
-                </p>
+                <div className="col-span-full flex flex-col items-center justify-center p-8 rounded-2xl bg-gradient-to-br from-blue-100 to-gray-50 shadow-lg hover:scale-105 transition-transform duration-300">
+                    <img
+                        src="https://img.icons8.com/fluency/96/null/calendar--v1.png"
+                        alt="No appointments"
+                        className="mb-4"
+                    />
+                    <h3 className="text-xl font-semibold text-[#145DB8] mb-2">
+                        No Appointments Yet
+                    </h3>
+                    <p className="text-gray-600 mb-4 text-center">
+                        You haven't scheduled any appointments. Start by booking your first visit!
+                    </p>
+                    <Link
+                        to="/bookappointment"
+                        className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
+                    >
+                        Book Now
+                    </Link>
+                </div>
             )}
         </div>
     );
 };
 
 export default AppointmentsList;
-// ززززززززززززززززززززز
