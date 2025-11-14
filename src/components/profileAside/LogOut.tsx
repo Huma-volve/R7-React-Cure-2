@@ -22,7 +22,7 @@ const LogOut: React.FC = () => {
         }
     };
     return (
-        <button onClick={handleLogout} className='flex items-center  gap-2 p-2"'>
+        <button type="button" onClick={handleLogout} className='flex items-center  gap-2 p-2"'>
             <img src="/icons/profile/Logout 4.svg" alt="Logout icon" loading="lazy" />
             <p className='text-[#FC4B4E]'>Logout</p>
         </button>
