@@ -18,9 +18,6 @@ const ProfileList = () => {
     const dispatch = useDispatch<AppDispatch>();
     const { data, loading, error } = useSelector((state: RootState) => state.profile);
 
-    // ✅ Open file input when clicking icon
-
-
     React.useEffect(() => {
         dispatch(getProfile());
     }, [dispatch]);

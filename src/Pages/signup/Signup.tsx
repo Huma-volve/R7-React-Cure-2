@@ -138,7 +138,6 @@ const Signup: React.FC = () => {
                                     {(errors.Email as any).message}
                                 </p>
                             )}
-
                         </nav>
                         <nav className="flex flex-col gap-2">
                             <label className="text-start w-full">
