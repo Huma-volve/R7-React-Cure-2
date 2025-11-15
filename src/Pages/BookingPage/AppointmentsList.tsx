@@ -23,7 +23,7 @@ interface AppointmentsListProps {
 const AppointmentsList: React.FC<AppointmentsListProps> = ({ tab, date }) => {
     const [appointments, setAppointments] = useState<Appointment[]>([]);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
+    const [setError] = useState<string | null>(null);
 
     const token = Cookies.get("accessToken");
 
