@@ -23,9 +23,8 @@ interface AppointmentsListProps {
 const AppointmentsList: React.FC<AppointmentsListProps> = ({ tab, date }) => {
     const [appointments, setAppointments] = useState<Appointment[]>([]);
     const [loading, setLoading] = useState(true);
-    const [setError] = useState<string | null>(null);
+    const [error, setError] = useState<string | null>(null);
 
-    console.log(error)
     const token = Cookies.get("accessToken");
 
     useEffect(() => {
@@ -82,12 +81,19 @@ const AppointmentsList: React.FC<AppointmentsListProps> = ({ tab, date }) => {
 
     const finalAppointments = date
         ? filteredAppointments.filter(
-            (a) => new Date(a.date).toDateString() === date.toDateString()
-        )
+              (a) => new Date(a.date).toDateString() === date.toDateString()
+          )
         : filteredAppointments;
 
     if (loading)
         return <p className="text-center text-gray-500">Loading appointments...</p>;
+
+    if (error)
+        return (
+            <p className="text-center text-red-500 font-medium">
+                {error}
+            </p>
+        );
 
     return (
         <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 justify-items-center">
