@@ -25,6 +25,7 @@ const AppointmentsList: React.FC<AppointmentsListProps> = ({ tab, date }) => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
+    console.log(error)
     const token = Cookies.get("accessToken");
 
     useEffect(() => {

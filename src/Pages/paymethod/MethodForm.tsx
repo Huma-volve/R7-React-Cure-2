@@ -169,15 +169,15 @@ const MethodForm: React.FC = () => {
                                 {...register("expYear", {
                                     required: "Year is required",
                                     validate: (val) =>
-                                        Number(val) >= 25 && Number(val) <= 30 || "Year must be between 25 and 30",
+                                        Number(val) >= 25 && Number(val) <= 35 || "Year must be between 25 and 35",
                                     onChange: (e) => { setExpiryYear(e.target.value) }
 
                                 })}
                                 className="w-1/2 text-center p-2 bg-[#f1f1f1] rounded-md border border-gray-300 outline-none text-black"
                             >
                                 <option value="">YY</option>
-                                {Array.from({ length: 6 }, (_, i) => {
-                                    const year = (25 + i).toString(); // من 25 إلى 30
+                                {Array.from({ length: 11 }, (_, i) => {
+                                    const year = (25 + i).toString();
                                     return (
                                         <option key={year} value={year}>
                                             {year}
