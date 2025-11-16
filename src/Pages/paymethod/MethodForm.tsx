@@ -138,51 +138,55 @@ const MethodForm: React.FC = () => {
                 </div>
 
                 <div className="flex gap-4 items-center">
-                    <div className="flex items-center mt-[1.4rem]! gap-2">
-                        <select
-                            value={expiryMonth}
-                            {...register("expMonth", {
-                                required: "Month is required",
-                                validate: (val) =>
-                                    Number(val) >= 1 && Number(val) <= 12 || "Month must be between 1 and 12",
-                                onChange: (e) => {
-                                    setExpiryMonth(e.target.value)
+                    <div className="flex flex-col items-start ">
+                        <label className="block mb-1 text-sm text-black">Expiry Date</label>
+                        <div className="flex gap-2  items-center ">
+                            <select
+                                value={expiryMonth}
+                                {...register("expMonth", {
+                                    required: "Month is required",
+                                    validate: (val) =>
+                                        Number(val) >= 1 && Number(val) <= 12 || "Month must be between 1 and 12",
+                                    onChange: (e) => {
+                                        setExpiryMonth(e.target.value)
+                                    }
+                                })
                                 }
-                            })
-                            }
-                            className="w-1/2 text-center p-2 bg-[#f1f1f1] rounded-md border border-gray-300 outline-none text-black"
-                        >
-                            <option value="">MM</option>
-                            {Array.from({ length: 12 }, (_, i) => {
-                                const month = (i + 1).toString().padStart(2, "0");
-                                return (
-                                    <option key={month} value={month}>
-                                        {month}
-                                    </option>
-                                );
-                            })}
-                        </select>
-                        <select
-                            value={expiryYear}
-                            {...register("expYear", {
-                                required: "Year is required",
-                                validate: (val) =>
-                                    Number(val) >= 25 && Number(val) <= 30 || "Year must be between 25 and 30",
-                                onChange: (e) => { setExpiryYear(e.target.value) }
+                                className="w-1/2 text-center p-2 bg-[#f1f1f1] rounded-md border border-gray-300 outline-none text-black"
+                            >
+                                <option value="">MM</option>
+                                {Array.from({ length: 12 }, (_, i) => {
+                                    const month = (i + 1).toString().padStart(2, "0");
+                                    return (
+                                        <option key={month} value={month}>
+                                            {month}
+                                        </option>
+                                    );
+                                })}
+                            </select>
+                            <select
+                                value={expiryYear}
+                                {...register("expYear", {
+                                    required: "Year is required",
+                                    validate: (val) =>
+                                        Number(val) >= 25 && Number(val) <= 35 || "Year must be between 25 and 35",
+                                    onChange: (e) => { setExpiryYear(e.target.value) }
 
-                            })}
-                            className="w-1/2 text-center p-2 bg-[#f1f1f1] rounded-md border border-gray-300 outline-none text-black"
-                        >
-                            <option value="">YY</option>
-                            {Array.from({ length: 6 }, (_, i) => {
-                                const year = (25 + i).toString(); // من 25 إلى 30
-                                return (
-                                    <option key={year} value={year}>
-                                        {year}
-                                    </option>
-                                );
-                            })}
-                        </select>
+                                })}
+                                className="w-1/2 text-center p-2 bg-[#f1f1f1] rounded-md border border-gray-300 outline-none text-black"
+                            >
+                                <option value="">YY</option>
+                                {Array.from({ length: 11 }, (_, i) => {
+                                    const year = (25 + i).toString();
+                                    return (
+                                        <option key={year} value={year}>
+                                            {year}
+                                        </option>
+                                    );
+                                })}
+                            </select>
+                        </div>
+
                     </div>
                     <div className="flex-1">
                         <label className="block mb-1 text-sm text-black">CVV</label>
