@@ -38,7 +38,7 @@ const AppointmentsList: React.FC<AppointmentsListProps> = ({ tab, date }) => {
                 const response = await axios.get("https://cure-doctor-booking.runasp.net/api/Customer/Booking/PatientBookings", {
                     headers: {
                         Authorization: Bearer ${token},
-                        Accept: "/",
+                        Accept: "/"
                     },
                 });
 
