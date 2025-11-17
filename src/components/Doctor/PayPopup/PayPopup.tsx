@@ -131,18 +131,18 @@ const PayPopup = ({ onClose, selectedDate, selectedTime, selectedSlotId }: PayPo
         }, 2000);
       }
 
-      // Redireact if it's paypal or stripe
-      else if (result?.paymentUrl) {
-        console.log(" Redirecting to payment URL:", result.paymentUrl);
-        window.location.href = result.paymentUrl; // Redirect للدفع
+      // Redirect if it's paypal or stripe
+      else if (result?.data?.paymentUrl) {
+        console.log("✅ Redirecting to payment URL:", result.data.paymentUrl);
+        window.location.href = result.data.paymentUrl; // Redirect للدفع
       } else {
-        console.warn(" No payment URL received from API");
+        console.warn("⚠️ No payment URL received from API");
         alert("Payment URL not available. Please try again.");
       }
 
     } catch (error: any) {
-      console.error(" Booking Error:", error);
-      alert(` Booking failed: ${error || "Unknown error"}`);
+      console.error("❌ Booking Error:", error);
+      alert(`❌ Booking failed: ${error || "Unknown error"}`);
     }
   };
 
@@ -226,7 +226,7 @@ const PayPopup = ({ onClose, selectedDate, selectedTime, selectedSlotId }: PayPo
 
         {bookingError && (
           <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg">
-            <p className="text-red-600 text-sm">:( {bookingError}</p>
+            <p className="text-red-600 text-sm">❌ {bookingError}</p>
           </div>
         )}
 
