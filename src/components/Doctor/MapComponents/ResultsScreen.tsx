@@ -2,7 +2,7 @@ import React from "react";
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
-import { MapPin, Star, List, Map as MapIcon, ChevronLeft, Filter, ArrowUpDown } from "lucide-react";
+import { MapPin, Star, List, ChevronLeft } from "lucide-react";
 import { Link } from "react-router";
 import { FilterMapToggle, MapToggle, SortMapToggle } from "../icons";
 
@@ -40,7 +40,7 @@ function ChangeMapView({ center }: { center: [number, number] }) {
 }
 
 interface Doctor {
-  id: number;
+  id: string; 
   fullName: string;
   specialistTitle: string;
   imgUrl?: string;
@@ -100,7 +100,7 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({
           <p className="text-sm text-gray-600">{doctors.length} doctors found</p>
         </div>
 
-        <div className="flex gap-[24px] w-full">
+        <div className="flex gap-6 w-full">
           <button
             onClick={onOpenFilter}
             className="relative  hover:bg-gray-100 rounded-[10px] transition duration-300 border border-[#BBC1C7] px-3 h-9 flex items-center gap-2 w-full justify-center"
