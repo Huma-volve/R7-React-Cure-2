@@ -1,4 +1,4 @@
-ودي صفحه الكارت import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import AppointmentCard from "./AppointmentCard";
 import { Link } from "react-router-dom";
