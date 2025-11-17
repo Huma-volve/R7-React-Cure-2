@@ -6,7 +6,7 @@ import { ResultsScreen } from "./MapComponents/ResultsScreen";
 import { FilterModal, type FilterOptions } from "./MapComponents/FilterModal";
 import { SortModal, type SortOption } from "./MapComponents/SortModal";
 import { reverseGeocode, searchLocation as searchLocationUtil } from "./MapComponents/MapUtils";
-import { searchDoctors, type Doctor } from "@/services/DoctorService";
+import { searchDoctors,  Doctor } from "@/services/DoctorService";
 
 const DoctorMapMobile: React.FC = () => {
   const [step, setStep] = useState<"confirm" | "loading" | "results">("confirm");
