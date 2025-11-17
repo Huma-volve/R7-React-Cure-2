@@ -2,7 +2,7 @@ import React from "react";
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
-import { MapPin, Star, List, Map as MapIcon, ChevronLeft, Filter, ArrowUpDown } from "lucide-react";
+import { MapPin, Star, List, ChevronLeft } from "lucide-react";
 import { Link } from "react-router";
 import { FilterMapToggle, MapToggle, SortMapToggle } from "../icons";
 
