@@ -1,138 +1,123 @@
-ودي صفحه الكارت import React, { useEffect, useState } from "react";
-import axios from "axios";
-import AppointmentCard from "./AppointmentCard";
-import { Link } from "react-router-dom";
-import Cookies from "js-cookie";
+خد ده صفحه الكارت import React from "react";
+import { useNavigate } from "react-router-dom";
 
-interface Appointment {
-    id: number;
-    date: string;
-    status: "upcoming" | "completed" | "canceled";
-    doctorName: string;
-    specialization: string;
-    doctorImage?: string;
-    location: string;
-    doctorId: number;
+interface AppointmentProps {
+    appointment: {
+        id: number;
+        doctorId: number;
+        date: string;
+        status: string;
+        doctorName: string;
+        specialization: string;
+        doctorImage?: string;
+        location: string;
+    };
+    onCancel?: (id: number) => void; // نبعته للليست عشان تظهر البوب اب هناك
 }
 
-interface AppointmentsListProps {
-    tab: string;
-    date: Date | null;
-}
+const AppointmentCard: React.FC<AppointmentProps> = ({ appointment, onCancel }) => {
+    const navigate = useNavigate();
 
-const AppointmentsList: React.FC<AppointmentsListProps> = ({ tab, date }) => {
-    const [appointments, setAppointments] = useState<Appointment[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
+    const { id, date, status: rawStatus, doctorId, doctorName, specialization, doctorImage, location } = appointment;
 
-    // 👇 حالة الاحتفاظ بالكانسل (Popup)
-    const [cancelId, setCancelId] = useState<number | null>(null);
+    const statusKey = String(rawStatus ?? "")
+        .trim()
+        .toLowerCase();
 
-    const token = Cookies.get("accessToken");
-
-    useEffect(() => {
-        const fetchAppointments = async () => {
-            try {
-                setLoading(true);
-
-                const response = await axios.get("https://cure-doctor-booking.runasp.net/api/Customer/Booking/PatientBookings", {
-                    headers: {
-                        Authorization: Bearer ${token},
-                        Accept: "/",
-                    },
-                });
-
-                const rawData = response.data?.data?.data;
-
-                if (Array.isArray(rawData)) {
-                    const mappedAppointments: Appointment[] = rawData.map((item: any) => ({
-                        id: item.id,
-                        doctorId: item.doctorId,
-                        date: item.appointmentAt,
-                        status: item.status?.toLowerCase(),
-                        doctorName: item.doctorName,
-                        specialization: item.doctorSpeciality,
-                        doctorImage: item.doctorImg ? https://cure-doctor-booking.runasp.net/${item.doctorImg} : undefined,
-                        location: "Cairo Medical Center",
-                    }));
-
-                    setAppointments(mappedAppointments);
-                } else {
-                    setAppointments([]);
-                }
-            } catch (err) {
-                console.error("Fetch error:", err);
-                setError("Failed to load appointments");
-                setAppointments([]);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchAppointments();
-    }, []);
-
-    // 👇 فلترة حسب التاب
-    const filteredAppointments = tab === "All" ? appointments : appointments.filter((a) => a.status === tab.toLowerCase());
-
-    // 👇 فلترة حسب التاريخ
-    const finalAppointments = date ? filteredAppointments.filter((a) => new Date(a.date).toDateString() === date.toDateString()) : filteredAppointments;
-
-    // 👇 تنفيذ الكانسل
-    const handleConfirmCancel = () => {
-        if (cancelId === null) return;
-
-        setAppointments((prev) => prev.map((app) => (app.id === cancelId ? { ...app, status: "canceled" } : app)));
-
-        setCancelId(null);
+    const statusStyles: Record<string, { text: string; color: string }> = {
+        upcoming: { text: "Upcoming", color: "#145DB8" },
+        completed: { text: "Completed", color: "#00A86B" },
+        canceled: { text: "Canceled", color: "#D32F2F" },
+        cancelled: { text: "Canceled", color: "#D32F2F" },
     };
 
-    if (loading) return <p className="text-center text-gray-500">Loading appointments...</p>;
+    const fallback = {
+        text: String(rawStatus ?? "Unknown"),
+        color: "#6B7280",
+    };
+
+    const { text, color } = statusStyles[statusKey] ?? fallback;
+
+    const handleBookAgain = () => navigate(/doctordetails/${doctorId});
+    const handleFeedback = () => navigate(/doctordetails/${doctorId});
+
+    const renderButtons = () => {
+        switch (statusKey) {
+            case "upcoming":
+                return (
+                    <>
+                        <button onClick={() => onCancel && onCancel(id)} className="flex-1 border border-[#99A2AB] text-[#99A2AB] rounded-[10px] py-2 text-[14px] font-normal">
+                            Cancel
+                        </button>
+
+                        <button className="flex-1 bg-[#145DB8] text-white rounded-[10px] py-2 text-[14px] font-normal">Reschedule</button>
+                    </>
+                );
+
+            case "completed":
+                return (
+                    <>
+                        <button onClick={handleBookAgain} className="flex-1 border border-[#145DB8] text-[#145DB8] rounded-[10px] py-2 text-[14px] font-normal">
+                            Book Again
+                        </button>
+
+                        <button onClick={handleFeedback} className="flex-1 bg-[#145DB8] text-white rounded-[10px] py-2 text-[14px] font-normal">
+                            Feedback
+                        </button>
+                    </>
+                );
+
+            case "canceled":
+            case "cancelled":
+                return (
+                    <>
+                        <button onClick={handleBookAgain} className="flex-1 border border-[#145DB8] text-[#145DB8] rounded-[10px] py-2 text-[14px] font-normal">
+                            Book Again
+                        </button>
+
+                        <button onClick={handleBookAgain} className="flex-1 bg-[#145DB8] text-white rounded-[10px] py-2 text-[14px] font-normal">Support</button>
+                    </>
+                );
+
+            default:
+                return null;
+        }
+    };
 
     return (
-        <>
-            {/* قائمة المواعيد */}
-            <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 justify-items-center">
-                {finalAppointments.length > 0 ? (
-                    finalAppointments.map((a) => (
-                        <AppointmentCard
-                            key={a.id}
-                            appointment={a}
-                            onCancel={setCancelId} // 👈 مهم جداً
-                        />
-                    ))
-                ) : (
-                    <div className="col-span-full flex flex-col items-center justify-center p-8 rounded-2xl bg-gradient-to-br from-blue-100 to-gray-50 shadow-lg hover:scale-105 transition-transform duration-300">
-                        <img src="https://img.icons8.com/fluency/96/null/calendar--v1.png" alt="No appointments" className="mb-4" />
-                        <h3 className="text-xl font-semibold text-[#145DB8] mb-2">No Appointments Yet</h3>
-                        <p className="text-gray-600 mb-4 text-center">You haven't scheduled any appointments. Start by booking your first visit!</p>
-                        <Link to="/bookappointment" className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition">
-                            Book Now
-                        </Link>
-                    </div>
-                )}
+        <div className="w-full max-w-sm border border-[#BBC1C7] rounded-[20px] flex flex-col gap-3 p-4">
+            <div className="flex items-center justify-between">
+                <span className="text-[12px] text-[#05162C]">
+                    {new Date(date).toLocaleString("en-US", {
+                        weekday: "long",
+                        month: "long",
+                        day: "numeric",
+                        hour: "numeric",
+                        minute: "2-digit",
+                    })}
+                </span>
+
+                <span className="text-[14px] font-medium" style={{ color }}>
+                    {text}
+                </span>
             </div>
 
-            {/* 👇 Popup الكانسل */}
-            {cancelId !== null && (
-                <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50">
-                    <div className="bg-white p-6 rounded-2xl shadow-xl w-[350px] text-center">
-                        <h3 className="text-xl font-semibold text-[#145DB8] mb-3">Are you sure?</h3>
-                        <p className="text-gray-600 mb-6">Do you really want to cancel this appointment?</p>
+            <div className="border-t border-[#BBC1C7]" />
 
-                        <div className="flex gap-3">
-                            <button onClick={() => setCancelId(null)} className="flex-1 py-2 border border-gray-400 rounded-lg text-gray-600">
-                                No
-                            </button>
-                            <button onClick={handleConfirmCancel} className="flex-1 py-2 bg-red-500 text-white rounded-lg">
-                                Yes, Cancel
-                            </button>
-                        </div>
-                    </div>
+            <div className="flex items-center gap-3">
+                <div className="w-[45px] h-[45px] rounded-full bg-[#D9D9D9] overflow-hidden">{doctorImage && <img src={doctorImage} alt={doctorName} className="w-full h-full object-cover" />}</div>
+
+                <div className="flex flex-col">
+                    <span className="text-[16px] text-[#33384B]">{doctorName}</span>
+                    <span className="text-[14px] text-[#6D7379]">{specialization}</span>
                 </div>
-            )}
-        </>
+            </div>
+
+            <div className="text-[14px] text-[#6D7379]">{location}</div>
+
+            <div className="flex items-center gap-3 mt-2">{renderButtons()}</div>
+        </div>
     );
 };
 
-export default AppointmentsList;
+export default AppointmentCard;
