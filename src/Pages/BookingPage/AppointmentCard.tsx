@@ -1,4 +1,4 @@
-خد ده صفحه الكارت import React from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 
 interface AppointmentProps {
@@ -33,13 +33,12 @@ const AppointmentCard: React.FC<AppointmentProps> = ({ appointment, onCancel }) 
 
     const fallback = {
         text: String(rawStatus ?? "Unknown"),
-        color: "#6B7280",
+        color: "#6B7280"
     };
 
-    const { text, color } = statusStyles[statusKey] ?? fallback;
-
-    const handleBookAgain = () => navigate(/doctordetails/${doctorId});
-    const handleFeedback = () => navigate(/doctordetails/${doctorId});
+    const { text , color } = statusStyles[statusKey] ?? fallback;
+const handleBookAgain = () => navigate(`/doctordetails/${doctorId}`);
+const handleFeedback = () => navigate(`/doctordetails/${doctorId}`);
 
     const renderButtons = () => {
         switch (statusKey) {
