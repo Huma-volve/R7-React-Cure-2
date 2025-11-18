@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { ChevronLeft } from 'lucide-react';
 import { CancelledNotification, CompletedNotification, EmptyNotification, UpcomingNotification } from '@/components/Doctor/icons';
-import { fetchNotifications, markAsRead } from '@/store/notificationsSlice';
+import { fetchNotifications, initNotificationHub, markAsRead } from '@/store/notificationsSlice';
 import type { RootState, AppDispatch } from '@/store/Store';
 
 const NotificationsPage: React.FC = () => {
@@ -11,9 +11,11 @@ const NotificationsPage: React.FC = () => {
   const navigate = useNavigate();
   const { notifications, loading } = useSelector((state: RootState) => state.notifications);
 
-  useEffect(() => {
-    dispatch(fetchNotifications());
-  }, [dispatch]);
+useEffect(() => {
+  dispatch(fetchNotifications());
+  dispatch(initNotificationHub()); // ← مهم جدًا
+}, [dispatch]);
+
 
   const handleNotificationClick = (id: number, isRead: boolean) => {
     if (!isRead) {
