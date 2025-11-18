@@ -9,7 +9,7 @@ import ReviewsSection from '@/components/Doctor/ReviewsSection';
 import React, { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { fetchDoctors, fetchDoctorById } from '@/store/doctorSlice';
-import { useParams } from 'react-router';
+import { Link, useParams } from 'react-router';
 import { ChevronLeft } from 'lucide-react';
 import { BackwardArrow, ChatIcon } from '@/components/Doctor/icons';
 
@@ -146,9 +146,11 @@ const MobileHeader: React.FC = () => (
       <ChevronLeft className="w-6 h-6" />
     </button>
     <h1 className="text-lg font-semibold">Doctor Details</h1>
-    <button className="p-2 bg-white  rounded-full cursor-pointer hover:bg-[#b9d9ff] text-white transition duration-500">
-        <ChatIcon />
-    </button>
+    <Link to={"/chatpage"}>
+      <button className="p-2 bg-white  rounded-full cursor-pointer hover:bg-[#b9d9ff] text-white transition duration-500">
+          <ChatIcon />
+      </button>
+    </Link>
   </div>
 );
 
