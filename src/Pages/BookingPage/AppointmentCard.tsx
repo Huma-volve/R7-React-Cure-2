@@ -5,98 +5,84 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 
 interface AppointmentProps {
-    appointment: {
-        id: number;
-        doctorId: number;
-        date: string;
-        status: string;
-        doctorName: string;
-        specialization: string;
-        doctorImage?: string;
-        location: string;
-    };
-    onCancel?: (id: number) => void; // نبعته للليست عشان تظهر البوب اب هناك
+  appointment: {
+    id: number;
+    doctorId: number;
+    date: string;
+    status: string;
+    doctorName: string;
+    specialization: string;
+    doctorImage?: string;
+    location: string;
+  };
 }
 
 const AppointmentCard: React.FC<AppointmentProps> = ({ appointment }) => {
   const navigate = useNavigate();
-  const { date, status: rawStatus, doctorId, doctorName, specialization, doctorImage, location } = appointment;
-const [showReschedulePopup, setShowReschedulePopup] = React.useState(false);
+  const { id, date, status: rawStatus, doctorId, doctorName, specialization, doctorImage, location } = appointment;
 
-const handleReschedule = () => {
-  setShowReschedulePopup(true);
-};
-  // نعمل normalization للحالة (lowercase, trim)
+  const [showReschedulePopup, setShowReschedulePopup] = React.useState(false);
+
+  const handleReschedule = () => setShowReschedulePopup(true);
+
   const statusKey = String(rawStatus ?? "").trim().toLowerCase();
 
-  // خريطة الحالات المعروفة + دعم لبدائل شائعة (cancelled vs canceled)
   const statusStyles: Record<string, { text: string; color: string }> = {
     upcoming: { text: "Upcoming", color: "#145DB8" },
     completed: { text: "Completed", color: "#00A86B" },
-    canceled: { text: "Canceled", color: "#D32F2F" },      // american
-    cancelled: { text: "Canceled", color: "#D32F2F" },     // british spelling -> map to same
-    // ممكن تضيف حالات إضافية هنا حسب الـ API: "pending", "no-show", ...
+    canceled: { text: "Canceled", color: "#D32F2F" },
+    cancelled: { text: "Canceled", color: "#D32F2F" },
   };
 
-  // نعطي fallback لو الـ status غير معروف عشان ما يبوظش التطبيق
-  const fallback = { text: String(rawStatus ?? "Unknown").replace(/^\w/, (c) => c.toUpperCase()), color: "#6B7280" }; // grey
+  const fallback = { text: String(rawStatus ?? "Unknown"), color: "#6B7280" };
   const { text, color } = statusStyles[statusKey] ?? fallback;
 
-  const handleBookAgain = () => {
-    navigate(`/doctordetails/${doctorId}`);
-  };
-
-  const handleFeedback = () => {
-    navigate(`/doctordetails/${doctorId}`);
-    
-  };
+  const handleBookAgain = () => navigate(`/doctordetails/${doctorId}`);
+  const handleFeedback = () => navigate(`/doctordetails/${doctorId}`);
 
   const handleCancel = async () => {
-  try {
-    const token = Cookies.get("accessToken");
+    try {
+      const token = Cookies.get("accessToken");
 
-    await axios.put(
-      `https://cure-doctor-booking.runasp.net/api/Customer/Booking/CancelBooking/${appointment.id}`,
-      null,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      }
-    );
+      await axios.put(
+        `https://cure-doctor-booking.runasp.net/api/Customer/Booking/CancelBooking/${id}`,
+        null,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
-    alert("Appointment cancelled.");
-    window.location.reload();
-
-  } catch (err) {
-    console.error("Cancel error:", err);
-    alert("Failed to cancel appointment.");
-  }
-};
-
+      alert("Appointment cancelled.");
+      window.location.reload();
+    } catch (err) {
+      console.error("Cancel error:", err);
+      alert("Failed to cancel appointment.");
+    }
+  };
 
   const renderButtons = () => {
-    // نستخدم نفس statusKey هنا
     switch (statusKey) {
-case "upcoming":
-  return (
-    <>
-      <button
-        onClick={handleCancel}
-        className="flex-1 border border-[#99A2AB] text-[#99A2AB] rounded-[10px] py-2 text-[14px] font-normal"
-      >
-        Cancel
-      </button>
+      case "upcoming":
+        return (
+          <>
+            <button
+              onClick={handleCancel}
+              className="flex-1 border border-[#99A2AB] text-[#99A2AB] rounded-[10px] py-2 text-[14px] font-normal"
+            >
+              Cancel
+            </button>
 
-      <button
-        onClick={handleReschedule}
-        className="flex-1 bg-[#145DB8] text-white rounded-[10px] py-2 text-[14px] font-normal"
-      >
-        Reschedule
-      </button>
-    </>
-  );
+            <button
+              onClick={handleReschedule}
+              className="flex-1 bg-[#145DB8] text-white rounded-[10px] py-2 text-[14px] font-normal"
+            >
+              Reschedule
+            </button>
+          </>
+        );
 
       case "completed":
         return (
@@ -115,6 +101,7 @@ case "upcoming":
             </button>
           </>
         );
+
       case "canceled":
       case "cancelled":
         return (
@@ -130,8 +117,8 @@ case "upcoming":
             </button>
           </>
         );
+
       default:
-        // حالة غير معروفة — نعرض أزرار افتراضية أو لا شيء
         return null;
     }
   };
@@ -139,87 +126,30 @@ case "upcoming":
   return (
     <div className="w-full max-w-sm border border-[#BBC1C7] rounded-[20px] flex flex-col gap-3 p-4">
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-1">
-          <span className="text-[12px] text-[#05162C]">
-            {new Date(date).toLocaleString("en-US", {
-              weekday: "long",
-              month: "long",
-              day: "numeric",
-              hour: "numeric",
-              minute: "2-digit",
-            })}
-          </span>
-        </div>
+        <span className="text-[12px] text-[#05162C]">
+          {new Date(date).toLocaleString("en-US", {
+            weekday: "long",
+            month: "long",
+            day: "numeric",
+            hour: "numeric",
+            minute: "2-digit",
+          })}
+        </span>
+
         <span className="text-[14px] font-medium" style={{ color }}>
           {text}
         </span>
       </div>
 
-    const { id, date, status: rawStatus, doctorId, doctorName, specialization, doctorImage, location } = appointment;
-
-    const statusKey = String(rawStatus ?? "")
-        .trim()
-        .toLowerCase();
-
-    const statusStyles: Record<string, { text: string; color: string }> = {
-        upcoming: { text: "Upcoming", color: "#145DB8" },
-        completed: { text: "Completed", color: "#00A86B" },
-        canceled: { text: "Canceled", color: "#D32F2F" },
-        cancelled: { text: "Canceled", color: "#D32F2F" },
-    };
-
-    const fallback = {
-        text: String(rawStatus ?? "Unknown"),
-        color: "#6B7280"
-    };
-
-    const { text , color } = statusStyles[statusKey] ?? fallback;
-const handleBookAgain = () => navigate(`/doctordetails/${doctorId}`);
-const handleFeedback = () => navigate(`/doctordetails/${doctorId}`);
-
-    const renderButtons = () => {
-        switch (statusKey) {
-            case "upcoming":
-                return (
-                    <>
-                        <button onClick={() => onCancel && onCancel(id)} className="flex-1 border border-[#99A2AB] text-[#99A2AB] rounded-[10px] py-2 text-[14px] font-normal">
-                            Cancel
-                        </button>
-
-                        <button className="flex-1 bg-[#145DB8] text-white rounded-[10px] py-2 text-[14px] font-normal">Reschedule</button>
-                    </>
-                );
-
-            case "completed":
-                return (
-                    <>
-                        <button onClick={handleBookAgain} className="flex-1 border border-[#145DB8] text-[#145DB8] rounded-[10px] py-2 text-[14px] font-normal">
-                            Book Again
-                        </button>
-
-                        <button onClick={handleFeedback} className="flex-1 bg-[#145DB8] text-white rounded-[10px] py-2 text-[14px] font-normal">
-                            Feedback
-                        </button>
-                    </>
-                );
-
-            case "canceled":
-            case "cancelled":
-                return (
-                    <>
-                        <button onClick={handleBookAgain} className="flex-1 border border-[#145DB8] text-[#145DB8] rounded-[10px] py-2 text-[14px] font-normal">
-                            Book Again
-                        </button>
-
       <div className="flex items-center gap-3 mt-2">{renderButtons()}</div>
-      {showReschedulePopup && (
-  <ReschedulePopup
-    appointmentId={appointment.id}
-    doctorId={doctorId}
-    onClose={() => setShowReschedulePopup(false)}
-  />
-)}
 
+      {showReschedulePopup && (
+        <ReschedulePopup
+          appointmentId={id}
+          doctorId={doctorId}
+          onClose={() => setShowReschedulePopup(false)}
+        />
+      )}
     </div>
   );
 };
