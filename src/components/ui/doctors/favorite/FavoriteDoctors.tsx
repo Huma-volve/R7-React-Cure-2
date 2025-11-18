@@ -21,7 +21,7 @@ const FavoriteDoctors = ({ doctors, onSelect }: FavoriteDoctorsProps) => {
                     onMouseDown={(e) => e.preventDefault()}
                 >
                     <Link
-                        to={`/doctors/${doc.id}`}
+                        to={`/doctordetalis/${doc.id}`}
                         className="flex items-center gap-3 w-full"
                         onClick={onSelect}
                     >
