@@ -44,6 +44,7 @@ const AppointmentsList: React.FC<AppointmentsListProps> = ({ tab, date }) => {
                 );
 
                 const rawData = response.data?.data?.data;
+                console.log(rawData)
 
                 if (Array.isArray(rawData)) {
                     const mappedAppointments: Appointment[] = rawData.map(
