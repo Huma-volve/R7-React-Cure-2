@@ -8,16 +8,17 @@
 
 
 
-:root {
-    --color-main: #145db8;
-    --color-text: #6d7379;
-    --font-primary: 'Montserrat', sans-serif;
-    --font-secondary: 'georgia', serif;
-    --bg-main: #145db8;
+:root
+{
+  --color-main: #145db8;
+  --color-text: #6d7379;
+  --font-primary: 'Montserrat', sans-serif;
+  --font-secondary: 'georgia', serif;
+  --bg-main: #145db8;
 }
+
 *
 {
-  cursor: url('/icons/cursor.svg'), auto !important;
   font-family: "Montserrat", sans-serif;
   text-size-adjust: 100%;
 }
