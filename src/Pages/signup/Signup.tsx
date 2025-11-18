@@ -52,6 +52,7 @@ const Signup: React.FC = () => {
             };
             const result = await dispatch(signup(formData)).unwrap();
             console.log("✅ Register Success:", result);
+            sessionStorage.setItem("phone", phoneNumber.number);
             toast.success("Register Success");
             navigate("/verify-otp", {
                 state: { phoneNumber: phoneNumber.number, type: "register" },
