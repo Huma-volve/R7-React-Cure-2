@@ -28,12 +28,7 @@ const SPECIALIZATIONS = [
   "General Medicine",
 ];
 
-const AVAILABILITY_OPTIONS = [
-  "Available Today",
-  "Available Tomorrow",
-  "Weekend Available",
-  "Emergency Available",
-];
+
 
 export const FilterModal: React.FC<FilterModalProps> = ({
   isOpen,
@@ -70,14 +65,7 @@ export const FilterModal: React.FC<FilterModalProps> = ({
     }));
   };
 
-  const toggleAvailability = (avail: string) => {
-    setFilters((prev) => ({
-      ...prev,
-      availability: prev.availability.includes(avail)
-        ? prev.availability.filter((a) => a !== avail)
-        : [...prev.availability, avail],
-    }));
-  };
+
 
   return (
     <div className="fixed inset-0 z-9999 bg-black/50 flex items-end">
@@ -158,46 +146,7 @@ export const FilterModal: React.FC<FilterModalProps> = ({
             </div>
           </div>
 
-          {/* Availability */}
-          <div>
-            <h3 className="text-base font-semibold text-gray-900 mb-3">Availability</h3>
-            <div className="space-y-2">
-              {AVAILABILITY_OPTIONS.map((avail) => (
-                <label
-                  key={avail}
-                  className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg cursor-pointer hover:bg-gray-100"
-                >
-                  <input
-                    type="checkbox"
-                    checked={filters.availability.includes(avail)}
-                    onChange={() => toggleAvailability(avail)}
-                    className="w-5 h-5 text-blue-600 rounded accent-blue-600"
-                  />
-                  <span className="text-sm text-gray-700">{avail}</span>
-                </label>
-              ))}
-            </div>
-          </div>
 
-          {/* Gender */}
-          <div>
-            <h3 className="text-base font-semibold text-gray-900 mb-3">Gender</h3>
-            <div className="flex gap-2">
-              {["all", "male", "female"].map((gender) => (
-                <button
-                  key={gender}
-                  onClick={() => setFilters((prev) => ({ ...prev, gender }))}
-                  className={`flex-1 px-4 py-3 rounded-lg text-sm font-medium transition capitalize ${
-                    filters.gender === gender
-                      ? "bg-blue-600 text-white"
-                      : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                  }`}
-                >
-                  {gender}
-                </button>
-              ))}
-            </div>
-          </div>
         </div>
 
         {/* Footer */}
