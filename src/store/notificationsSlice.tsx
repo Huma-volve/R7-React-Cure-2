@@ -59,7 +59,7 @@ export const fetchNotifications = createAsyncThunk<
 
       const data = await response.json();
 
-      console.log(data.data)
+      console.log(data.data);
       // Ensure the returned value is an array
       return Array.isArray(data) ? (data as Notification[]) : (data.data ?? []) as Notification[];
     } catch (error: any) {
@@ -147,11 +147,22 @@ const notificationsSlice = createSlice({
 
     // <-- هنا ضفنا addNotification مع تايب صارم
     addNotification: (state, action: PayloadAction<Notification>) => {
+
+
+
+        if (!Array.isArray(state.notifications)) state.notifications = [];
+
+  state.notifications.unshift(action.payload);
+
+  state.notifications.sort(
+    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+  );
       // تأكد أن notifications موجودة كـ array قبل unshift
       if (!Array.isArray(state.notifications)) state.notifications = [];
       // استخدم unshift (مسموح مع Redux Toolkit / Immer) أو أنشئ مصفوفة جديدة:
       state.notifications.unshift(action.payload);
     },
+    
   },
   extraReducers: (builder) => {
     // fetchNotifications
@@ -162,8 +173,11 @@ const notificationsSlice = createSlice({
       })
       .addCase(fetchNotifications.fulfilled, (state, action: PayloadAction<Notification[]>) => {
         state.loading = false;
-        state.notifications = Array.isArray(action.payload) ? action.payload : [];
-      })
+state.notifications = Array.isArray(action.payload)
+  ? action.payload.sort(
+      (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    )
+  : [];      })
       .addCase(fetchNotifications.rejected, (state, action) => {
         state.loading = false;
         // action.payload ممكن يكون string (rejectWithValue) أو undefined

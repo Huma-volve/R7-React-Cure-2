@@ -50,7 +50,7 @@ const DoctorCard: React.FC<DoctorCardProps> = (props) => {
             <div className="absolute top-3 right-3 z-10">
                 <BtnFavorite id={id} doctorData={doctorData} />
             </div>
-            <div className="p-4 flex flex-col h-full">
+            <div className="p-4 flex flex-col h-full w-[360px]">
                 {/* ====== Doctor Info ====== */}
                 <div className="flex items-center gap-3 mb-3">
                     {/* Doctor Image */}
