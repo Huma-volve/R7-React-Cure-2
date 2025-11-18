@@ -5,6 +5,7 @@ import AboutSection from './AboutSection';
 import DoctorStats from './DoctorStats/DoctorStats';
 import DoctorDetailsMap from './DoctorDetailsMap';
 import BtnFavorite from '../ui/doctors/favorite/BtnFavorite';
+import { Link } from 'react-router';
 
 interface DoctorInfoSidebarProps {
   doctor: {
@@ -48,10 +49,12 @@ const DoctorInfoSidebar: React.FC<DoctorInfoSidebarProps> = ({ doctor, text, sho
 
       <div className='p-2 bg-white absolute top-4 left-4 rounded-full cursor-pointer hover:bg-[#fca5a6] transition duration-500'>
         <BtnFavorite id={doctor.id} />
-      </div>      
+      </div>
+      <Link to={'/chatpage'} >   
       <div className='p-2 bg-white absolute top-4 right-4 rounded-full cursor-pointer hover:bg-[#b9d9ff] text-white transition duration-500'>
         <ChatIcon />
       </div>
+      </Link>   
 
       <div className="flex items-center justify-center mb-4">
         <div className="flex gap-3 flex-col">
