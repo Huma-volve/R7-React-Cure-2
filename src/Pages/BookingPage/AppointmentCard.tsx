@@ -1,3 +1,6 @@
+import ReschedulePopup from "@/components/ReschedulePopup/ReschedulePopup";
+import axios from "axios";
+import Cookies from "js-cookie";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -17,7 +20,11 @@ interface AppointmentProps {
 const AppointmentCard: React.FC<AppointmentProps> = ({ appointment }) => {
   const navigate = useNavigate();
   const { date, status: rawStatus, doctorId, doctorName, specialization, doctorImage, location } = appointment;
+const [showReschedulePopup, setShowReschedulePopup] = React.useState(false);
 
+const handleReschedule = () => {
+  setShowReschedulePopup(true);
+};
   // نعمل normalization للحالة (lowercase, trim)
   const statusKey = String(rawStatus ?? "").trim().toLowerCase();
 
@@ -40,22 +47,56 @@ const AppointmentCard: React.FC<AppointmentProps> = ({ appointment }) => {
 
   const handleFeedback = () => {
     navigate(`/doctordetails/${doctorId}`);
+    
   };
+
+  const handleCancel = async () => {
+  try {
+    const token = Cookies.get("accessToken");
+
+    await axios.put(
+      `https://cure-doctor-booking.runasp.net/api/Customer/Booking/CancelBooking/${appointment.id}`,
+      null,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    alert("Appointment cancelled.");
+    window.location.reload();
+
+  } catch (err) {
+    console.error("Cancel error:", err);
+    alert("Failed to cancel appointment.");
+  }
+};
+
 
   const renderButtons = () => {
     // نستخدم نفس statusKey هنا
     switch (statusKey) {
-      case "upcoming":
-        return (
-          <>
-            <button className="flex-1 border border-[#99A2AB] text-[#99A2AB] rounded-[10px] py-2 text-[14px] font-normal">
-              Cancel
-            </button>
-            <button className="flex-1 bg-[#145DB8] text-white rounded-[10px] py-2 text-[14px] font-normal">
-              Reschedule
-            </button>
-          </>
-        );
+case "upcoming":
+  return (
+    <>
+      <button
+        onClick={handleCancel}
+        className="flex-1 border border-[#99A2AB] text-[#99A2AB] rounded-[10px] py-2 text-[14px] font-normal"
+      >
+        Cancel
+      </button>
+
+      <button
+        onClick={handleReschedule}
+        className="flex-1 bg-[#145DB8] text-white rounded-[10px] py-2 text-[14px] font-normal"
+      >
+        Reschedule
+      </button>
+    </>
+  );
+
       case "completed":
         return (
           <>
@@ -130,6 +171,14 @@ const AppointmentCard: React.FC<AppointmentProps> = ({ appointment }) => {
       </div>
 
       <div className="flex items-center gap-3 mt-2">{renderButtons()}</div>
+      {showReschedulePopup && (
+  <ReschedulePopup
+    appointmentId={appointment.id}
+    doctorId={doctorId}
+    onClose={() => setShowReschedulePopup(false)}
+  />
+)}
+
     </div>
   );
 };
